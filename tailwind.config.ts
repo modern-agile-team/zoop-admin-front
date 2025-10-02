@@ -1,7 +1,7 @@
-import { type Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss'
 
-const config: Config = {
-  content: ['./src/**/*'],
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -90,6 +90,4 @@ const config: Config = {
     },
   },
   plugins: [],
-}
-
-export default config
+} satisfies Config

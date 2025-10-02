@@ -1,15 +1,11 @@
-import Header from '@/shared/components/Header'
+import LoginForm from './components/LoginFrom'
 
 export default function HomePage() {
   return (
-    <>
-      {/* 헤더 영역 */}
-      <Header />
-
-      {/* 본문 영역 */}
-      <div className="text-center">
-        <h1 className="text-4xl font-bold">Welcome to the Quiz Game Admin</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 relative overflow-hidden">
+      <div className="relative z-10 min-h-screen flex flex-col justify-center items-center">
+        <LoginForm />
       </div>
-    </>
+    </div>
   )
 }
