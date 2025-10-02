@@ -1,0 +1,50 @@
+name: Issue Management
+
+on:
+  pull_request:
+    types: [opened, closed, reopened]
+    branches:
+      - main
+      - develop
+  create:
+    # 브랜치 생성 시
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - 'main'
+      - 'develop'
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  handle-pr-events:
+    runs-on: ubuntu-latest
+    steps:
+      # 저장소 체크아웃
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Node.js 설치
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 의존성 설치
+      - name: Install dependencies
+        run: npm install
+
+      # JS 스크립트 실행
+      - name: Run Issue Management Script
+        run: node .github/scripts/issue-management.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_EVENT_ACTION: ${{ github.event.action }}
