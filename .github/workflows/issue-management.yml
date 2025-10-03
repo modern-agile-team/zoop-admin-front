@@ -38,7 +38,7 @@ jobs:
 
       # 의존성 설치
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
       # JS 스크립트 실행
       - name: Run Issue Management Script
