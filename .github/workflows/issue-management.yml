@@ -36,6 +36,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Enable Corepack (Yarn)
+        run: corepack enable
+
       # 의존성 설치
       - name: Install dependencies
         run: yarn install
