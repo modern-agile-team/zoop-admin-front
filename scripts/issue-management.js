@@ -1,11 +1,13 @@
-#!/usr/bin/env node
-
 import { Octokit } from '@octokit/rest'
 
 const githubContext = JSON.parse(process.env.GITHUB_CONTEXT)
 const token = process.env.GITHUB_TOKEN
 const eventName = process.env.GITHUB_EVENT_NAME
 const eventAction = process.env.GITHUB_EVENT_ACTION
+
+console.log(token)
+console.log(eventName)
+console.log(eventAction)
 
 if (!token) {
   console.error('❌ GITHUB_TOKEN is missing.')
