@@ -45,7 +45,7 @@ jobs:
 
       # JS 스크립트 실행
       - name: Run Issue Management Script
-        run: node .github/scripts/issue-management.js
+        run: node scripts/issue-management.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_CONTEXT: ${{ toJson(github) }}
