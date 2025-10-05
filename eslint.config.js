@@ -1,13 +1,12 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import reactPlugin from 'eslint-plugin-react'
-import reactCompiler from 'eslint-plugin-react-compiler'
-import importPlugin from 'eslint-plugin-import'
-import unusedImports from 'eslint-plugin-unused-imports'
-import responsiveStylesNaming from './eslint-rules/responsive-styles-naming.mjs'
+import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
+import reactPlugin from 'eslint-plugin-react';
+import reactCompiler from 'eslint-plugin-react-compiler';
+import importPlugin from 'eslint-plugin-import';
+import unusedImports from 'eslint-plugin-unused-imports';
 
 // Import order configuration
 const importOrder = ({ ruleSeverities = 'error' } = {}) => [
@@ -75,7 +74,7 @@ const importOrder = ({ ruleSeverities = 'error' } = {}) => [
     'newlines-between': 'always',
     // 그룹 간에 개행 강제
   },
-]
+];
 
 // Common naming convention rules
 const commonBaseRules = [
@@ -154,7 +153,7 @@ const commonBaseRules = [
     format: null,
     modifiers: ['requiresQuotes'],
   },
-]
+];
 
 export default tseslint.config(
   {
@@ -253,11 +252,6 @@ export default tseslint.config(
       import: importPlugin,
       'react-compiler': reactCompiler,
       'unused-imports': unusedImports,
-      custom: {
-        rules: {
-          'responsive-styles-naming': responsiveStylesNaming,
-        },
-      },
     },
     settings: {
       react: {
@@ -354,5 +348,5 @@ export default tseslint.config(
     settings: {
       'import/external-module-folders': ['.yarn'],
     },
-  },
-)
+  }
+);
