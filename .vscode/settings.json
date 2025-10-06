@@ -3,10 +3,15 @@
     "**/routeTree.gen.ts": true
   },
   "search.exclude": {
-    "**/routeTree.gen.ts": true
+    "**/routeTree.gen.ts": true,
+    "**/.yarn": true,
+    "**/.pnp.*": true
   },
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "eslint.nodePath": ".yarn/sdks",
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
