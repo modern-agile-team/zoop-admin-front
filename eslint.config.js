@@ -277,9 +277,6 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': 'off', // unused-imports가 대신 처리
       '@typescript-eslint/naming-convention': ['error', ...commonBaseRules],
 
-      // 커스텀 룰: getResponsiveClasses 결과 변수는 Styles로 끝나야 함
-      'custom/responsive-styles-naming': 'error',
-
       // Import 관련 규칙들
       /**
        * require() / import 문의 순서에 대한 규칙을 강제합니다
