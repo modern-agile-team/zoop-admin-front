@@ -28,6 +28,7 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@eslint/js", "npm:9.37.0"],\
           ["@tailwindcss/vite", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:4.1.14"],\
           ["@tanstack/eslint-config", "npm:0.3.2"],\
           ["@tanstack/react-devtools", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:0.7.2"],\
@@ -7203,6 +7204,7 @@ const RAW_RUNTIME_STATE =
       ["workspace:.", {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@eslint/js", "npm:9.37.0"],\
           ["@tailwindcss/vite", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:4.1.14"],\
           ["@tanstack/eslint-config", "npm:0.3.2"],\
           ["@tanstack/react-devtools", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:0.7.2"],\
