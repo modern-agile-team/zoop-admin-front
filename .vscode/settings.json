@@ -22,9 +22,9 @@
 
   // 저장 시 ESLint 자동 실행
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.fixAll": true,
-    "source.organizeImports": true
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
   },
 
   // ESLint 관련 설정
