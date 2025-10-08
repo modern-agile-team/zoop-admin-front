@@ -1,0 +1,457 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/admin/quizzes": {
+      "get": {
+        "operationId": "ListQuizzesController_listQuizzes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizCollectionDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "COMMON.REQUEST_VALIDATION_ERROR",
+                      "enum": [
+                        "COMMON.REQUEST_VALIDATION_ERROR"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "COMMON.UNAUTHORIZED",
+                      "enum": [
+                        "COMMON.UNAUTHORIZED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "COMMON.PERMISSION_DENIED",
+                      "enum": [
+                        "COMMON.PERMISSION_DENIED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "퀴즈 목록 조회",
+        "tags": [
+          "quiz"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "quizzes-game-io-backend",
+    "description": "The Quizzes Game IO Backend API",
+    "version": "0.1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "/backend"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "AccountDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "description": "Account role",
+            "example": "admin"
+          },
+          "signInType": {
+            "type": "string",
+            "description": "Account sign in type",
+            "example": "username"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "enteredAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "진입 시점"
+          },
+          "leftAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "role",
+          "signInType",
+          "nickname",
+          "enteredAt",
+          "leftAt",
+          "isActive"
+        ]
+      },
+      "AccountCollectionDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountDto"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SignUpWithUsernameDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "AuthTokenDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "SignInWithUsernameDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "CreateGameRoomDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "게임 방 제목",
+            "example": "My Awesome Game Room",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "quizzesCount": {
+            "type": "number",
+            "minimum": 10,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "title",
+          "quizzesCount"
+        ]
+      },
+      "GameRoomMemberDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "gameRoomId": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "host",
+              "player"
+            ]
+          },
+          "nickname": {
+            "type": "string",
+            "description": "게임방 구성원의 닉네임(계정 닉네임과 동일함)"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "accountId",
+          "gameRoomId",
+          "role",
+          "nickname"
+        ]
+      },
+      "GameRoomDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "hostId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "waiting",
+              "starting",
+              "inProgress",
+              "finished",
+              "paused"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "maxMembersCount": {
+            "type": "number"
+          },
+          "currentMembersCount": {
+            "type": "number"
+          },
+          "quizTimeLimitInSeconds": {
+            "type": "number"
+          },
+          "quizzesCount": {
+            "type": "number"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameRoomMemberDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "hostId",
+          "status",
+          "title",
+          "maxMembersCount",
+          "currentMembersCount",
+          "quizTimeLimitInSeconds",
+          "quizzesCount",
+          "members"
+        ]
+      },
+      "GameRoomMemberCollectionDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameRoomMemberDto"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GameRoomCollectionDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameRoomDto"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "QuizDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "퀴즈 유형",
+            "example": "multipleChoice"
+          },
+          "question": {
+            "type": "string",
+            "description": "퀴즈 질문",
+            "example": "다음 중 옳은 것은?"
+          },
+          "answer": {
+            "type": "string",
+            "description": "퀴즈 정답",
+            "example": "정답"
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "퀴즈 이미지 URL",
+            "example": "https://example.com/quiz.png"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "type",
+          "answer"
+        ]
+      },
+      "QuizCollectionDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuizDto"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  }
+}
