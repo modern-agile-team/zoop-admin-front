@@ -12,6 +12,7 @@
     "check": "prettier --write . && eslint --fix",
     "type-check": "tsc --noEmit",
     "prepare": "husky",
+    "codegen:apis": "yarn node ./scripts/codegen/codeGen-apis.mjs",
     "codegen:sync": "yarn node ./scripts/codegen/syncCodeGenSpec.mjs"
   },
   "dependencies": {
