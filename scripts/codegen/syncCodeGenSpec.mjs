@@ -15,6 +15,13 @@ const SPEC_WRITE_PATH = {
 // 필터링할 path prefix
 const PATH_PREFIX = ['/admin', '/auth'];
 
+const filterPath = (path, target) => {
+  if (path.startsWith(target)) {
+    return true;
+  }
+  return false;
+};
+
 console.log('API 스펙을 가져오는 중...');
 
 const getSpec = async (type) => {
@@ -27,9 +34,8 @@ const getSpec = async (type) => {
 
     const originalPaths = data.paths || {};
     const filteredPaths = Object.fromEntries(
-      Object.entries(originalPaths).filter(
-        ([path]) =>
-          path.startsWith(PATH_PREFIX[0]) || path.startsWith(PATH_PREFIX[1])
+      Object.entries(originalPaths).filter(([path]) =>
+        PATH_PREFIX.some((ele) => filterPath(path, ele))
       )
     );
 
