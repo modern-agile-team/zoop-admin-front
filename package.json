@@ -27,6 +27,7 @@
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/router-core": "^1.132.27",
     "@tanstack/router-plugin": "^1.132.0",
+    "antd": "^5.27.4",
     "clsx": "^2.1.1",
     "ky": "^1.11.0",
     "react": "^19.0.0",
