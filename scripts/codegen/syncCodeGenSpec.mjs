@@ -2,7 +2,7 @@ import fs from 'fs';
 
 // OpenAPI 스펙이 있는 URL
 const SPEC_URL = {
-  API: 'https://lsh.taild0f974.ts.net/backend/swagger/admin-json',
+  API: 'https://lsh.taild0f974.ts.net/backend/swagger-json',
   SOCKET: 'https://lsh.taild0f974.ts.net/backend/async-doc-json',
 };
 
@@ -11,9 +11,6 @@ const SPEC_WRITE_PATH = {
   API: 'src/lib/apis/spec.json',
   SOCKET: 'src/lib/socket/spec.json',
 };
-
-// 필터링할 path prefix
-const PATH_PREFIX = '/admin';
 
 console.log('API 스펙을 가져오는 중...');
 

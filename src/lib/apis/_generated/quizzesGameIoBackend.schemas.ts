@@ -52,10 +52,9 @@ export interface CreateGameRoomDto {
   quizzesCount: number;
 }
 
-export type GameRoomMemberDtoRole = typeof GameRoomMemberDtoRole[keyof typeof GameRoomMemberDtoRole];
+export type GameRoomMemberDtoRole =
+  (typeof GameRoomMemberDtoRole)[keyof typeof GameRoomMemberDtoRole];
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GameRoomMemberDtoRole = {
   host: 'host',
   player: 'player',
@@ -72,10 +71,9 @@ export interface GameRoomMemberDto {
   nickname: string;
 }
 
-export type GameRoomDtoStatus = typeof GameRoomDtoStatus[keyof typeof GameRoomDtoStatus];
+export type GameRoomDtoStatus =
+  (typeof GameRoomDtoStatus)[keyof typeof GameRoomDtoStatus];
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GameRoomDtoStatus = {
   waiting: 'waiting',
   starting: 'starting',
@@ -127,10 +125,85 @@ export interface QuizCollectionDto {
 /**
  * error code
  */
-export type ListQuizzesControllerListQuizzes400Code = typeof ListQuizzesControllerListQuizzes400Code[keyof typeof ListQuizzesControllerListQuizzes400Code];
+export type SignUpWithUsernameControllerSignUpWithUsername400Code =
+  (typeof SignUpWithUsernameControllerSignUpWithUsername400Code)[keyof typeof SignUpWithUsernameControllerSignUpWithUsername400Code];
 
+export const SignUpWithUsernameControllerSignUpWithUsername400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type SignUpWithUsernameControllerSignUpWithUsername400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: SignUpWithUsernameControllerSignUpWithUsername400Code;
+};
+
+/**
+ * error code
+ */
+export type SignUpWithUsernameControllerSignUpWithUsername409Code =
+  (typeof SignUpWithUsernameControllerSignUpWithUsername409Code)[keyof typeof SignUpWithUsernameControllerSignUpWithUsername409Code];
+
+export const SignUpWithUsernameControllerSignUpWithUsername409Code = {
+  ACCOUNTUSERNAME_ALREADY_OCCUPIED: 'ACCOUNT.USERNAME_ALREADY_OCCUPIED',
+} as const;
+
+export type SignUpWithUsernameControllerSignUpWithUsername409 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: SignUpWithUsernameControllerSignUpWithUsername409Code;
+};
+
+/**
+ * error code
+ */
+export type SignInWithUsernameControllerSignInWithUsername400Code =
+  (typeof SignInWithUsernameControllerSignInWithUsername400Code)[keyof typeof SignInWithUsernameControllerSignInWithUsername400Code];
+
+export const SignInWithUsernameControllerSignInWithUsername400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type SignInWithUsernameControllerSignInWithUsername400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: SignInWithUsernameControllerSignInWithUsername400Code;
+};
+
+/**
+ * error code
+ */
+export type SignInWithUsernameControllerSignInWithUsername401Code =
+  (typeof SignInWithUsernameControllerSignInWithUsername401Code)[keyof typeof SignInWithUsernameControllerSignInWithUsername401Code];
+
+export const SignInWithUsernameControllerSignInWithUsername401Code = {
+  AUTHSIGN_IN_INFO_NOT_MATCHED: 'AUTH.SIGN_IN_INFO_NOT_MATCHED',
+} as const;
+
+export type SignInWithUsernameControllerSignInWithUsername401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: SignInWithUsernameControllerSignInWithUsername401Code;
+};
+
+/**
+ * error code
+ */
+export type ListQuizzesControllerListQuizzes400Code =
+  (typeof ListQuizzesControllerListQuizzes400Code)[keyof typeof ListQuizzesControllerListQuizzes400Code];
+
 export const ListQuizzesControllerListQuizzes400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
 } as const;
@@ -147,10 +220,9 @@ export type ListQuizzesControllerListQuizzes400 = {
 /**
  * error code
  */
-export type ListQuizzesControllerListQuizzes401Code = typeof ListQuizzesControllerListQuizzes401Code[keyof typeof ListQuizzesControllerListQuizzes401Code];
+export type ListQuizzesControllerListQuizzes401Code =
+  (typeof ListQuizzesControllerListQuizzes401Code)[keyof typeof ListQuizzesControllerListQuizzes401Code];
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListQuizzesControllerListQuizzes401Code = {
   COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
 } as const;
@@ -167,10 +239,9 @@ export type ListQuizzesControllerListQuizzes401 = {
 /**
  * error code
  */
-export type ListQuizzesControllerListQuizzes403Code = typeof ListQuizzesControllerListQuizzes403Code[keyof typeof ListQuizzesControllerListQuizzes403Code];
+export type ListQuizzesControllerListQuizzes403Code =
+  (typeof ListQuizzesControllerListQuizzes403Code)[keyof typeof ListQuizzesControllerListQuizzes403Code];
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListQuizzesControllerListQuizzes403Code = {
   COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
 } as const;
@@ -183,4 +254,3 @@ export type ListQuizzesControllerListQuizzes403 = {
   /** error code */
   code?: ListQuizzesControllerListQuizzes403Code;
 };
-
