@@ -12,13 +12,6 @@ const SPEC_WRITE_PATH = {
   SOCKET: 'src/lib/socket/spec.json',
 };
 
-const filterPath = (path, target) => {
-  if (path.startsWith(target)) {
-    return true;
-  }
-  return false;
-};
-
 console.log('API 스펙을 가져오는 중...');
 
 const getSpec = async (type) => {
