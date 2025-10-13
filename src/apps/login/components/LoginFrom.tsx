@@ -1,13 +1,18 @@
-import { useNavigate } from '@tanstack/react-router'
-import { useForm } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
+import { useForm } from 'react-hook-form';
+
+import { authQueries } from '@/shared/service/query/auth';
 
 export default function LoginForm() {
-  const navigate = useNavigate()
-  const form = useForm()
+  const navigate = useNavigate();
+  const form = useForm();
+
+  const { mutateAsync: signIn } = useMutation(authQueries.signIn);
 
   const handleSubmit = () => {
-    navigate({ to: '/quizzes' })
-  }
+    navigate({ to: '/quizzes' });
+  };
 
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md min-w-[450px]">
@@ -41,5 +46,5 @@ export default function LoginForm() {
         </button>
       </form>
     </div>
-  )
+  );
 }
