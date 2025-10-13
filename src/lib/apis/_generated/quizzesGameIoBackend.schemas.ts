@@ -127,6 +127,86 @@ export interface QuizCollectionDto {
 /**
  * error code
  */
+export type SignUpWithUsernameControllerSignUpWithUsername400Code = typeof SignUpWithUsernameControllerSignUpWithUsername400Code[keyof typeof SignUpWithUsernameControllerSignUpWithUsername400Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const SignUpWithUsernameControllerSignUpWithUsername400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type SignUpWithUsernameControllerSignUpWithUsername400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: SignUpWithUsernameControllerSignUpWithUsername400Code;
+};
+
+/**
+ * error code
+ */
+export type SignUpWithUsernameControllerSignUpWithUsername409Code = typeof SignUpWithUsernameControllerSignUpWithUsername409Code[keyof typeof SignUpWithUsernameControllerSignUpWithUsername409Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const SignUpWithUsernameControllerSignUpWithUsername409Code = {
+  ACCOUNTUSERNAME_ALREADY_OCCUPIED: 'ACCOUNT.USERNAME_ALREADY_OCCUPIED',
+} as const;
+
+export type SignUpWithUsernameControllerSignUpWithUsername409 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: SignUpWithUsernameControllerSignUpWithUsername409Code;
+};
+
+/**
+ * error code
+ */
+export type SignInWithUsernameControllerSignInWithUsername400Code = typeof SignInWithUsernameControllerSignInWithUsername400Code[keyof typeof SignInWithUsernameControllerSignInWithUsername400Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const SignInWithUsernameControllerSignInWithUsername400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type SignInWithUsernameControllerSignInWithUsername400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: SignInWithUsernameControllerSignInWithUsername400Code;
+};
+
+/**
+ * error code
+ */
+export type SignInWithUsernameControllerSignInWithUsername401Code = typeof SignInWithUsernameControllerSignInWithUsername401Code[keyof typeof SignInWithUsernameControllerSignInWithUsername401Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const SignInWithUsernameControllerSignInWithUsername401Code = {
+  AUTHSIGN_IN_INFO_NOT_MATCHED: 'AUTH.SIGN_IN_INFO_NOT_MATCHED',
+} as const;
+
+export type SignInWithUsernameControllerSignInWithUsername401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: SignInWithUsernameControllerSignInWithUsername401Code;
+};
+
+/**
+ * error code
+ */
 export type ListQuizzesControllerListQuizzes400Code = typeof ListQuizzesControllerListQuizzes400Code[keyof typeof ListQuizzesControllerListQuizzes400Code];
 
 

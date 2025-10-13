@@ -12,9 +12,6 @@ const SPEC_WRITE_PATH = {
   SOCKET: 'src/lib/socket/spec.json',
 };
 
-// 필터링할 path prefix
-const PATH_PREFIX = ['/admin', '/auth'];
-
 const filterPath = (path, target) => {
   if (path.startsWith(target)) {
     return true;
@@ -32,26 +29,7 @@ const getSpec = async (type) => {
     }
     const data = await response.json();
 
-    const originalPaths = data.paths || {};
-    const filteredPaths = Object.fromEntries(
-      Object.entries(originalPaths).filter(([path]) =>
-        PATH_PREFIX.some((ele) => filterPath(path, ele))
-      )
-    );
-
-    if (Object.keys(filteredPaths).length === 0) {
-      console.warn(
-        `⚠️ [${type}] '${PATH_PREFIX}'로 시작하는 경로가 없습니다. 저장을 건너뜁니다.`
-      );
-      return;
-    }
-
-    const filteredSpec = {
-      ...data,
-      paths: filteredPaths,
-    };
-
-    const jsonContent = JSON.stringify(filteredSpec, null, 2);
+    const jsonContent = JSON.stringify(data, null, 2);
 
     // 해당하는 폴더가 없으면 생성
     const dirPath = SPEC_WRITE_PATH[type].split('/').slice(0, -1).join('/');
