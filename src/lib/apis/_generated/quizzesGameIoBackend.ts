@@ -9,53 +9,55 @@ import type {
   AuthTokenDto,
   QuizCollectionDto,
   SignInWithUsernameDto,
-  SignUpWithUsernameDto
+  SignUpWithUsernameDto,
 } from './quizzesGameIoBackend.schemas';
 
 import { orvalInstance } from '../../../shared/service/api/client/index';
 
-
-
-  /**
+/**
  * @summary username 기반 회원가입
  */
 export const signUpWithUsernameControllerSignUpWithUsername = (
-    signUpWithUsernameDto: SignUpWithUsernameDto,
- ) => {
-      return orvalInstance<AuthTokenDto>(
-      {url: `/auth/sign-up/username`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: signUpWithUsernameDto
-    },
-      );
-    }
-  
+  signUpWithUsernameDto: SignUpWithUsernameDto
+) => {
+  return orvalInstance<AuthTokenDto>({
+    url: `/auth/sign-up/username`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: signUpWithUsernameDto,
+  });
+};
+
 /**
  * @summary username 기반 로그인
  */
 export const signInWithUsernameControllerSignInWithUsername = (
-    signInWithUsernameDto: SignInWithUsernameDto,
- ) => {
-      return orvalInstance<AuthTokenDto>(
-      {url: `/auth/sign-in/username`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: signInWithUsernameDto
-    },
-      );
-    }
-  
+  signInWithUsernameDto: SignInWithUsernameDto
+) => {
+  return orvalInstance<AuthTokenDto>({
+    url: `/auth/sign-in/username`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: signInWithUsernameDto,
+  });
+};
+
 /**
  * @summary 퀴즈 목록 조회
  */
-export const listQuizzesControllerListQuizzes = (
-    
- ) => {
-      return orvalInstance<QuizCollectionDto>(
-      {url: `/admin/quizzes`, method: 'GET'
-    },
-      );
-    }
-  
-export type SignUpWithUsernameControllerSignUpWithUsernameResult = NonNullable<Awaited<ReturnType<typeof signUpWithUsernameControllerSignUpWithUsername>>>
-export type SignInWithUsernameControllerSignInWithUsernameResult = NonNullable<Awaited<ReturnType<typeof signInWithUsernameControllerSignInWithUsername>>>
-export type ListQuizzesControllerListQuizzesResult = NonNullable<Awaited<ReturnType<typeof listQuizzesControllerListQuizzes>>>
+export const listQuizzesControllerListQuizzes = () => {
+  return orvalInstance<QuizCollectionDto>({
+    url: `/admin/quizzes`,
+    method: 'GET',
+  });
+};
+
+export type SignUpWithUsernameControllerSignUpWithUsernameResult = NonNullable<
+  Awaited<ReturnType<typeof signUpWithUsernameControllerSignUpWithUsername>>
+>;
+export type SignInWithUsernameControllerSignInWithUsernameResult = NonNullable<
+  Awaited<ReturnType<typeof signInWithUsernameControllerSignInWithUsername>>
+>;
+export type ListQuizzesControllerListQuizzesResult = NonNullable<
+  Awaited<ReturnType<typeof listQuizzesControllerListQuizzes>>
+>;
