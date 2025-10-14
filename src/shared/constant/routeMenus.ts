@@ -1,4 +1,4 @@
-interface RouteMenu {
+export interface RouteMenu {
   name: string;
   path: string;
   subMenus?: RouteMenu[];
