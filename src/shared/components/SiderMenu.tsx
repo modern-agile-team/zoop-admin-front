@@ -10,9 +10,9 @@ const hasSubMenus = (
   Boolean(menu.subMenus && menu.subMenus.length > 0);
 
 const items = ROUTE_MENUS.map((menu) => {
-  if (hasSubMenus(menu)) {
-    const parentPath = menu.path;
+  const parentPath = menu.path;
 
+  if (hasSubMenus(menu)) {
     const children: NonNullable<MenuProps['items']>[number][] =
       menu.subMenus.map((sub) => {
         const subPath = sub.path;
@@ -22,10 +22,10 @@ const items = ROUTE_MENUS.map((menu) => {
         };
       });
 
-    return { key: menu.path, label: menu.name, children };
+    return { key: parentPath, label: menu.name, children };
   }
 
-  return { key: menu.path, label: <Link to={menu.path}>{menu.name}</Link> };
+  return { key: parentPath, label: <Link to={parentPath}>{menu.name}</Link> };
 });
 
 export default function SiderMenu() {
