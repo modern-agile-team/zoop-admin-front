@@ -4,10 +4,7 @@ import Sider from 'antd/es/layout/Sider';
 
 import { ROUTE_MENUS } from '@/shared/constant/routeMenus';
 
-const hasSubMenus = (
-  menu: (typeof ROUTE_MENUS)[number]
-): menu is Required<(typeof ROUTE_MENUS)[number]> =>
-  Boolean(menu.subMenus && menu.subMenus.length > 0);
+import { hasSubMenus } from '../utils/routeMenu';
 
 const items = ROUTE_MENUS.map((menu) => {
   const parentPath = menu.path;
