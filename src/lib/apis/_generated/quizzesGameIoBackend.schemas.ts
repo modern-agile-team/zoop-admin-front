@@ -104,22 +104,92 @@ export interface GameRoomCollectionDto {
   data: GameRoomDto[];
 }
 
+export interface CreateImageDto {
+  /** image file */
+  file: Blob;
+  /** image category */
+  category: string;
+}
+
+export interface ImageDto {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  category: string;
+  originalFileName: string;
+  imageUrl: string;
+  extension: string;
+  contentType: string;
+  contentLength: number;
+  width: number;
+  height: number;
+}
+
+export interface ImageCollectionDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
+  data: ImageDto[];
+}
+
+export interface CreateNicknameSourceDto {
+  /**
+   * @minLength 1
+   * @maxLength 10
+   */
+  name: string;
+}
+
+export interface NicknameSourceDto {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  sequence: number;
+  fullname: string;
+}
+
+export interface CreateQuizzesDto {
+  type: string;
+  answer: string;
+  /** @nullable */
+  question: string | null;
+  /** @nullable */
+  imageUrl: string | null;
+}
+
 export interface QuizDto {
   id: string;
   createdAt: string;
   updatedAt: string;
   /** 퀴즈 유형 */
   type: string;
-  /** 퀴즈 질문 */
-  question?: string;
+  /**
+   * 퀴즈 질문
+   * @nullable
+   */
+  question: string | null;
   /** 퀴즈 정답 */
   answer: string;
-  /** 퀴즈 이미지 URL */
-  imageUrl?: string;
+  /**
+   * 퀴즈 이미지 URL
+   * @nullable
+   */
+  imageUrl: string | null;
 }
 
 export interface QuizCollectionDto {
   data: QuizDto[];
+}
+
+export interface UpdateQuizDto {
+  type?: string;
+  answer?: string;
+  /** @nullable */
+  question?: string | null;
+  /** @nullable */
+  imageUrl?: string | null;
 }
 
 /**
@@ -196,61 +266,4 @@ export type SignInWithUsernameControllerSignInWithUsername401 = {
   message?: string;
   /** error code */
   code?: SignInWithUsernameControllerSignInWithUsername401Code;
-};
-
-/**
- * error code
- */
-export type ListQuizzesControllerListQuizzes400Code =
-  (typeof ListQuizzesControllerListQuizzes400Code)[keyof typeof ListQuizzesControllerListQuizzes400Code];
-
-export const ListQuizzesControllerListQuizzes400Code = {
-  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
-} as const;
-
-export type ListQuizzesControllerListQuizzes400 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: ListQuizzesControllerListQuizzes400Code;
-};
-
-/**
- * error code
- */
-export type ListQuizzesControllerListQuizzes401Code =
-  (typeof ListQuizzesControllerListQuizzes401Code)[keyof typeof ListQuizzesControllerListQuizzes401Code];
-
-export const ListQuizzesControllerListQuizzes401Code = {
-  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
-} as const;
-
-export type ListQuizzesControllerListQuizzes401 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: ListQuizzesControllerListQuizzes401Code;
-};
-
-/**
- * error code
- */
-export type ListQuizzesControllerListQuizzes403Code =
-  (typeof ListQuizzesControllerListQuizzes403Code)[keyof typeof ListQuizzesControllerListQuizzes403Code];
-
-export const ListQuizzesControllerListQuizzes403Code = {
-  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
-} as const;
-
-export type ListQuizzesControllerListQuizzes403 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: ListQuizzesControllerListQuizzes403Code;
 };
