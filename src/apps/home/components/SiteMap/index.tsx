@@ -11,7 +11,6 @@ export default function SiteMap() {
           <Card
             title={menu.name}
             key={menu.path}
-            className="w-xs"
             extra={hasSubMenus(menu) ? null : <a href={menu.path}>바로가기</a>}
           >
             <Space direction="vertical">

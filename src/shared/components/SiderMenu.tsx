@@ -14,7 +14,7 @@ const items = ROUTE_MENUS.map((menu) => {
       menu.subMenus.map((sub) => {
         const subPath = sub.path;
         return {
-          key: subPath,
+          key: `${parentPath}${subPath}`,
           label: <Link to={`${parentPath}${subPath}`}>{sub.name}</Link>,
         };
       });
