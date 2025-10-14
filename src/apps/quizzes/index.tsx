@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 type Quiz = {
   id: string;
   createdAt: string;
@@ -41,8 +39,6 @@ const QUIZZES_MOCK_DATA: Quiz[] = [
 ];
 
 export default function QuizListPage() {
-  const [quizzes, setQuizzes] = useState<Quiz[]>(QUIZZES_MOCK_DATA);
-
   return (
     <div className="bg-contents-100 min-h-screen p-8">
       <div className="max-w-7xl mx-auto bg-bg-100 rounded-lg shadow-lg overflow-hidden">
@@ -69,11 +65,13 @@ export default function QuizListPage() {
               </div>
 
               <div>
-                {quizzes.map((quiz, index) => (
+                {QUIZZES_MOCK_DATA.map((quiz, index) => (
                   <div
                     key={quiz.id}
                     className={`grid grid-cols-[auto_1fr_1fr_auto] items-center ${
-                      index < quizzes.length - 1 ? 'border-b border-bg-400' : ''
+                      index < QUIZZES_MOCK_DATA.length - 1
+                        ? 'border-b border-bg-400'
+                        : ''
                     }`}
                   >
                     <div className="p-3 text-sm text-contents-700 font-mono">
