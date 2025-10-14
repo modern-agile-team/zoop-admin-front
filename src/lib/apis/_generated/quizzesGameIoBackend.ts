@@ -7,7 +7,6 @@
  */
 import type {
   AuthTokenDto,
-  QuizCollectionDto,
   SignInWithUsernameDto,
   SignUpWithUsernameDto,
 } from './quizzesGameIoBackend.schemas';
@@ -42,22 +41,9 @@ export const signInWithUsernameControllerSignInWithUsername = (
   });
 };
 
-/**
- * @summary 퀴즈 목록 조회
- */
-export const listQuizzesControllerListQuizzes = () => {
-  return orvalInstance<QuizCollectionDto>({
-    url: `/admin/quizzes`,
-    method: 'GET',
-  });
-};
-
 export type SignUpWithUsernameControllerSignUpWithUsernameResult = NonNullable<
   Awaited<ReturnType<typeof signUpWithUsernameControllerSignUpWithUsername>>
 >;
 export type SignInWithUsernameControllerSignInWithUsernameResult = NonNullable<
   Awaited<ReturnType<typeof signInWithUsernameControllerSignInWithUsername>>
->;
-export type ListQuizzesControllerListQuizzesResult = NonNullable<
-  Awaited<ReturnType<typeof listQuizzesControllerListQuizzes>>
 >;

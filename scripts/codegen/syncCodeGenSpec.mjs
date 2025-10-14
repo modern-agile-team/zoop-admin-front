@@ -4,14 +4,12 @@ import fs from 'fs';
 const SPEC_URL = {
   ADMIN: 'https://lsh.taild0f974.ts.net/backend/swagger/admin-json',
   API: 'https://lsh.taild0f974.ts.net/backend/swagger-json',
-  SOCKET: 'https://lsh.taild0f974.ts.net/backend/async-doc-json',
 };
 
 // 스펙을 저장할 파일 경로
 const SPEC_WRITE_PATH = {
   ADMIN: 'src/lib/admins/spec.json',
   API: 'src/lib/apis/spec.json',
-  SOCKET: 'src/lib/socket/spec.json',
 };
 
 console.log('API 스펙을 가져오는 중...');
@@ -23,22 +21,6 @@ const getSpec = async (type) => {
       throw new Error(`HTTP 에러: ${response.status}`);
     }
     const data = await response.json();
-
-    const originalPaths = data.paths || {};
-    const filteredPaths =
-      (type === 'API' &&
-        originalPaths.Object.fromEntries(
-          Object.entries(originalPaths).filter(([path]) =>
-            path.startsWith('/auth')
-          )
-        )) ||
-      null;
-
-    const filterData = {
-      ...data,
-      filteredPaths: filteredPaths || originalPaths,
-    };
-
     const jsonContent = JSON.stringify(data, null, 2);
 
     // 해당하는 폴더가 없으면 생성
@@ -57,11 +39,7 @@ const getSpec = async (type) => {
 };
 
 // 병렬로 API와 SOCKET 스펙 가져오기
-const results = await Promise.allSettled([
-  getSpec('API'),
-  getSpec('ADMIN'),
-  getSpec('SOCKET'),
-]);
+const results = await Promise.allSettled([getSpec('API'), getSpec('ADMIN')]);
 
 results.forEach((result, index) => {
   if (result.status === 'fulfilled') {
