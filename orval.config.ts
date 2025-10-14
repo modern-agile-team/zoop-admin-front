@@ -5,9 +5,6 @@ export default defineConfig({
     input: {
       target: 'src/lib/apis/spec.json',
       converterOptions: true,
-      filters: {
-        tags: ['auth', 'quiz'],
-      },
     },
     output: {
       target: 'src/lib/apis/_generated',
