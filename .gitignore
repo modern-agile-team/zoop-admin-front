@@ -7,3 +7,12 @@ count.txt
 .env
 .nitro
 .tanstack
+
+# Yarn Zero-Install
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
