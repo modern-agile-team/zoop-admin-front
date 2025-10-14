@@ -1,75 +1,107 @@
-export default function QuizPage() {
+import { useState } from 'react';
+
+type Quiz = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  type: 'multipleChoice' | 'shortAnswer';
+  question: string;
+  answer: string;
+  imageUrl: string | null;
+};
+
+const QUIZZES_MOCK_DATA: Quiz[] = [
+  {
+    id: 'quiz-001',
+    createdAt: '2025-10-12T07:06:18.021Z',
+    updatedAt: '2025-10-12T07:06:18.021Z',
+    type: 'multipleChoice',
+    question: '대한민국의 수도는 어디인가요?',
+    answer: '서울',
+    imageUrl: null,
+  },
+  {
+    id: 'quiz-002',
+    createdAt: '2025-10-11T11:20:45.110Z',
+    updatedAt: '2025-10-11T11:20:45.110Z',
+    type: 'shortAnswer',
+    question: '세상에서 가장 높은 산의 이름은 무엇인가요?',
+    answer: '에베레스트 산',
+    imageUrl: null,
+  },
+  {
+    id: 'quiz-003',
+    createdAt: '2025-10-10T02:55:00.987Z',
+    updatedAt: '2025-10-10T02:55:00.987Z',
+    type: 'multipleChoice',
+    question: 'React를 개발한 회사는 어디인가요?',
+    answer: 'Facebook (Meta)',
+    imageUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee',
+  },
+];
+
+export default function QuizListPage() {
+  const [quizzes, setQuizzes] = useState<Quiz[]>(QUIZZES_MOCK_DATA);
+
   return (
-    <div className="text-center">
-      <h1 className="text-4xl font-bold">Quiz Page</h1>
+    <div className="bg-contents-100 min-h-screen p-8">
+      <div className="max-w-7xl mx-auto bg-bg-100 rounded-lg shadow-lg overflow-hidden">
+        <header className="p-6 border-b border-contents-200 flex justify-between items-center">
+          <div>
+            <h1 className="text-title-2 font-bold">퀴즈 목록 (인라인 편집)</h1>
+            <p className="text-contents-600 mt-1">
+              셀을 더블클릭하여 내용을 수정하세요.
+            </p>
+          </div>
+          <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors cursor-pointer">
+            변경 사항 저장
+          </button>
+        </header>
 
-      <div>
-        <h2>design token</h2>
-        <p className="text-title-1">title1</p>
-        <p className="text-title-2">title2</p>
-        <p className="text-title-3">title3</p>
-        <p className="text-title-4">title4</p>
-        <p className="text-title-5">title5</p>
+        <main className="p-6">
+          <section>
+            <div className="border border-bg-500 rounded-lg overflow-hidden">
+              <div className="grid grid-cols-[auto_1fr_1fr_auto] font-semibold bg-bg-300 text-left">
+                <div className="p-3 border-b border-bg-500">ID</div>
+                <div className="p-3 border-b border-bg-500">질문</div>
+                <div className="p-3 border-b border-bg-500">정답</div>
+                <div className="p-3 border-b border-bg-500">이미지</div>
+              </div>
 
-        <p className="text-body-1">body-1</p>
-        <p className="text-body-2">body-2</p>
-        <p className="text-body-3">body-3</p>
-        <p className="text-body-4">body-4</p>
-        <p className="text-body-5">body-5</p>
-
-        <p className="text-caption-1">caption-1</p>
-        <p className="text-caption-2">caption-2</p>
-        <p className="text-caption-3">caption-3</p>
-        <p className="text-caption-4">caption-4</p>
-        <p className="text-caption-5">caption-5</p>
+              <div>
+                {quizzes.map((quiz, index) => (
+                  <div
+                    key={quiz.id}
+                    className={`grid grid-cols-[auto_1fr_1fr_auto] items-center ${
+                      index < quizzes.length - 1 ? 'border-b border-bg-400' : ''
+                    }`}
+                  >
+                    <div className="p-3 text-sm text-contents-700 font-mono">
+                      {quiz.id}
+                    </div>
+                    <div className="p-0">{quiz.question}</div>
+                    <div className="p-0 font-semibold">{quiz.answer}</div>
+                    <div className="p-3">
+                      {quiz.imageUrl ? (
+                        <img
+                          src={quiz.imageUrl}
+                          alt={quiz.question}
+                          className="w-16 h-16 object-cover rounded-md"
+                        />
+                      ) : (
+                        <span className="text-contents-500 text-sm">없음</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+          <button className="bg-primary-600 px-2 py-1 mt-3 text-white rounded-lg hover:bg-primary-700 transition-colors cursor-pointer">
+            +
+          </button>
+        </main>
       </div>
-
-      <section>
-        <h1>color</h1>
-        <span>primary</span>
-        <div className="bg-primary-100">contents1</div>
-        <div className="bg-primary-200">contents2</div>
-        <div className="bg-primary-300">contents3</div>
-        <div className="bg-primary-400">contents4</div>
-        <div className="bg-primary-500">contents5</div>
-        <div className="bg-primary-600">contents6</div>
-        <div className="bg-primary-700">contents7</div>
-        <div className="bg-primary-800">contents8</div>
-        <div className="bg-primary-900">contents9</div>
-
-        <span>secondary</span>
-        <div className="bg-secondary-100">contents1</div>
-        <div className="bg-secondary-200">contents2</div>
-        <div className="bg-secondary-300">contents3</div>
-        <div className="bg-secondary-400">contents4</div>
-        <div className="bg-secondary-500">contents5</div>
-        <div className="bg-secondary-600">contents6</div>
-        <div className="bg-secondary-700">contents7</div>
-        <div className="bg-secondary-800">contents8</div>
-        <div className="bg-secondary-900">contents9</div>
-
-        <span>contents</span>
-        <div className="bg-contents-100">contents1</div>
-        <div className="bg-contents-200">contents2</div>
-        <div className="bg-contents-300">contents3</div>
-        <div className="bg-contents-400">contents4</div>
-        <div className="bg-contents-500">contents5</div>
-        <div className="bg-contents-600">contents6</div>
-        <div className="bg-contents-700">contents7</div>
-        <div className="bg-contents-800">contents8</div>
-        <div className="bg-contents-900">contents9</div>
-
-        <span>bg</span>
-        <div className="bg-bg-100">contents1</div>
-        <div className="bg-bg-200">contents2</div>
-        <div className="bg-bg-300">contents3</div>
-        <div className="bg-bg-400">contents4</div>
-        <div className="bg-bg-500">contents5</div>
-        <div className="bg-bg-600">contents6</div>
-        <div className="bg-bg-700">contents7</div>
-        <div className="bg-bg-800">contents8</div>
-        <div className="bg-bg-900">contents9</div>
-      </section>
     </div>
-  )
+  );
 }
