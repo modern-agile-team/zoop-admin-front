@@ -1,10 +1,9 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { Layout } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 
 import HomePage from '@/apps/home';
 import SiderMenu from '@/shared/components/SiderMenu';
-import { STORAGE } from '@/shared/utils/storage';
 
 const HomComponent = () => {
   return (
@@ -23,12 +22,4 @@ const HomComponent = () => {
 
 export const Route = createFileRoute('/')({
   component: HomComponent,
-  loader: () => {
-    if (!STORAGE.getAuthToken()) {
-      throw redirect({
-        to: '/login',
-        search: { redirectUrl: window.location.href },
-      });
-    }
-  },
 });

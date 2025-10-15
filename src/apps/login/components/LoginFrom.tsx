@@ -40,7 +40,7 @@ export default function LoginForm() {
       const result = await signIn(data);
       STORAGE.setAuthToken(result.accessToken);
 
-      navigate({ href: searchParams.redirectUrl });
+      navigate({ to: searchParams.redirectUrl });
     } catch (error) {
       if (error === 'AUTH.SIGN_IN_INFO_NOT_MATCHED') {
         form.setError('password', {
