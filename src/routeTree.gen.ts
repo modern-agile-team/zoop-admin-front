@@ -14,7 +14,6 @@ import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as menusQuizzesIndexRouteImport } from './routes/(menus)/quizzes/index'
 import { Route as authLoginIndexRouteImport } from './routes/(auth)/login/index'
-import { Route as menusAssetsImagesIndexRouteImport } from './routes/(menus)/assets/images/index'
 
 const menusRouteRoute = menusRouteRouteImport.update({
   id: '/(menus)',
@@ -39,23 +38,16 @@ const authLoginIndexRoute = authLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => authRouteRoute,
 } as any)
-const menusAssetsImagesIndexRoute = menusAssetsImagesIndexRouteImport.update({
-  id: '/assets/images/',
-  path: '/assets/images/',
-  getParentRoute: () => menusRouteRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof menusRouteRouteWithChildren
   '/login': typeof authLoginIndexRoute
   '/quizzes': typeof menusQuizzesIndexRoute
-  '/assets/images': typeof menusAssetsImagesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof menusRouteRouteWithChildren
   '/login': typeof authLoginIndexRoute
   '/quizzes': typeof menusQuizzesIndexRoute
-  '/assets/images': typeof menusAssetsImagesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -64,13 +56,12 @@ export interface FileRoutesById {
   '/(menus)': typeof menusRouteRouteWithChildren
   '/(auth)/login/': typeof authLoginIndexRoute
   '/(menus)/quizzes/': typeof menusQuizzesIndexRoute
-  '/(menus)/assets/images/': typeof menusAssetsImagesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/quizzes' | '/assets/images'
+  fullPaths: '/' | '/login' | '/quizzes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/quizzes' | '/assets/images'
+  to: '/' | '/login' | '/quizzes'
   id:
     | '__root__'
     | '/'
@@ -78,7 +69,6 @@ export interface FileRouteTypes {
     | '/(menus)'
     | '/(auth)/login/'
     | '/(menus)/quizzes/'
-    | '/(menus)/assets/images/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -124,13 +114,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginIndexRouteImport
       parentRoute: typeof authRouteRoute
     }
-    '/(menus)/assets/images/': {
-      id: '/(menus)/assets/images/'
-      path: '/assets/images'
-      fullPath: '/assets/images'
-      preLoaderRoute: typeof menusAssetsImagesIndexRouteImport
-      parentRoute: typeof menusRouteRoute
-    }
   }
 }
 
@@ -148,12 +131,10 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface menusRouteRouteChildren {
   menusQuizzesIndexRoute: typeof menusQuizzesIndexRoute
-  menusAssetsImagesIndexRoute: typeof menusAssetsImagesIndexRoute
 }
 
 const menusRouteRouteChildren: menusRouteRouteChildren = {
   menusQuizzesIndexRoute: menusQuizzesIndexRoute,
-  menusAssetsImagesIndexRoute: menusAssetsImagesIndexRoute,
 }
 
 const menusRouteRouteWithChildren = menusRouteRoute._addFileChildren(
