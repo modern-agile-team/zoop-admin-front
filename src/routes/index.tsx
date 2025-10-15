@@ -27,7 +27,7 @@ export const Route = createFileRoute('/')({
     if (!STORAGE.getAuthToken()) {
       throw redirect({
         to: '/login',
-        search: { redirectUrl: encodeURIComponent(window.location.href) },
+        search: { redirectUrl: window.location.href },
       });
     }
   },
