@@ -9,58 +9,100 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as menusRouteRouteImport } from './routes/(menus)/route'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as QuizzesIndexRouteImport } from './routes/quizzes/index'
-import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as menusQuizzesIndexRouteImport } from './routes/(menus)/quizzes/index'
+import { Route as authLoginIndexRouteImport } from './routes/(auth)/login/index'
+import { Route as menusAssetsImagesIndexRouteImport } from './routes/(menus)/assets/images/index'
 
+const menusRouteRoute = menusRouteRouteImport.update({
+  id: '/(menus)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const QuizzesIndexRoute = QuizzesIndexRouteImport.update({
+const menusQuizzesIndexRoute = menusQuizzesIndexRouteImport.update({
   id: '/quizzes/',
   path: '/quizzes/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => menusRouteRoute,
 } as any)
-const LoginIndexRoute = LoginIndexRouteImport.update({
+const authLoginIndexRoute = authLoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => authRouteRoute,
+} as any)
+const menusAssetsImagesIndexRoute = menusAssetsImagesIndexRouteImport.update({
+  id: '/assets/images/',
+  path: '/assets/images/',
+  getParentRoute: () => menusRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/login': typeof LoginIndexRoute
-  '/quizzes': typeof QuizzesIndexRoute
+  '/': typeof menusRouteRouteWithChildren
+  '/login': typeof authLoginIndexRoute
+  '/quizzes': typeof menusQuizzesIndexRoute
+  '/assets/images': typeof menusAssetsImagesIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/login': typeof LoginIndexRoute
-  '/quizzes': typeof QuizzesIndexRoute
+  '/': typeof menusRouteRouteWithChildren
+  '/login': typeof authLoginIndexRoute
+  '/quizzes': typeof menusQuizzesIndexRoute
+  '/assets/images': typeof menusAssetsImagesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/login/': typeof LoginIndexRoute
-  '/quizzes/': typeof QuizzesIndexRoute
+  '/(auth)': typeof authRouteRouteWithChildren
+  '/(menus)': typeof menusRouteRouteWithChildren
+  '/(auth)/login/': typeof authLoginIndexRoute
+  '/(menus)/quizzes/': typeof menusQuizzesIndexRoute
+  '/(menus)/assets/images/': typeof menusAssetsImagesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/quizzes'
+  fullPaths: '/' | '/login' | '/quizzes' | '/assets/images'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/quizzes'
-  id: '__root__' | '/' | '/login/' | '/quizzes/'
+  to: '/' | '/login' | '/quizzes' | '/assets/images'
+  id:
+    | '__root__'
+    | '/'
+    | '/(auth)'
+    | '/(menus)'
+    | '/(auth)/login/'
+    | '/(menus)/quizzes/'
+    | '/(menus)/assets/images/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  LoginIndexRoute: typeof LoginIndexRoute
-  QuizzesIndexRoute: typeof QuizzesIndexRoute
+  authRouteRoute: typeof authRouteRouteWithChildren
+  menusRouteRoute: typeof menusRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/(menus)': {
+      id: '/(menus)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof menusRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)': {
+      id: '/(auth)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -68,27 +110,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/quizzes/': {
-      id: '/quizzes/'
+    '/(menus)/quizzes/': {
+      id: '/(menus)/quizzes/'
       path: '/quizzes'
       fullPath: '/quizzes'
-      preLoaderRoute: typeof QuizzesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof menusQuizzesIndexRouteImport
+      parentRoute: typeof menusRouteRoute
     }
-    '/login/': {
-      id: '/login/'
+    '/(auth)/login/': {
+      id: '/(auth)/login/'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof authLoginIndexRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(menus)/assets/images/': {
+      id: '/(menus)/assets/images/'
+      path: '/assets/images'
+      fullPath: '/assets/images'
+      preLoaderRoute: typeof menusAssetsImagesIndexRouteImport
+      parentRoute: typeof menusRouteRoute
     }
   }
 }
 
+interface authRouteRouteChildren {
+  authLoginIndexRoute: typeof authLoginIndexRoute
+}
+
+const authRouteRouteChildren: authRouteRouteChildren = {
+  authLoginIndexRoute: authLoginIndexRoute,
+}
+
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
+  authRouteRouteChildren,
+)
+
+interface menusRouteRouteChildren {
+  menusQuizzesIndexRoute: typeof menusQuizzesIndexRoute
+  menusAssetsImagesIndexRoute: typeof menusAssetsImagesIndexRoute
+}
+
+const menusRouteRouteChildren: menusRouteRouteChildren = {
+  menusQuizzesIndexRoute: menusQuizzesIndexRoute,
+  menusAssetsImagesIndexRoute: menusAssetsImagesIndexRoute,
+}
+
+const menusRouteRouteWithChildren = menusRouteRoute._addFileChildren(
+  menusRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  LoginIndexRoute: LoginIndexRoute,
-  QuizzesIndexRoute: QuizzesIndexRoute,
+  authRouteRoute: authRouteRouteWithChildren,
+  menusRouteRoute: menusRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
