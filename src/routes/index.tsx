@@ -5,7 +5,7 @@ import { Content } from 'antd/es/layout/layout';
 import HomePage from '@/apps/home';
 import SiderMenu from '@/shared/components/SiderMenu';
 
-const HomComponent = () => {
+const HomeComponent = () => {
   return (
     <Layout hasSider>
       <SiderMenu />
@@ -21,5 +21,5 @@ const HomComponent = () => {
 };
 
 export const Route = createFileRoute('/')({
-  component: HomComponent,
+  component: HomeComponent,
 });
