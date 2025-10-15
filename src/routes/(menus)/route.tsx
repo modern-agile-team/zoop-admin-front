@@ -11,7 +11,7 @@ export const Route = createFileRoute('/(menus)')({
     if (!STORAGE.getAuthToken()) {
       throw redirect({
         to: '/login',
-        search: { redirect: window.location.pathname },
+        search: { redirectUrl: encodeURIComponent(window.location.href) },
       });
     }
   },
