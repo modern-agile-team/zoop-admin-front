@@ -5,7 +5,7 @@ import { STORAGE } from '@/shared/utils/storage';
 
 import { ApiError, type ApiErrorResponse } from './apiError';
 
-export const connectApi = ky.create({
+export const apiClient = ky.create({
   prefixUrl: API_URL,
   headers: {
     'Accept-Language': 'ko-KR',
@@ -23,6 +23,11 @@ export const connectApi = ky.create({
         const json = await response.clone().json();
 
         return json;
+      },
+      (_, _1, response) => {
+        if (response.status === 401 || response.status === 403) {
+          STORAGE.removeAuthToken();
+        }
       },
     ],
   },
@@ -46,7 +51,7 @@ export const orvalInstance = async <T>({
   const [, ...rawUrl] = url.split('/');
 
   try {
-    const response = await connectApi(rawUrl.join('/'), {
+    const response = await apiClient(rawUrl.join('/'), {
       method,
       json: data,
       searchParams: params ? serializeParams(params) : undefined,

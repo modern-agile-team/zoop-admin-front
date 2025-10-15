@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -23,6 +23,8 @@ type AuthFormData = z.infer<typeof authSchema>;
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const searchParams = useSearch({ from: '/(auth)/login/' });
+
   const form = useForm<AuthFormData>({
     resolver: zodResolver(authSchema),
     defaultValues: {
@@ -37,7 +39,8 @@ export default function LoginForm() {
     try {
       const result = await signIn(data);
       STORAGE.setAuthToken(result.accessToken);
-      navigate({ to: '/quizzes' });
+
+      navigate({ to: searchParams.redirectUrl });
     } catch (error) {
       if (error === 'AUTH.SIGN_IN_INFO_NOT_MATCHED') {
         form.setError('password', {
