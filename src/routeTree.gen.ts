@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuizzesIndexRouteImport } from './routes/quizzes/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as AssetsImagesIndexRouteImport } from './routes/assets/images/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,44 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssetsImagesIndexRoute = AssetsImagesIndexRouteImport.update({
+  id: '/assets/images/',
+  path: '/assets/images/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginIndexRoute
   '/quizzes': typeof QuizzesIndexRoute
+  '/assets/images': typeof AssetsImagesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginIndexRoute
   '/quizzes': typeof QuizzesIndexRoute
+  '/assets/images': typeof AssetsImagesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login/': typeof LoginIndexRoute
   '/quizzes/': typeof QuizzesIndexRoute
+  '/assets/images/': typeof AssetsImagesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/quizzes'
+  fullPaths: '/' | '/login' | '/quizzes' | '/assets/images'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/quizzes'
-  id: '__root__' | '/' | '/login/' | '/quizzes/'
+  to: '/' | '/login' | '/quizzes' | '/assets/images'
+  id: '__root__' | '/' | '/login/' | '/quizzes/' | '/assets/images/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   QuizzesIndexRoute: typeof QuizzesIndexRoute
+  AssetsImagesIndexRoute: typeof AssetsImagesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assets/images/': {
+      id: '/assets/images/'
+      path: '/assets/images'
+      fullPath: '/assets/images'
+      preLoaderRoute: typeof AssetsImagesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   QuizzesIndexRoute: QuizzesIndexRoute,
+  AssetsImagesIndexRoute: AssetsImagesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
