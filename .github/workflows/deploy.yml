@@ -52,10 +52,12 @@ jobs:
         with:
           node-version: 24
           cache: 'yarn'
+      - name: clean yarn cache
+        run: yarn cache clean
       - name: Install & Build
         shell: bash
         run: |
-          yarn install --immutable --immutable-cache
+          yarn install
           VITE_APP_ENV=${{ needs.determine.outputs.env }} \
           VITE_API_URL='${{ vars.VITE_API_URL }}' \
           yarn build:${{ needs.determine.outputs.env }}
