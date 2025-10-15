@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
 import LoginPage from '@/apps/login';
@@ -9,10 +9,11 @@ const urlSearchSchema = z.object({
 
 export const Route = createFileRoute('/(auth)/login/')({
   component: LoginPage,
-  loader(ctx) {
-    const result = urlSearchSchema.safeParse(ctx.location.search);
+  validateSearch: (search) => {
+    const result = urlSearchSchema.safeParse(search);
     if (!result.success) {
-      throw redirect({ to: '/login', search: { redirectUrl: '/' } });
+      return { redirectUrl: '/' };
     }
+    return result.data;
   },
 });
