@@ -68,6 +68,14 @@ async function createCommit() {
       console.log(chalk.yellow('⚠️  커밋할 staged 변경사항이 없습니다.'));
     }
 
+    const branchName = execSync('git rev-parse --abbrev-ref HEAD', {
+      encoding: 'utf8',
+    }).trim();
+    const issueNumberMatch = branchName.match(/-(\d+)/);
+    const defaultIssueNumber = issueNumberMatch
+      ? issueNumberMatch[1]
+      : undefined;
+
     const questions = [
       {
         type: 'list',
@@ -92,8 +100,8 @@ async function createCommit() {
       {
         type: 'input',
         name: 'issueNumber',
-        message: '이슈 번호를 입력하세요 (숫자만):',
-        default: undefined,
+        message: `이슈 번호를 입력하세요 (숫자만) ${defaultIssueNumber ? `(기본값: ${defaultIssueNumber})` : ''}:`,
+        default: defaultIssueNumber,
         validate: function (value) {
           if (!value) {
             return '이슈 번호는 필수입니다.';
