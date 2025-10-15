@@ -25,7 +25,7 @@ export const apiClient = ky.create({
         return json;
       },
       (_, _1, response) => {
-        if (response.status === 401) {
+        if (response.status === 401 || response.status === 403) {
           STORAGE.removeAuthToken();
         }
       },
