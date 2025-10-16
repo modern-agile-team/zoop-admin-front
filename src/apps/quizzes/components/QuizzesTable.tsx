@@ -1,83 +1,29 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import type { TableProps } from 'antd';
-import { Form, Input, InputNumber, Select, Table } from 'antd';
-import React, { useState } from 'react';
+import { Form, Table } from 'antd';
+import { useEffect, useState } from 'react';
 
-import type { Quiz } from '../mock/quizzes';
-import { QUIZZES_MOCK_DATA } from '../mock/quizzes';
+import type { QuizDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
+import { quizQueries } from '@/shared/service/query/quiz';
 
-interface EditableCellProps {
-  editing: boolean;
-  dataIndex: keyof Quiz;
-  record: Quiz;
-  inputType: 'number' | 'text' | 'select';
-  onSave: (key: string, dataIndex: keyof Quiz, value: unknown) => void;
-  children: React.ReactNode;
-  onDoubleClick: () => void;
-}
-
-const EditableCell: React.FC<EditableCellProps> = ({
-  editing,
-  dataIndex,
-  record,
-  inputType,
-  onSave,
-  children,
-  onDoubleClick,
-}) => {
-  let inputNode: React.ReactNode;
-
-  if (inputType === 'select') {
-    inputNode = (
-      <Select
-        autoFocus
-        defaultValue={record[dataIndex]}
-        style={{ width: '100%', minWidth: '120px' }}
-        onChange={(value) => onSave(record.id, dataIndex, value)}
-        options={[
-          { value: 'multipleChoice', label: '다중선택' },
-          { value: 'shortAnswer', label: '짧은 글' },
-          { value: 'selectPicture', label: '그림맞추기' },
-          { value: 'correctWords', label: '단어맞추기' },
-        ]}
-      />
-    );
-  } else if (inputType === 'number') {
-    inputNode = (
-      <InputNumber
-        autoFocus
-        onPressEnter={(e) =>
-          onSave(record.id, dataIndex, (e.target as HTMLInputElement).value)
-        }
-        onBlur={(e) => onSave(record.id, dataIndex, e.target.value)}
-      />
-    );
-  } else {
-    inputNode = (
-      <Input
-        autoFocus
-        onPressEnter={(e) =>
-          onSave(record.id, dataIndex, (e.target as HTMLInputElement).value)
-        }
-        onBlur={(e) => onSave(record.id, dataIndex, e.target.value)}
-      />
-    );
-  }
-
-  return (
-    <td onDoubleClick={onDoubleClick}>{editing ? inputNode : children}</td>
-  );
-};
+import EditableCell from './EditTableCell';
 
 export default function QuizzesTable() {
-  const [quizzes, setQuizzes] = useState<Quiz[]>(QUIZZES_MOCK_DATA);
+  const [quizzes, setQuizzes] = useState<QuizDto[] | undefined>([]);
   const [editingCell, setEditingCell] = useState<{
     key: string;
-    dataIndex: keyof Quiz;
+    dataIndex: keyof QuizDto;
   } | null>(null);
 
-  const save = (key: string, dataIndex: keyof Quiz, value: unknown) => {
+  const { data } = useSuspenseQuery(quizQueries.getList);
+
+  useEffect(() => {
+    setQuizzes(data?.data);
+  }, [data]);
+
+  const save = (key: string, dataIndex: keyof QuizDto, value: unknown) => {
     setQuizzes((prev) =>
-      prev.map((item) =>
+      prev?.map((item) =>
         item.id === key
           ? { ...item, [dataIndex]: value, updatedAt: new Date().toISOString() }
           : item
@@ -88,23 +34,23 @@ export default function QuizzesTable() {
 
   const addQuizTableHandler = () => {
     const newId = `new_${Date.now()}`;
-    const newData: Quiz = {
+    const newData: QuizDto = {
       id: newId,
       question: '',
       answer: '',
-      imageUrl: '',
+      imageUrl: null,
       type: 'multipleChoice',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    setQuizzes((prev) => [...prev, newData]);
+    setQuizzes((prev) => prev && [...prev, newData]);
   };
 
-  const columns: TableProps<Quiz>['columns'] = [
+  const columns: TableProps<QuizDto>['columns'] = [
     {
       title: '타입',
       dataIndex: 'type',
-      onCell: (record: Quiz) => ({
+      onCell: (record: QuizDto) => ({
         record,
         inputType: 'select',
         dataIndex: 'type',
@@ -113,12 +59,12 @@ export default function QuizzesTable() {
         onDoubleClick: () =>
           setEditingCell({ key: record.id, dataIndex: 'type' }),
       }),
-      render: (type: Quiz['type']) => type,
+      render: (type: QuizDto['type']) => type,
     },
     {
       title: '질문',
       dataIndex: 'question',
-      onCell: (record: Quiz) => ({
+      onCell: (record: QuizDto) => ({
         record,
         inputType: 'text',
         dataIndex: 'question',
@@ -133,7 +79,7 @@ export default function QuizzesTable() {
     {
       title: '정답',
       dataIndex: 'answer',
-      onCell: (record: Quiz) => ({
+      onCell: (record: QuizDto) => ({
         record,
         inputType: 'text',
         dataIndex: 'answer',
@@ -147,7 +93,7 @@ export default function QuizzesTable() {
     {
       title: '이미지',
       dataIndex: 'imageUrl',
-      onCell: (record: Quiz) => ({
+      onCell: (record: QuizDto) => ({
         record,
         inputType: 'text',
         dataIndex: 'imageUrl',
@@ -206,7 +152,7 @@ export default function QuizzesTable() {
             dataSource={quizzes}
             columns={columns}
             rowKey="id"
-            pagination={false}
+            pagination={{}}
           />
         </Form>
         <button
