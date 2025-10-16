@@ -14,6 +14,10 @@ export default function QuizzesTable() {
     key: string;
     dataIndex: keyof QuizDto;
   } | null>(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10, // 기본 페이지 크기
+  });
 
   const { data } = useSuspenseQuery(quizQueries.getList);
 
@@ -43,7 +47,13 @@ export default function QuizzesTable() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    setQuizzes((prev) => prev && [...prev, newData]);
+    setQuizzes((prev) => {
+      const newQuizzes = prev ? [...prev, newData] : [newData];
+      const newTotal = newQuizzes.length;
+      const newCurrent = Math.ceil(newTotal / pagination.pageSize);
+      setPagination((p) => ({ ...p, current: newCurrent }));
+      return newQuizzes;
+    });
   };
 
   const columns: TableProps<QuizDto>['columns'] = [
@@ -152,7 +162,12 @@ export default function QuizzesTable() {
             dataSource={quizzes}
             columns={columns}
             rowKey="id"
-            pagination={{}}
+            pagination={{
+              ...pagination,
+              onChange: (page, pageSize) => {
+                setPagination({ current: page, pageSize: pageSize || 10 });
+              },
+            }}
           />
         </Form>
         <button
