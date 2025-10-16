@@ -22,7 +22,7 @@ export default function QuizzesTable() {
       <main className="p-6">
         <section>
           <Table<Quiz> dataSource={QUIZZES_MOCK_DATA}>
-            <Column title="ID" dataIndex="id" key="id" />
+            <Column title="카테고리" dataIndex="type" key="type" />
             <Column title="질문" dataIndex="question" key="question" />
             <Column title="정답" dataIndex="answer" key="answer" />
             <Column
