@@ -7,6 +7,12 @@ import type { QuizDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas
 import { quizQueries } from '@/shared/service/query/quiz';
 
 import EditableCell from './EditTableCell';
+import ImageDrawer from './ImageDrawer';
+
+export interface DrawerStateType {
+  open: boolean;
+  quizId: string | null;
+}
 
 export default function QuizzesTable() {
   const [quizzes, setQuizzes] = useState<QuizDto[] | undefined>([]);
@@ -16,7 +22,11 @@ export default function QuizzesTable() {
   } | null>(null);
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 10, // 기본 페이지 크기
+    pageSize: 10,
+  });
+  const [drawerState, setDrawerState] = useState<DrawerStateType>({
+    open: false,
+    quizId: null,
   });
 
   const { data } = useSuspenseQuery(quizQueries.getList);
@@ -103,29 +113,26 @@ export default function QuizzesTable() {
     {
       title: '이미지',
       dataIndex: 'imageUrl',
-      onCell: (record: QuizDto) => ({
-        record,
-        inputType: 'text',
-        dataIndex: 'imageUrl',
-        editing:
-          editingCell?.key === record.id &&
-          editingCell?.dataIndex === 'imageUrl',
-        onSave: save,
-        onDoubleClick: () =>
-          setEditingCell({ key: record.id, dataIndex: 'imageUrl' }),
-      }),
-      render: (image: string) => {
-        if (!image) return null;
-        return (
-          <img
-            src={image}
-            alt="image"
-            width={50}
-            height={50}
-            style={{ objectFit: 'cover' }}
-          />
-        );
-      },
+      render: (image: string | null, record: QuizDto) => (
+        <div
+          className="cursor-pointer"
+          onClick={() => setDrawerState({ open: true, quizId: record.id })}
+        >
+          {image ? (
+            <img
+              src={image}
+              alt="퀴즈 이미지"
+              width={80}
+              height={80}
+              style={{ objectFit: 'cover', borderRadius: '4px' }}
+            />
+          ) : (
+            <button className="text-primary-600 hover:underline">
+              이미지 선택
+            </button>
+          )}
+        </div>
+      ),
     },
     {
       title: '시점',
@@ -177,6 +184,12 @@ export default function QuizzesTable() {
           +
         </button>
       </main>
+
+      <ImageDrawer
+        drawerState={drawerState}
+        setDrawerState={setDrawerState}
+        save={save}
+      />
     </>
   );
 }

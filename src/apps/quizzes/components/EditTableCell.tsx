@@ -12,7 +12,7 @@ interface EditableCellProps {
   onDoubleClick: () => void;
 }
 
-const EditableCell: React.FC<EditableCellProps> = ({
+export default function EditableCell({
   editing,
   dataIndex,
   record,
@@ -20,7 +20,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   onSave,
   children,
   onDoubleClick,
-}) => {
+}: EditableCellProps) {
   let inputNode: React.ReactNode;
 
   if (inputType === 'select') {
@@ -63,6 +63,4 @@ const EditableCell: React.FC<EditableCellProps> = ({
   return (
     <td onDoubleClick={onDoubleClick}>{editing ? inputNode : children}</td>
   );
-};
-
-export default EditableCell;
+}
