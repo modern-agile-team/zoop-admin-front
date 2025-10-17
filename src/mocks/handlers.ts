@@ -7,9 +7,7 @@ export const handlers = [
     return HttpResponse.json({ name: 'John Maverick' });
   }),
 
-  http.put(`${BASE_URL}/admin/quizzes`, async ({ request }) => {
-    const orderUpdates = await request.json();
-
+  http.put(`${BASE_URL}/admin/quizzes`, async () => {
     return HttpResponse.json(
       { error: 'Server Error' },
       {
