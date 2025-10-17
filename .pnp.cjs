@@ -64,6 +64,7 @@ const RAW_RUNTIME_STATE =
           ["ky", "npm:1.11.0"],\
           ["msw", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:2.11.5"],\
           ["orval", "npm:7.13.1"],\
+          ["overlay-kit", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:1.8.6"],\
           ["pinst", "npm:3.0.0"],\
           ["prettier", "npm:3.6.2"],\
           ["quiz-game-io-admin", "workspace:."],\
@@ -9284,6 +9285,32 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["overlay-kit", [\
+      ["npm:1.8.6", {\
+        "packageLocation": "./.yarn/cache/overlay-kit-npm-1.8.6-03654da2e3-025d611334.zip/node_modules/overlay-kit/",\
+        "packageDependencies": [\
+          ["overlay-kit", "npm:1.8.6"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:1.8.6", {\
+        "packageLocation": "./.yarn/__virtual__/overlay-kit-virtual-f960d04574/0/cache/overlay-kit-npm-1.8.6-03654da2e3-025d611334.zip/node_modules/overlay-kit/",\
+        "packageDependencies": [\
+          ["@types/react", "npm:19.2.0"],\
+          ["@types/react-dom", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:19.2.0"],\
+          ["overlay-kit", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:1.8.6"],\
+          ["react", "npm:19.2.0"],\
+          ["react-dom", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:19.2.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/react-dom",\
+          "@types/react",\
+          "react-dom",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["own-keys", [\
       ["npm:1.0.1", {\
         "packageLocation": "./.yarn/cache/own-keys-npm-1.0.1-1253f9b344-6dfeb3455b.zip/node_modules/own-keys/",\
@@ -9621,6 +9648,7 @@ const RAW_RUNTIME_STATE =
           ["ky", "npm:1.11.0"],\
           ["msw", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:2.11.5"],\
           ["orval", "npm:7.13.1"],\
+          ["overlay-kit", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:1.8.6"],\
           ["pinst", "npm:3.0.0"],\
           ["prettier", "npm:3.6.2"],\
           ["quiz-game-io-admin", "workspace:."],\
