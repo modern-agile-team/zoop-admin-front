@@ -1,29 +1,26 @@
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import type { TableProps } from 'antd';
 import { Button, Drawer, Form, Popconfirm, Table } from 'antd';
 import { useState } from 'react';
+
+import { quizQueries } from '@/shared/service/query/quiz';
 
 import EditableCell from './EditTableCell';
 import ImageDrawer from './ImageDrawer';
 import type { CreateQuizDto } from './schema';
 
 export default function CreateQuizzes() {
-  const [form] = Form.useForm();
-  const [data, setData] = useState<CreateQuizDto[]>([
-    {
-      key: '1',
-      type: '',
-      question: '',
-      answer: '',
-      imageUrl: '',
-    },
-  ]);
+  const navigate = useNavigate();
+  const [form] = Form.useForm<CreateQuizDto[]>();
+  const [quizzes, setQuizzes] = useState<CreateQuizDto[]>([]);
   const [count, setCount] = useState(2);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
 
   const handleDelete = (key: React.Key) => {
-    const newData = data.filter((item) => item.key !== key);
-    setData(newData);
+    const newData = quizzes.filter((quiz) => quiz.key !== key);
+    setQuizzes(newData);
   };
 
   const handleAdd = () => {
@@ -34,7 +31,7 @@ export default function CreateQuizzes() {
       answer: '',
       imageUrl: '',
     };
-    setData([...data, newData]);
+    setQuizzes([...quizzes, newData]);
     setCount(count + 1);
   };
 
@@ -43,7 +40,7 @@ export default function CreateQuizzes() {
     dataIndex: keyof CreateQuizDto,
     value: unknown
   ) => {
-    const newData = [...data];
+    const newData = [...quizzes];
     const index = newData.findIndex((item) => key === item.key);
     if (index > -1) {
       const item = newData[index];
@@ -51,7 +48,7 @@ export default function CreateQuizzes() {
         ...item,
         [dataIndex]: value,
       });
-      setData(newData);
+      setQuizzes(newData);
     }
   };
 
@@ -60,6 +57,20 @@ export default function CreateQuizzes() {
       handleSave(selectedRowKey, 'imageUrl', imageUrl);
     }
     setDrawerVisible(false);
+  };
+
+  const { mutateAsync: quizMutation } = useMutation(quizQueries.bulkUpload);
+
+  const handleBulkUpload = () => {
+    const dataToSave = quizzes.map(({ key, ...rest }) => rest);
+    quizMutation(dataToSave, {
+      onSuccess: () => {
+        navigate({ to: '/quizzes' });
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
   };
 
   const columns: TableProps<CreateQuizDto>['columns'] = [
@@ -140,7 +151,7 @@ export default function CreateQuizzes() {
       title: '삭제',
       dataIndex: 'operation',
       render: (_, record: { key: React.Key }) =>
-        data.length >= 1 ? (
+        quizzes.length >= 1 ? (
           <Popconfirm
             title="Sure to delete?"
             onConfirm={() => handleDelete(record.key)}
@@ -160,7 +171,10 @@ export default function CreateQuizzes() {
             셀에 새로운 정보를 입력해 주세요.
           </p>
         </div>
-        <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors cursor-pointer">
+        <button
+          onClick={handleBulkUpload}
+          className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors cursor-pointer"
+        >
           변경 사항 저장
         </button>
       </header>
@@ -171,7 +185,7 @@ export default function CreateQuizzes() {
               body: { cell: EditableCell },
             }}
             bordered
-            dataSource={data}
+            dataSource={quizzes}
             columns={columns}
             rowClassName="editable-row"
             pagination={false}
