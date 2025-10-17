@@ -4607,6 +4607,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"es-toolkit@npm:^1.40.0":
+  version: 1.40.0
+  resolution: "es-toolkit@npm:1.40.0"
+  dependenciesMeta:
+    "@trivago/prettier-plugin-sort-imports@4.3.0":
+      unplugged: true
+    prettier-plugin-sort-re-exports@0.0.1:
+      unplugged: true
+  checksum: 10c0/c08ce0d9d9688827e5f2b31da5957dfe6b374c4e43e8880a2262053e905893a0b9242975b23ada886fe09889600674a82f04961635efb3d4d1dd6ff6dc0fe445
+  languageName: node
+  linkType: hard
+
 "es6-promise@npm:^3.2.1":
   version: 3.3.1
   resolution: "es6-promise@npm:3.3.1"
@@ -7461,6 +7473,7 @@ __metadata:
     child_process: "npm:^1.0.2"
     clsx: "npm:^2.1.1"
     dayjs: "npm:^1.11.18"
+    es-toolkit: "npm:^1.40.0"
     eslint: "npm:^9.37.0"
     eslint-plugin-import: "npm:^2.32.0"
     eslint-plugin-react: "npm:^7.37.5"
