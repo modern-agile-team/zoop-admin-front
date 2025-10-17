@@ -49,20 +49,24 @@ export const orvalInstance = async <T>({
   data?: unknown;
 }) => {
   const [, ...rawUrl] = url.split('/');
+  const isFormData =
+    typeof FormData !== 'undefined' && data instanceof FormData;
 
   try {
     const response = await apiClient(rawUrl.join('/'), {
       method,
-      json: data,
+      ...(isFormData ? { body: data as BodyInit } : { json: data }),
       searchParams: params ? serializeParams(params) : undefined,
       hooks: {
         beforeRequest: [
           (request) => {
-            Object.entries(headers ?? {})
+            const headerEntries = Object.entries(headers ?? {});
+            headerEntries
               .filter(([, value]) => value !== undefined)
-              .forEach(([key, value]) =>
-                request.headers.set(key, value as string)
-              );
+              .forEach(([key, value]) => {
+                if (isFormData && key.toLowerCase() === 'content-type') return;
+                request.headers.set(key, value as string);
+              });
           },
         ],
       },
