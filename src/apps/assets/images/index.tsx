@@ -3,6 +3,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import { Image, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
+import { omit } from 'es-toolkit/object';
 import { useState } from 'react';
 
 import type { ImageDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
@@ -54,15 +55,9 @@ export default function ImageAssetPage() {
       perPage: PAGE_SIZE,
     }),
     select: (res) => {
-      const metaData = {
-        currentPage: res.currentPage,
-        perPage: res.perPage,
-        totalCount: res.totalCount,
-        totalPages: res.totalPages,
-      };
       return {
         dataSource: res.data.map((item) => ({ ...item, key: item.id })),
-        meta: metaData,
+        meta: omit(res, ['data']),
       };
     },
   });
