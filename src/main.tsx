@@ -26,7 +26,10 @@ declare module '@tanstack/react-router' {
 }
 
 async function enableMocking() {
-  if (process.env.NODE_ENV !== 'development') {
+  if (
+    import.meta.env.VITE_IS_MOCKING === 'true' &&
+    process.env.NODE_ENV !== 'development'
+  ) {
     return;
   }
 
@@ -34,7 +37,9 @@ async function enableMocking() {
 
   // `worker.start()` returns a Promise that resolves
   // once the Service Worker is up and ready to intercept requests.
-  return worker.start();
+  return worker.start({
+    onUnhandledRequest: 'bypass',
+  });
 }
 
 // Render the app

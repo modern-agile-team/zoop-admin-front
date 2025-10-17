@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import type { TableProps } from 'antd';
-import { Button, Drawer, Form, Popconfirm, Table } from 'antd';
+import { Button, Drawer, Form, notification, Popconfirm, Table } from 'antd';
 import { useState } from 'react';
 
 import { quizQueries } from '@/shared/service/query/quiz';
@@ -11,28 +11,27 @@ import ImageDrawer from './ImageDrawer';
 import type { CreateQuizDto } from './schema';
 
 export default function CreateQuizzes() {
+  const [notificationApi, contextHolder] = notification.useNotification();
   const navigate = useNavigate();
   const [form] = Form.useForm<CreateQuizDto[]>();
   const [quizzes, setQuizzes] = useState<CreateQuizDto[]>([]);
-  const [count, setCount] = useState(2);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
 
   const handleDelete = (key: React.Key) => {
     const newData = quizzes.filter((quiz) => quiz.key !== key);
-    setQuizzes(newData);
+    form.setFieldsValue({ ...newData });
   };
 
   const handleAdd = () => {
     const newData: CreateQuizDto = {
-      key: count.toString(),
+      key: (quizzes.length + 1).toString(),
       type: '',
       question: '',
       answer: '',
       imageUrl: '',
     };
     setQuizzes([...quizzes, newData]);
-    setCount(count + 1);
   };
 
   const handleSave = (
@@ -67,8 +66,13 @@ export default function CreateQuizzes() {
       onSuccess: () => {
         navigate({ to: '/quizzes' });
       },
-      onError: (error) => {
-        console.log(error);
+      onError: () => {
+        notificationApi.info({
+          message: '❌ 퀴즈 업로드에 실패했습니다.',
+          description:
+            '잠시 뒤 다시 요청을 보내거나, 새로고침 후 다시 시도해 보세요.',
+          placement: 'topLeft',
+        });
       },
     });
   };
@@ -164,6 +168,7 @@ export default function CreateQuizzes() {
 
   return (
     <>
+      {contextHolder}
       <header className="p-6 border-b border-contents-200 flex justify-between items-center">
         <div>
           <h1 className="text-title-2 font-bold">퀴즈 추가</h1>
