@@ -11,10 +11,6 @@ import { TABLE } from '../constants';
 export default function QuizzesTable() {
   const { data: quizzes } = useSuspenseQuery(quizQueries.getList);
 
-  if (!quizzes) {
-    return <>퀴즈에 대한 정보가 없습니다.</>;
-  }
-
   return (
     <>
       <header className="p-6 border-b border-contents-200 flex justify-between items-center">
