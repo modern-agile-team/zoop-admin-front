@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Image, Table, Typography, Upload, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 
 import type { ImageDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 import { imageQueries } from '@/shared/service/query/image';
@@ -34,18 +35,16 @@ const columns: ColumnsType<ImageDto> = [
     key: 'createdAt',
     render: (date) => dayjs(date).format('YYYY년 MM월 DD일'),
   },
-  {
-    key: 'action',
-    render: () => <Button>삭제</Button>,
-  },
 ];
 
 export default function ImageAssetPage() {
   const queryClient = useQueryClient();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  const { data, isLoading } = useQuery(
-    imageQueries.getList({ category: undefined })
-  );
+  const { data, isLoading } = useQuery({
+    ...imageQueries.getList({ category: undefined }),
+    select: (res) => res.data.map((item) => ({ ...item, key: item.id })),
+  });
 
   const { mutate: uploadImage, isPending } = useMutation({
     ...imageQueries.uploadImage,
@@ -65,18 +64,31 @@ export default function ImageAssetPage() {
     <div className="flex flex-col gap-4">
       <Typography.Title level={1}>이미지 관리</Typography.Title>
 
-      <Upload
-        disabled={isPending}
-        multiple
-        className="self-end"
-        customRequest={(args) => {
-          const { file } = args;
-          uploadImage({ file: file as File, category: '테스트' });
+      <div className="flex gap-4 self-end">
+        {selectedRowKeys.length > 0 && (
+          <Button danger>선택된 이미지 삭제</Button>
+        )}
+        <Upload
+          disabled={isPending}
+          multiple
+          customRequest={(args) => {
+            const { file } = args;
+            uploadImage({ file: file as File, category: '테스트' });
+          }}
+        >
+          <Button>이미지 업로드</Button>
+        </Upload>
+      </div>
+      <Table
+        rowSelection={{
+          type: 'checkbox',
+          selectedRowKeys,
+          onChange: setSelectedRowKeys,
         }}
-      >
-        <Button>이미지 업로드</Button>
-      </Upload>
-      <Table loading={isLoading} columns={columns} dataSource={data?.data} />
+        loading={isLoading}
+        columns={columns}
+        dataSource={data}
+      />
     </div>
   );
 }
