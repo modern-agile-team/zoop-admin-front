@@ -10,7 +10,7 @@ export default function CreateQuizzes() {
   const [data, setData] = useState<CreateQuizDto[]>([
     {
       key: '1',
-      type: 'multipleChoice',
+      type: '',
       question: '',
       answer: '',
       imageUrl: '',
@@ -26,8 +26,8 @@ export default function CreateQuizzes() {
   const handleAdd = () => {
     const newData: CreateQuizDto = {
       key: count.toString(),
-      type: 'multipleChoice',
-      question: ``,
+      type: '',
+      question: '',
       answer: '',
       imageUrl: '',
     };
@@ -61,6 +61,7 @@ export default function CreateQuizzes() {
     {
       title: '카테고리',
       dataIndex: 'type',
+      width: '15%',
       onCell: (record: CreateQuizDto) => ({
         record,
         inputType: 'select',
@@ -72,6 +73,8 @@ export default function CreateQuizzes() {
     {
       title: '질문',
       dataIndex: 'question',
+      width: '45%',
+
       onCell: (record: CreateQuizDto) => ({
         record,
         inputType: 'text',
@@ -83,6 +86,7 @@ export default function CreateQuizzes() {
     {
       title: '정답',
       dataIndex: 'answer',
+      width: '15%',
       onCell: (record: CreateQuizDto) => ({
         record,
         inputType: 'text',
@@ -94,6 +98,7 @@ export default function CreateQuizzes() {
     {
       title: '이미지',
       dataIndex: 'imageUrl',
+      width: '10%',
       onCell: (record: CreateQuizDto) => ({
         record,
         inputType: 'text',

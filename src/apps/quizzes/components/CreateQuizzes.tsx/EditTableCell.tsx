@@ -1,13 +1,15 @@
-import { Input, Select } from 'antd';
+import { Select } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import React from 'react';
 
 import type { CreateQuizDto } from './schema';
 
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+interface EditableCellProps {
   dataIndex: keyof CreateQuizDto;
   record: CreateQuizDto;
   inputType: 'number' | 'text' | 'select';
   onSave: (key: string, dataIndex: keyof CreateQuizDto, value: unknown) => void;
+  isEdit: boolean;
   children: React.ReactNode;
 }
 
@@ -15,7 +17,7 @@ const SelectBox = ({
   record,
   dataIndex,
   onSave,
-}: Omit<EditableCellProps, 'children' | 'inputType'>) => (
+}: Omit<EditableCellProps, 'isEdit' | 'children' | 'inputType'>) => (
   <Select
     autoFocus
     defaultValue={record[dataIndex]}
@@ -34,9 +36,12 @@ const TextBox = ({
   record,
   dataIndex,
   onSave,
-}: Omit<EditableCellProps, 'children' | 'inputType'>) => (
-  <Input
+}: Omit<EditableCellProps, 'isEdit' | 'children' | 'inputType'>) => (
+  <TextArea
+    defaultValue={record[dataIndex]}
     autoFocus
+    autoSize
+    bordered={false}
     onPressEnter={(e) =>
       onSave(record.key, dataIndex, (e.target as HTMLInputElement).value)
     }
@@ -49,6 +54,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   record,
   inputType,
   onSave,
+  isEdit,
   children,
   ...restProps
 }) => {
@@ -76,6 +82,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
     return children;
   };
 
-  return <td {...restProps}>{children ? children : renderCell()}</td>;
+  return <td {...restProps}>{isEdit ? children : renderCell()}</td>;
 };
 export default EditableCell;
