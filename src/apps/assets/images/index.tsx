@@ -1,10 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Image, Table, Typography, Upload, message } from 'antd';
+import { useQuery } from '@tanstack/react-query';
+import { Image, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 
 import type { ImageDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 import { imageQueries } from '@/shared/service/query/image';
+
+import ActionButtons from './components/ActionButtons';
 
 const columns: ColumnsType<ImageDto> = [
   {
@@ -34,49 +37,37 @@ const columns: ColumnsType<ImageDto> = [
     key: 'createdAt',
     render: (date) => dayjs(date).format('YYYY년 MM월 DD일'),
   },
-  {
-    key: 'action',
-    render: () => <Button>삭제</Button>,
-  },
 ];
 
 export default function ImageAssetPage() {
-  const queryClient = useQueryClient();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  const { data, isLoading } = useQuery(
-    imageQueries.getList({ category: undefined })
-  );
-
-  const { mutate: uploadImage, isPending } = useMutation({
-    ...imageQueries.uploadImage,
-    onSuccess: () => {
-      message.success('이미지를 업로드했어요.');
-      queryClient.invalidateQueries({
-        queryKey: imageQueries.getList({ category: undefined }).queryKey,
-      });
-    },
-    onError: () => {
-      message.error('업로드 중 오류가 발생했어요.');
-    },
-    retry: false,
+  const { data, isLoading, refetch } = useQuery({
+    ...imageQueries.getList({ category: undefined }),
+    select: (res) => res.data.map((item) => ({ ...item, key: item.id })),
   });
 
   return (
     <div className="flex flex-col gap-4">
       <Typography.Title level={1}>이미지 관리</Typography.Title>
 
-      <Upload
-        disabled={isPending}
-        multiple
-        className="self-end"
-        customRequest={(args) => {
-          const { file } = args;
-          uploadImage({ file: file as File, category: '테스트' });
+      <ActionButtons
+        selectedImageIds={selectedRowKeys.map((key) => key.toString())}
+        onRemoveImages={() => {
+          refetch();
+          setSelectedRowKeys([]);
         }}
-      >
-        <Button>이미지 업로드</Button>
-      </Upload>
-      <Table loading={isLoading} columns={columns} dataSource={data?.data} />
+      />
+      <Table
+        rowSelection={{
+          type: 'checkbox',
+          selectedRowKeys,
+          onChange: setSelectedRowKeys,
+        }}
+        loading={isLoading}
+        columns={columns}
+        dataSource={data}
+      />
     </div>
   );
 }
