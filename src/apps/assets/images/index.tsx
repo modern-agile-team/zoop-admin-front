@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { Image, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
@@ -19,7 +20,7 @@ const columns: ColumnsType<ImageDto> = [
     title: '이미지',
     dataIndex: 'imageUrl',
     key: 'imageUrl',
-    render: (url) => <Image src={url} alt="이미지" style={{ height: 120 }} />,
+    render: (url) => <Image src={url} alt="이미지" style={{ height: 40 }} />,
   },
   {
     title: '카테고리',
@@ -39,17 +40,36 @@ const columns: ColumnsType<ImageDto> = [
   },
 ];
 
+const PAGE_SIZE = 20;
+
 export default function ImageAssetPage() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const currentPage = useSearch({ from: '/(menus)/assets/images/' }).page;
+  const navigate = useNavigate({ from: '/assets/images' });
 
   const { data, isLoading, refetch } = useQuery({
-    ...imageQueries.getList({ category: undefined }),
-    select: (res) => res.data.map((item) => ({ ...item, key: item.id })),
+    ...imageQueries.getList({
+      category: undefined,
+      page: currentPage,
+      perPage: PAGE_SIZE,
+    }),
+    select: (res) => {
+      const metaData = {
+        currentPage: res.currentPage,
+        perPage: res.perPage,
+        totalCount: res.totalCount,
+        totalPages: res.totalPages,
+      };
+      return {
+        dataSource: res.data.map((item) => ({ ...item, key: item.id })),
+        meta: metaData,
+      };
+    },
   });
 
   return (
     <div className="flex flex-col gap-4">
-      <Typography.Title level={1}>이미지 관리</Typography.Title>
+      <Typography.Title level={2}>이미지 관리</Typography.Title>
 
       <ActionButtons
         selectedImageIds={selectedRowKeys.map((key) => key.toString())}
@@ -66,7 +86,16 @@ export default function ImageAssetPage() {
         }}
         loading={isLoading}
         columns={columns}
-        dataSource={data}
+        dataSource={data?.dataSource}
+        scroll={{ y: '70vh' }}
+        pagination={{
+          pageSize: PAGE_SIZE,
+          current: currentPage,
+          total: data?.meta.totalCount,
+          onChange(page) {
+            navigate({ search: { page } });
+          },
+        }}
       />
     </div>
   );
