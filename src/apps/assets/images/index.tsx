@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Table, Typography, Upload, message } from 'antd';
+import { Button, Image, Table, Typography, Upload, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 
@@ -16,7 +16,7 @@ const columns: ColumnsType<ImageDto> = [
     title: '이미지',
     dataIndex: 'imageUrl',
     key: 'imageUrl',
-    render: (url) => <img src={url} alt="이미지" style={{ maxWidth: 200 }} />,
+    render: (url) => <Image src={url} alt="이미지" style={{ height: 120 }} />,
   },
   {
     title: '카테고리',
