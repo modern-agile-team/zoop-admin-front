@@ -174,9 +174,14 @@ export default function CreateQuizzes() {
             dataSource={data}
             columns={columns}
             rowClassName="editable-row"
+            pagination={false}
           />
         </Form>
-        <Button onClick={handleAdd} type="primary" className="bg-primary-600">
+        <Button
+          onClick={handleAdd}
+          type="primary"
+          className="bg-primary-600 mt-5"
+        >
           행 추가
         </Button>
         <Drawer
