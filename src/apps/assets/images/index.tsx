@@ -40,7 +40,7 @@ const columns: ColumnsType<ImageDto> = [
   },
 ];
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 30;
 
 export default function ImageAssetPage() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -92,6 +92,10 @@ export default function ImageAssetPage() {
           pageSize: PAGE_SIZE,
           current: currentPage,
           total: data?.meta.totalCount,
+          showQuickJumper: true,
+          showSizeChanger: false,
+          showTotal: (total, range) =>
+            `총 ${total.toLocaleString()}개 중 ${range[0]}-${range[1]}`,
           onChange(page) {
             navigate({ search: { page } });
           },
