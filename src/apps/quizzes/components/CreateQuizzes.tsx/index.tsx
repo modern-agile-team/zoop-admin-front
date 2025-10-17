@@ -1,8 +1,9 @@
 import type { TableProps } from 'antd';
-import { Button, Form, Popconfirm, Table } from 'antd';
+import { Button, Drawer, Form, Popconfirm, Table } from 'antd';
 import { useState } from 'react';
 
 import EditableCell from './EditTableCell';
+import ImageDrawer from './ImageDrawer';
 import type { CreateQuizDto } from './schema';
 
 export default function CreateQuizzes() {
@@ -17,6 +18,8 @@ export default function CreateQuizzes() {
     },
   ]);
   const [count, setCount] = useState(2);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
 
   const handleDelete = (key: React.Key) => {
     const newData = data.filter((item) => item.key !== key);
@@ -52,6 +55,13 @@ export default function CreateQuizzes() {
     }
   };
 
+  const handleImageSelect = (imageUrl: string) => {
+    if (selectedRowKey) {
+      handleSave(selectedRowKey, 'imageUrl', imageUrl);
+    }
+    setDrawerVisible(false);
+  };
+
   const columns: TableProps<CreateQuizDto>['columns'] = [
     {
       title: '번호',
@@ -67,6 +77,7 @@ export default function CreateQuizzes() {
         inputType: 'select',
         dataIndex: 'type',
         onSave: handleSave,
+        isEdit: true,
         children: record.type,
       }),
     },
@@ -80,6 +91,7 @@ export default function CreateQuizzes() {
         inputType: 'text',
         dataIndex: 'question',
         onSave: handleSave,
+        isEdit: true,
         children: record.question,
       }),
     },
@@ -92,6 +104,7 @@ export default function CreateQuizzes() {
         inputType: 'text',
         dataIndex: 'answer',
         onSave: handleSave,
+        isEdit: true,
         children: record.answer,
       }),
     },
@@ -99,13 +112,29 @@ export default function CreateQuizzes() {
       title: '이미지',
       dataIndex: 'imageUrl',
       width: '10%',
-      onCell: (record: CreateQuizDto) => ({
-        record,
-        inputType: 'text',
-        dataIndex: 'imageUrl',
-        onSave: handleSave,
-        children: record.imageUrl,
-      }),
+      render: (imageUrl: string, record: CreateQuizDto) => (
+        <>
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt="quiz"
+              onClick={() => {
+                setDrawerVisible(true);
+                setSelectedRowKey(record.key);
+              }}
+            />
+          ) : (
+            <Button
+              onClick={() => {
+                setDrawerVisible(true);
+                setSelectedRowKey(record.key);
+              }}
+            >
+              이미지 선택
+            </Button>
+          )}
+        </>
+      ),
     },
     {
       title: '삭제',
@@ -145,11 +174,25 @@ export default function CreateQuizzes() {
             dataSource={data}
             columns={columns}
             rowClassName="editable-row"
+            pagination={false}
           />
         </Form>
-        <Button onClick={handleAdd} type="primary" className="bg-primary-600">
+        <Button
+          onClick={handleAdd}
+          type="primary"
+          className="bg-primary-600 mt-5"
+        >
           행 추가
         </Button>
+        <Drawer
+          title="이미지 선택"
+          placement="right"
+          onClose={() => setDrawerVisible(false)}
+          open={drawerVisible}
+          width={500}
+        >
+          <ImageDrawer onSelect={handleImageSelect} />
+        </Drawer>
       </main>
     </>
   );

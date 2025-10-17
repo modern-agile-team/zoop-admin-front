@@ -9,7 +9,6 @@ interface EditableCellProps {
   record: CreateQuizDto;
   inputType: 'number' | 'text' | 'select';
   onSave: (key: string, dataIndex: keyof CreateQuizDto, value: unknown) => void;
-  isEdit: boolean;
   children: React.ReactNode;
 }
 
@@ -17,7 +16,7 @@ const SelectBox = ({
   record,
   dataIndex,
   onSave,
-}: Omit<EditableCellProps, 'isEdit' | 'children' | 'inputType'>) => (
+}: Omit<EditableCellProps, 'children' | 'inputType'>) => (
   <Select
     autoFocus
     defaultValue={record[dataIndex]}
@@ -36,12 +35,11 @@ const TextBox = ({
   record,
   dataIndex,
   onSave,
-}: Omit<EditableCellProps, 'isEdit' | 'children' | 'inputType'>) => (
+}: Omit<EditableCellProps, 'children' | 'inputType'>) => (
   <TextArea
     defaultValue={record[dataIndex]}
     autoFocus
     autoSize
-    bordered={false}
     onPressEnter={(e) =>
       onSave(record.key, dataIndex, (e.target as HTMLInputElement).value)
     }
@@ -54,7 +52,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
   record,
   inputType,
   onSave,
-  isEdit,
   children,
   ...restProps
 }) => {
@@ -82,6 +79,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
     return children;
   };
 
-  return <td {...restProps}>{isEdit ? children : renderCell()}</td>;
+  return <td {...restProps}>{renderCell()}</td>;
 };
 export default EditableCell;
