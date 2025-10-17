@@ -115,7 +115,14 @@ export default function CreateQuizzes() {
       render: (imageUrl: string, record: CreateQuizDto) => (
         <>
           {imageUrl ? (
-            <img src={imageUrl} alt="quiz" />
+            <img
+              src={imageUrl}
+              alt="quiz"
+              onClick={() => {
+                setDrawerVisible(true);
+                setSelectedRowKey(record.key);
+              }}
+            />
           ) : (
             <Button
               onClick={() => {
