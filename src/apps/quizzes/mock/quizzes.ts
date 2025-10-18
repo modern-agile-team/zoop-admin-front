@@ -8,32 +8,6 @@ export type Quiz = {
   imageUrl: string | null;
 };
 
-export const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-  },
-  {
-    title: '질문',
-    dataIndex: 'question',
-    key: 'question',
-  },
-  {
-    title: '정답',
-    dataIndex: 'answer',
-    key: 'answer',
-  },
-  {
-    title: '이미지',
-    dataIndex: 'image',
-    key: 'image',
-  },
-  {
-    title: '시점',
-  },
-];
-
 export const QUIZZES_MOCK_DATA: Quiz[] = [
   {
     id: 'quiz-001',
