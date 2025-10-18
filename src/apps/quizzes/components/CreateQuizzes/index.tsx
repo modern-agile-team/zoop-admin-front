@@ -4,6 +4,7 @@ import {
   Button,
   Drawer,
   Form,
+  Image,
   Input,
   notification,
   Popconfirm,
@@ -153,23 +154,30 @@ export default function CreateQuizzes() {
                               getFieldValue(['quizzes', index, 'imageUrl']) ||
                               '';
                             return (
-                              <Button
-                                onClick={() => {
-                                  setDrawerVisible(true);
-                                  setSelectedRowIndex(index);
-                                }}
-                                className="w-full h-full flex items-center justify-center"
-                              >
+                              <>
                                 {imageUrl ? (
-                                  <img
+                                  <Image
                                     src={imageUrl}
                                     alt="quiz"
-                                    className="w-full h-auto object-cover"
+                                    width="100%"
+                                    preview={false}
+                                    onClick={() => {
+                                      setDrawerVisible(true);
+                                      setSelectedRowIndex(index);
+                                    }}
                                   />
                                 ) : (
-                                  '선택'
+                                  <Button
+                                    onClick={() => {
+                                      setDrawerVisible(true);
+                                      setSelectedRowIndex(index);
+                                    }}
+                                    className="w-full h-full flex items-center justify-center"
+                                  >
+                                    선택
+                                  </Button>
                                 )}
-                              </Button>
+                              </>
                             );
                           }}
                         </Form.Item>
