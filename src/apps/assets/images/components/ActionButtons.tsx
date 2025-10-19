@@ -75,6 +75,7 @@ export default function ActionButtons({
       )}
 
       <Button
+        loading={isUploading}
         disabled={isUploading}
         onClick={async () => {
           const fileList = await overlay.openAsync<File[] | null>(
