@@ -1,17 +1,27 @@
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Outlet, createRootRoute, redirect } from '@tanstack/react-router';
+import {
+  Outlet,
+  createRootRoute,
+  redirect,
+  useLocation,
+} from '@tanstack/react-router';
 import { App as AntdAppProvider } from 'antd';
+import { OverlayProvider } from 'overlay-kit';
 
 import { queryClient } from '@/lib/queryClient';
 import { STORAGE } from '@/shared/utils/storage';
 
 const Component = () => {
+  const location = useLocation();
+
   return (
     <QueryClientProvider client={queryClient}>
-      <AntdAppProvider>
-        <Outlet />
-      </AntdAppProvider>
+      <OverlayProvider key={location.url}>
+        <AntdAppProvider>
+          <Outlet />
+        </AntdAppProvider>
+      </OverlayProvider>
       <TanStackDevtools />
     </QueryClientProvider>
   );
