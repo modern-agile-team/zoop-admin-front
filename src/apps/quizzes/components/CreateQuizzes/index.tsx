@@ -1,89 +1,180 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import {
-  Button,
-  Drawer,
-  Form,
-  Image,
-  Input,
-  notification,
-  Popconfirm,
-  Select,
-  Typography,
-} from 'antd';
+import type { TableProps } from 'antd';
+import { Button, Drawer, Form, notification, Popconfirm, Table } from 'antd';
 import { useState } from 'react';
 
 import { quizQueries } from '@/shared/service/query/quiz';
 
+import EditableCell from './EditTableCell';
 import ImageDrawer from './ImageDrawer';
-
-import { TABLE } from '../../constants';
-
-const { Title, Paragraph } = Typography;
-const { TextArea } = Input;
+import type { CreateQuizDto } from './schema';
 
 export default function CreateQuizzes() {
   const [notificationApi, contextHolder] = notification.useNotification();
   const navigate = useNavigate();
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<{ dataSource: CreateQuizDto[] }>();
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
+  const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
 
-  const { mutateAsync: quizMutation } = useMutation(quizQueries.bulkUpload);
+  const quizFormValues = Form.useWatch([], form)?.dataSource || [];
+  const handleDelete = (key: React.Key) => {
+    const newData = quizFormValues.filter((quiz) => quiz.key !== key);
+    form.setFieldsValue({ dataSource: [...newData] });
+  };
 
-  const handleBulkUpload = async () => {
-    try {
-      const values = await form.validateFields();
-      const quizzes = values.quizzes || [];
-      quizMutation(quizzes, {
-        onSuccess: () => {
-          navigate({ to: '/quizzes' });
-        },
-        onError: () => {
-          notificationApi.error({
-            message: '퀴즈 업로드에 실패했습니다.',
-            description:
-              '잠시 뒤 다시 요청을 보내거나, 새로고침 후 다시 시도해 보세요.',
-            placement: 'topLeft',
-          });
-        },
+  const handleAdd = () => {
+    const newData: CreateQuizDto = {
+      key: (quizFormValues.length + 1).toString(),
+      type: '',
+      question: '',
+      answer: '',
+      imageUrl: '',
+    };
+    form.setFieldsValue({ dataSource: [...quizFormValues, newData] });
+  };
+
+  const handleSave = (
+    key: string,
+    dataIndex: keyof CreateQuizDto,
+    value: unknown
+  ) => {
+    const newData = [...quizFormValues];
+    const index = newData.findIndex((item) => key === item.key);
+    if (index > -1) {
+      const item = newData[index];
+      newData.splice(index, 1, {
+        ...item,
+        [dataIndex]: value,
       });
-    } catch (errInfo) {
-      console.error(errInfo);
+      form.setFieldsValue({ dataSource: newData });
     }
   };
 
   const handleImageSelect = (imageUrl: string) => {
-    if (selectedRowIndex !== null) {
-      const quizzes = form.getFieldValue('quizzes') || [];
-      quizzes[selectedRowIndex].imageUrl = imageUrl;
-      form.setFieldsValue({ quizzes });
+    if (selectedRowKey) {
+      handleSave(selectedRowKey, 'imageUrl', imageUrl);
     }
     setDrawerVisible(false);
   };
 
-  const TableHeader = () => (
-    <div className="flex items-center bg-gray-50 border-y border-gray-200 font-semibold">
-      <div className="w-1/12 p-3 text-center">번호</div>
-      <div className="w-2/12 p-3">카테고리</div>
-      <div className="w-5/12 p-3">질문</div>
-      <div className="w-2/12 p-3">정답</div>
-      <div className="w-1/12 p-3 text-center">이미지</div>
-      <div className="w-1/12 p-3 text-center">삭제</div>
-    </div>
-  );
+  const { mutateAsync: quizMutation } = useMutation(quizQueries.bulkUpload);
+
+  const handleBulkUpload = () => {
+    const dataToSave = quizFormValues.map(({ key, ...rest }) => rest);
+    quizMutation(dataToSave, {
+      onSuccess: () => {
+        navigate({ to: '/quizzes' });
+      },
+      onError: () => {
+        notificationApi.info({
+          message: '❌ 퀴즈 업로드에 실패했습니다.',
+          description:
+            '잠시 뒤 다시 요청을 보내거나, 새로고침 후 다시 시도해 보세요.',
+          placement: 'topLeft',
+        });
+      },
+    });
+  };
+
+  const columns: TableProps<CreateQuizDto>['columns'] = [
+    {
+      title: '번호',
+      dataIndex: 'key',
+      render: (_text, _record, index) => `${index + 1}`,
+    },
+    {
+      title: '카테고리',
+      dataIndex: 'type',
+      width: '15%',
+      onCell: (record: CreateQuizDto) => ({
+        record,
+        inputType: 'select',
+        dataIndex: 'type',
+        onSave: handleSave,
+        isEdit: true,
+        children: record.type,
+      }),
+    },
+    {
+      title: '질문',
+      dataIndex: 'question',
+      width: '45%',
+
+      onCell: (record: CreateQuizDto) => ({
+        record,
+        inputType: 'text',
+        dataIndex: 'question',
+        onSave: handleSave,
+        isEdit: true,
+        children: record.question,
+      }),
+    },
+    {
+      title: '정답',
+      dataIndex: 'answer',
+      width: '15%',
+      onCell: (record: CreateQuizDto) => ({
+        record,
+        inputType: 'text',
+        dataIndex: 'answer',
+        onSave: handleSave,
+        isEdit: true,
+        children: record.answer,
+      }),
+    },
+    {
+      title: '이미지',
+      dataIndex: 'imageUrl',
+      width: '10%',
+      render: (imageUrl: string, record: CreateQuizDto) => (
+        <>
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt="quiz"
+              onClick={() => {
+                setDrawerVisible(true);
+                setSelectedRowKey(record.key);
+              }}
+            />
+          ) : (
+            <Button
+              onClick={() => {
+                setDrawerVisible(true);
+                setSelectedRowKey(record.key);
+              }}
+            >
+              이미지 선택
+            </Button>
+          )}
+        </>
+      ),
+    },
+    {
+      title: '삭제',
+      dataIndex: 'operation',
+      render: (_, record: { key: React.Key }) =>
+        quizFormValues.length >= 1 ? (
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => handleDelete(record.key)}
+          >
+            <a>삭제</a>
+          </Popconfirm>
+        ) : null,
+    },
+  ];
 
   return (
     <>
       {contextHolder}
       <header className="p-6 border-b border-contents-200 flex justify-between items-center">
         <div>
-          <Title level={2} className="!text-title-2 !font-bold">
-            퀴즈 추가
-          </Title>
-          <Paragraph className="text-contents-600 mt-1">
+          <h1 className="text-title-2 font-bold">퀴즈 추가</h1>
+          <p className="text-contents-600 mt-1">
             셀에 새로운 정보를 입력해 주세요.
-          </Paragraph>
+          </p>
         </div>
         <button
           onClick={handleBulkUpload}
@@ -93,128 +184,27 @@ export default function CreateQuizzes() {
         </button>
       </header>
       <main className="p-6">
-        <Form form={form} autoComplete="off">
-          <div className="border border-gray-200 rounded-lg">
-            <TableHeader />
-            <Form.List
-              name="quizzes"
-              initialValue={[
-                {
-                  type: 'multipleChoice',
-                  question: '',
-                  answer: '',
-                  imageUrl: '',
-                },
-              ]}
-            >
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map((field, index) => (
-                    <div
-                      key={field.key}
-                      className="flex items-center border-b border-gray-200"
-                    >
-                      <div className="w-1/12 p-3 text-center">{index + 1}</div>
-                      <div className="w-2/12 p-2">
-                        <Form.Item
-                          name={[field.name, 'type']}
-                          rules={[{ required: true, message: '카테고리 필수' }]}
-                          className="!m-0"
-                        >
-                          <Select options={TABLE.TYPE_OPTIONS} />
-                        </Form.Item>
-                      </div>
-                      <div className="w-5/12 p-2">
-                        <Form.Item
-                          name={[field.name, 'question']}
-                          rules={[{ required: true, message: '질문 필수' }]}
-                          className="!m-0"
-                        >
-                          <TextArea autoSize placeholder="질문을 입력하세요" />
-                        </Form.Item>
-                      </div>
-                      <div className="w-2/12 p-2">
-                        <Form.Item
-                          name={[field.name, 'answer']}
-                          rules={[{ required: true, message: '정답 필수' }]}
-                          className="!m-0"
-                        >
-                          <TextArea autoSize placeholder="정답을 입력하세요" />
-                        </Form.Item>
-                      </div>
-                      <div className="w-1/12 p-2 text-center">
-                        <Form.Item
-                          shouldUpdate={(prev, cur) =>
-                            prev.quizzes[index] !== cur.quizzes[index]
-                          }
-                          className="!m-0"
-                        >
-                          {({ getFieldValue }) => {
-                            const imageUrl =
-                              getFieldValue(['quizzes', index, 'imageUrl']) ||
-                              '';
-                            return (
-                              <>
-                                {imageUrl ? (
-                                  <Image
-                                    src={imageUrl}
-                                    alt="quiz"
-                                    width="100%"
-                                    preview={false}
-                                    onClick={() => {
-                                      setDrawerVisible(true);
-                                      setSelectedRowIndex(index);
-                                    }}
-                                  />
-                                ) : (
-                                  <Button
-                                    onClick={() => {
-                                      setDrawerVisible(true);
-                                      setSelectedRowIndex(index);
-                                    }}
-                                    className="w-full h-full flex items-center justify-center"
-                                  >
-                                    선택
-                                  </Button>
-                                )}
-                              </>
-                            );
-                          }}
-                        </Form.Item>
-                      </div>
-                      <div className="w-1/12 p-2 text-center">
-                        <Popconfirm
-                          title="이 행을 삭제하시겠습니까?"
-                          onConfirm={() => remove(field.name)}
-                        >
-                          <Button type="text" danger>
-                            삭제
-                          </Button>
-                        </Popconfirm>
-                      </div>
-                    </div>
-                  ))}
-                  <div className="p-4">
-                    <Button
-                      onClick={() =>
-                        add({
-                          type: '',
-                          question: '',
-                          answer: '',
-                          imageUrl: '',
-                        })
-                      }
-                      type="primary"
-                      className="bg-primary-600"
-                    >
-                      행 추가
-                    </Button>
-                  </div>
-                </>
-              )}
-            </Form.List>
-          </div>
+        <Form form={form} component={false} initialValues={{ dataSource: [] }}>
+          <Form.Item name="dataSource" rules={[{ required: true }]}>
+            <Table
+              components={{
+                body: { cell: EditableCell },
+              }}
+              bordered
+              dataSource={quizFormValues}
+              columns={columns}
+              rowClassName="editable-row"
+              pagination={false}
+            />
+          </Form.Item>
         </Form>
+        <Button
+          onClick={handleAdd}
+          type="primary"
+          className="bg-primary-600 mt-5"
+        >
+          행 추가
+        </Button>
         <Drawer
           title="이미지 선택"
           placement="right"
