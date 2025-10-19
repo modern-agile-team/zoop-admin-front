@@ -62,7 +62,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ant-design/icons@npm:^5.6.1":
+"@ant-design/icons@npm:5.x, @ant-design/icons@npm:^5.6.1":
   version: 5.6.1
   resolution: "@ant-design/icons@npm:5.6.1"
   dependencies:
@@ -7461,6 +7461,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "quiz-game-io-admin@workspace:."
   dependencies:
+    "@ant-design/icons": "npm:5.x"
     "@eslint/js": "npm:^9.37.0"
     "@hookform/resolvers": "npm:^5.2.2"
     "@tailwindcss/vite": "npm:^4.0.6"
