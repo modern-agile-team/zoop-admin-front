@@ -36,7 +36,7 @@ jobs:
           in-progress: 작업중
           review: 리뷰 대기
           done: 완료
-          github-token: ${{ secrets.ORG_PROJECTS_TOKEN != '' && secrets.ORG_PROJECTS_TOKEN || github.token }}
+          github-token: ${{ secrets.ORG_PROJECTS_TOKEN || github.token }}
 
       - name: 브랜치 생성 시 작업중으로 변경
         if: github.event_name == 'create' && github.event.ref_type == 'branch'
@@ -50,7 +50,7 @@ jobs:
           in-progress: 작업중
           review: 리뷰 대기
           done: 완료
-          github-token: ${{ secrets.ORG_PROJECTS_TOKEN != '' && secrets.ORG_PROJECTS_TOKEN || github.token }}
+          github-token: ${{ secrets.ORG_PROJECTS_TOKEN || github.token }}
 
       - name: PR 오픈 시 리뷰 대기로 변경
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
@@ -65,7 +65,7 @@ jobs:
           in-progress: 작업중
           review: 리뷰 대기
           done: 완료
-          github-token: ${{ secrets.ORG_PROJECTS_TOKEN != '' && secrets.ORG_PROJECTS_TOKEN || github.token }}
+          github-token: ${{ secrets.ORG_PROJECTS_TOKEN || github.token }}
 
       - name: PR 머지 시 완료로 변경
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
@@ -80,7 +80,7 @@ jobs:
           in-progress: 작업중
           review: 리뷰 대기
           done: 완료
-          github-token: ${{ secrets.ORG_PROJECTS_TOKEN != '' && secrets.ORG_PROJECTS_TOKEN || github.token }}
+          github-token: ${{ secrets.ORG_PROJECTS_TOKEN || github.token }}
 
       - name: develop 푸시 시 완료로 변경
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop')
@@ -94,7 +94,7 @@ jobs:
           in-progress: 작업중
           review: 리뷰 대기
           done: 완료
-          github-token: ${{ secrets.ORG_PROJECTS_TOKEN != '' && secrets.ORG_PROJECTS_TOKEN || github.token }}
+          github-token: ${{ secrets.ORG_PROJECTS_TOKEN || github.token }}
 
       - name: 브랜치 푸시 시 작업중 유지(재동기화)
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') && !startsWith(github.ref, 'refs/heads/develop')

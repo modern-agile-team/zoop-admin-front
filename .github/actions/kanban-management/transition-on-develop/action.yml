@@ -61,31 +61,39 @@ runs:
               return [...nums];
             }
 
-            async function getOrgProjectByNumberOrName(org, number, name) {
+          async function getOrgProjectByNumberOrName(org, number, name) {
+            try {
               const projects = await github.paginate(github.request, 'GET /orgs/{org}/projects', {
                 org,
                 per_page: 100,
                 headers: inertiaHeader,
               });
+              core.info(`조회된 프로젝트 목록: ${projects.map(p => `${p.number}:${p.name}`).join(', ')}`);
               const found = (number && projects.find(p => p.number === number)) || (name && projects.find(p => p.name === name));
-              if (!found) throw new Error(`프로젝트를 찾을 수 없습니다: number=${number}, name='${name}'`);
+              if (!found) { core.warning(`프로젝트를 찾지 못했습니다. number=${number}, name='${name}'`); return null; }
               return found;
+            } catch (e) {
+              core.warning(`프로젝트 조회 실패(org='${org}'): ${e.message}`);
+              return null;
             }
+          }
 
-            async function getColumns(project_id) {
-              return await github.paginate(github.request, 'GET /projects/{project_id}/columns', {
-                project_id,
-                per_page: 100,
-                headers: inertiaHeader,
-              });
-            }
+          async function getColumns(project_id) {
+            const cols = await github.paginate(github.request, 'GET /projects/{project_id}/columns', {
+              project_id,
+              per_page: 100,
+              headers: inertiaHeader,
+            });
+            core.info(`프로젝트(${project_id}) 컬럼들: ${cols.map(c => c.name).join(', ')}`);
+            return cols;
+          }
 
-            async function getColumnIdByName(project_id, name) {
-              const cols = await getColumns(project_id);
-              const col = cols.find(c => c.name === name);
-              if (!col) throw new Error(`컬럼을 찾을 수 없음: ${name}`);
-              return col.id;
-            }
+          async function getColumnIdByName(project_id, name) {
+            const cols = await getColumns(project_id);
+            const col = cols.find(c => c.name === name);
+            if (!col) { core.warning(`컬럼을 찾지 못했습니다: ${name}`); return null; }
+            return col.id;
+          }
 
             async function findIssue(owner, repo, issue_number) {
               const { data } = await github.rest.issues.get({ owner, repo, issue_number });
@@ -132,8 +140,10 @@ runs:
             if (!nums.size) { core.info('커밋 메시지에 참조된 이슈 없음'); return; }
 
             const { owner, repo } = context.repo;
-            const project = await getOrgProjectByNumberOrName(ORG, PROJECT_NUMBER, PROJECT_NAME);
-            const toColumnId = await getColumnIdByName(project.id, COLUMN_NAMES.done);
+          const project = await getOrgProjectByNumberOrName(ORG, PROJECT_NUMBER, PROJECT_NAME);
+          if (!project) { core.warning('프로젝트가 없어 이동을 건너뜁니다.'); return; }
+          const toColumnId = await getColumnIdByName(project.id, COLUMN_NAMES.done);
+          if (!toColumnId) { core.warning('대상 컬럼을 찾지 못해 이동을 건너뜁니다.'); return; }
 
             for (const issue_number of nums) {
               try {
