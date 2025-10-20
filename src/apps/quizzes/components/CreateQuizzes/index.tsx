@@ -31,6 +31,7 @@ export default function CreateQuizzes() {
   });
 
   const quizFormValues = Form.useWatch([], form)?.dataSource || [];
+
   const handleDelete = (key: React.Key) => {
     const newData = quizFormValues.filter((quiz) => quiz.key !== key);
     form.setFieldsValue({ dataSource: [...newData] });
@@ -49,7 +50,7 @@ export default function CreateQuizzes() {
     setFormIsDirty(true);
   };
 
-  const handleSave = (
+  const handleSave = async (
     key: string,
     dataIndex: keyof CreateQuizDto,
     value: unknown
@@ -76,11 +77,12 @@ export default function CreateQuizzes() {
 
   const { mutateAsync: quizMutation } = useMutation(quizQueries.bulkUpload);
 
-  const handleBulkUpload = () => {
-    const dataToSave = quizFormValues.map(({ key, ...rest }) => rest);
+  const handleBulkUpload = async () => {
+    setFormIsDirty(false);
+    const tableValues = await form.validateFields();
+    const dataToSave = tableValues.dataSource.map(({ key, ...rest }) => rest);
     quizMutation(dataToSave, {
       onSuccess: () => {
-        setFormIsDirty(false);
         navigate({ to: '/quizzes' });
       },
       onError: () => {
@@ -104,10 +106,11 @@ export default function CreateQuizzes() {
       title: '카테고리',
       dataIndex: 'type',
       width: '15%',
-      onCell: (record: CreateQuizDto) => ({
+      onCell: (record: CreateQuizDto, rowIndex) => ({
         record,
         inputType: 'select',
         dataIndex: 'type',
+        rowIndex,
         onSave: handleSave,
         isEdit: true,
         children: record.type,
@@ -118,10 +121,11 @@ export default function CreateQuizzes() {
       dataIndex: 'question',
       width: '45%',
 
-      onCell: (record: CreateQuizDto) => ({
+      onCell: (record: CreateQuizDto, rowIndex) => ({
         record,
         inputType: 'text',
         dataIndex: 'question',
+        rowIndex,
         onSave: handleSave,
         isEdit: true,
         children: record.question,
@@ -131,10 +135,11 @@ export default function CreateQuizzes() {
       title: '정답',
       dataIndex: 'answer',
       width: '15%',
-      onCell: (record: CreateQuizDto) => ({
+      onCell: (record: CreateQuizDto, rowIndex) => ({
         record,
         inputType: 'text',
         dataIndex: 'answer',
+        rowIndex,
         onSave: handleSave,
         isEdit: true,
         children: record.answer,
@@ -192,16 +197,23 @@ export default function CreateQuizzes() {
             셀에 새로운 정보를 입력해 주세요.
           </Typography.Paragraph>
         </Typography>
-        <button
+        <Button
           onClick={handleBulkUpload}
+          type="primary"
+          htmlType="submit"
           className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors cursor-pointer"
         >
           변경 사항 저장
-        </button>
+        </Button>
       </header>
       <main className="p-6">
         <Form form={form} component={false} initialValues={{ dataSource: [] }}>
-          <Form.Item name="dataSource" rules={[{ required: true }]}>
+          <Form.Item
+            name="dataSource"
+            rules={[
+              { required: true, message: '새로운 퀴즈 추가가 필요합니다.' },
+            ]}
+          >
             <Table
               components={{
                 body: { cell: EditableCell },
