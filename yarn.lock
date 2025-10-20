@@ -62,7 +62,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ant-design/icons@npm:^5.6.1":
+"@ant-design/icons@npm:5.x, @ant-design/icons@npm:^5.6.1":
   version: 5.6.1
   resolution: "@ant-design/icons@npm:5.6.1"
   dependencies:
@@ -4223,7 +4223,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.11.11":
+"dayjs@npm:^1.11.11, dayjs@npm:^1.11.18":
   version: 1.11.18
   resolution: "dayjs@npm:1.11.18"
   checksum: 10c0/83b67f5d977e2634edf4f5abdd91d9041a696943143638063016915d2cd8c7e57e0751e40379a07ebca8be7a48dd380bef8752d22a63670f2d15970e34f96d7a
@@ -4604,6 +4604,18 @@ __metadata:
     is-date-object: "npm:^1.0.5"
     is-symbol: "npm:^1.0.4"
   checksum: 10c0/c7e87467abb0b438639baa8139f701a06537d2b9bc758f23e8622c3b42fd0fdb5bde0f535686119e446dd9d5e4c0f238af4e14960f4771877cf818d023f6730b
+  languageName: node
+  linkType: hard
+
+"es-toolkit@npm:^1.40.0":
+  version: 1.40.0
+  resolution: "es-toolkit@npm:1.40.0"
+  dependenciesMeta:
+    "@trivago/prettier-plugin-sort-imports@4.3.0":
+      unplugged: true
+    prettier-plugin-sort-re-exports@0.0.1:
+      unplugged: true
+  checksum: 10c0/c08ce0d9d9688827e5f2b31da5957dfe6b374c4e43e8880a2262053e905893a0b9242975b23ada886fe09889600674a82f04961635efb3d4d1dd6ff6dc0fe445
   languageName: node
   linkType: hard
 
@@ -7184,6 +7196,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"overlay-kit@npm:^1.8.6":
+  version: 1.8.6
+  resolution: "overlay-kit@npm:1.8.6"
+  peerDependencies:
+    react: ^16.8 || ^17 || ^18 || ^19
+    react-dom: ^16.8 || ^17 || ^18 || ^19
+  checksum: 10c0/025d61133475500ccd7f07d07e346f65880feec7898ab2ad535a4f290c885dfb68d749518873ac5dd85b38b4caa4ef2b6464e249aef03707a26e0f1768fb2ef9
+  languageName: node
+  linkType: hard
+
 "own-keys@npm:^1.0.1":
   version: 1.0.1
   resolution: "own-keys@npm:1.0.1"
@@ -7439,6 +7461,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "quiz-game-io-admin@workspace:."
   dependencies:
+    "@ant-design/icons": "npm:5.x"
     "@eslint/js": "npm:^9.37.0"
     "@hookform/resolvers": "npm:^5.2.2"
     "@tailwindcss/vite": "npm:^4.0.6"
@@ -7460,6 +7483,8 @@ __metadata:
     chalk: "npm:^5.6.2"
     child_process: "npm:^1.0.2"
     clsx: "npm:^2.1.1"
+    dayjs: "npm:^1.11.18"
+    es-toolkit: "npm:^1.40.0"
     eslint: "npm:^9.37.0"
     eslint-plugin-import: "npm:^2.32.0"
     eslint-plugin-react: "npm:^7.37.5"
@@ -7474,6 +7499,7 @@ __metadata:
     ky: "npm:^1.11.0"
     msw: "npm:^2.11.5"
     orval: "npm:^7.13.0"
+    overlay-kit: "npm:^1.8.6"
     pinst: "npm:^3.0.0"
     prettier: "npm:^3.5.3"
     react: "npm:^19.0.0"
