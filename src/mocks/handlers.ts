@@ -8,11 +8,15 @@ export const handlers = [
   }),
 
   http.put(`${BASE_URL}/admin/quizzes`, async () => {
-    return HttpResponse.json(
-      { error: 'Server Error' },
-      {
-        status: 500,
-      }
-    );
+    // return HttpResponse.json(
+    //   { error: 'Server Error' },
+    //   {
+    //     status: 500,
+    //   }
+    // );
+
+    return HttpResponse.json(null, {
+      status: 200,
+    });
   }),
 ];
