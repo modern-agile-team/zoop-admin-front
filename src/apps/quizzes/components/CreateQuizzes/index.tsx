@@ -1,10 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
+import { useBlocker, useNavigate } from '@tanstack/react-router';
 import type { TableProps } from 'antd';
 import { Button, Drawer, Form, notification, Popconfirm, Table } from 'antd';
 import { useEffect, useState } from 'react';
 
-import useOutWindow from '@/shared/hooks/useOutWindow';
 import { quizQueries } from '@/shared/service/query/quiz';
 
 import EditableCell from './EditTableCell';
@@ -17,8 +16,12 @@ export default function CreateQuizzes() {
   const [form] = Form.useForm<{ dataSource: CreateQuizDto[] }>();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
+  const [formIsDirty, setFormIsDirty] = useState(false);
 
-  const { blocker, setFormIsDirty } = useOutWindow();
+  const blocker = useBlocker({
+    shouldBlockFn: () => formIsDirty,
+    withResolver: true,
+  });
 
   const quizFormValues = Form.useWatch([], form)?.dataSource || [];
   const handleDelete = (key: React.Key) => {
