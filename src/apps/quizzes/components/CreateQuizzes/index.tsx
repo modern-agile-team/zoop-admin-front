@@ -15,7 +15,6 @@ export default function CreateQuizzes() {
   const { notification, modal } = useApp();
   const navigate = useNavigate();
   const [form] = Form.useForm<{ dataSource: CreateQuizDto[] }>();
-  const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
   const [formIsDirty, setFormIsDirty] = useState(false);
 
@@ -72,7 +71,6 @@ export default function CreateQuizzes() {
     if (selectedRowKey) {
       handleSave(selectedRowKey, 'imageUrl', imageUrl);
     }
-    setDrawerVisible(false);
   };
 
   const showImagesModal = (recordKey: string) => {
@@ -139,7 +137,6 @@ export default function CreateQuizzes() {
       title: '질문',
       dataIndex: 'question',
       width: '45%',
-
       onCell: (record: CreateQuizDto, rowIndex) => ({
         record,
         inputType: 'text',
@@ -174,10 +171,7 @@ export default function CreateQuizzes() {
             <img
               src={imageUrl}
               alt="quiz"
-              onClick={() => {
-                setDrawerVisible(true);
-                setSelectedRowKey(record.key);
-              }}
+              onClick={() => showImagesModal(record.key)}
             />
           ) : (
             <Button type="primary" onClick={() => showImagesModal(record.key)}>
