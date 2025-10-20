@@ -99,7 +99,7 @@ runs:
               const q = gql`query($org:String!){ organization(login:$org){ projectsV2(first:100){ nodes { id title number fields(first:50){ nodes { __typename ... on ProjectV2FieldCommon { id name dataType } ... on ProjectV2SingleSelectField { id name options { id name } } } } } } } }`;
               const r = await github.graphql(q, { org });
               const list = r?.organization?.projectsV2?.nodes || [];
-              core.info(`v2 프로젝트 목록: ${list.map(n => `${n.number}:${n.title}`).join(', ')}`);
+              core.info(`v2 프로젝트 목록(Org): ${list.map(n => `${n.number}:${n.title}`).join(', ')}`);
               if (name) {
                 const p = list.find(n => n.title === name);
                 if (p) return p;
@@ -109,7 +109,25 @@ runs:
                 if (p) return p;
               }
             } catch (e) {
-              core.warning(`projectsV2 목록 조회 실패: ${e.message}`);
+              core.warning(`projectsV2 목록 조회 실패(Org): ${e.message}`);
+            }
+            // Repo-level Projects(v2) fallback
+            try {
+              const { owner, repo } = context.repo;
+              const q = gql`query($owner:String!,$repo:String!){ repository(owner:$owner,name:$repo){ projectsV2(first:100){ nodes { id title number fields(first:50){ nodes { __typename ... on ProjectV2FieldCommon { id name dataType } ... on ProjectV2SingleSelectField { id name options { id name } } } } } } } }`;
+              const r2 = await github.graphql(q, { owner, repo });
+              const list2 = r2?.repository?.projectsV2?.nodes || [];
+              core.info(`v2 프로젝트 목록(Repo ${owner}/${repo}): ${list2.map(n => `${n.number}:${n.title}`).join(', ')}`);
+              if (name) {
+                const p = list2.find(n => n.title === name);
+                if (p) return p;
+              }
+              if (number) {
+                const p = list2.find(n => n.number === number);
+                if (p) return p;
+              }
+            } catch (e) {
+              core.warning(`projectsV2 목록 조회 실패(Repo): ${e.message}`);
             }
             return null;
           }
