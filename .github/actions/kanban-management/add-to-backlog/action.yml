@@ -37,84 +37,93 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         script: |
-          const ORG = process.env.ORG || process.env.GITHUB_REPOSITORY_OWNER;
-            const PROJECT_NUMBER = process.env.PROJECT_NUMBER ? parseInt(process.env.PROJECT_NUMBER, 10) : undefined;
-            const PROJECT_NAME = process.env.PROJECT_NAME || undefined;
-            const COLUMN_NAMES = {
-              backlog: process.env.BACKLOG,
-              planned: process.env.PLANNED,
-              inProgress: process.env.IN_PROGRESS,
-              review: process.env.REVIEW,
-              done: process.env.DONE,
-            };
+          const ORG = process.env.ORG || context.repo.owner;
+          core.info(`해결된 ORG: '${ORG}'`);
+          const PROJECT_NUMBER = process.env.PROJECT_NUMBER ? parseInt(process.env.PROJECT_NUMBER, 10) : undefined;
+          const PROJECT_NAME = process.env.PROJECT_NAME || undefined;
+          const STATUS_MAP = {
+            backlog: process.env.BACKLOG,
+            planned: process.env.PLANNED,
+            inProgress: process.env.IN_PROGRESS,
+            review: process.env.REVIEW,
+            done: process.env.DONE,
+          };
 
-            const inertiaHeader = { accept: 'application/vnd.github.inertia-preview+json' };
-
-            if (!(context.eventName === 'issues' && context.payload.action === 'opened')) {
-              core.info('이슈 생성 이벤트가 아님: 건너뜀');
-              return;
-            }
-
-          async function getOrgProjectByNumberOrName(org, number, name) {
-            try {
-              const projects = await github.paginate(github.request, `GET /orgs/${org}/projects`, {
-                org,
-                per_page: 100,
-                headers: inertiaHeader,
-              });
-              core.info(`조회된 프로젝트 목록: ${projects.map(p => `${p.number}:${p.name}`).join(', ')}`);
-              const found = (number && projects.find(p => p.number === number)) || (name && projects.find(p => p.name === name));
-              if (!found) { core.warning(`프로젝트를 찾지 못했습니다. number=${number}, name='${name}'`); return null; }
-              return found;
-            } catch (e) {
-              core.warning(`프로젝트 조회 실패(org='${org}'): ${e.message}`);
-              return null;
-            }
+          if (!(context.eventName === 'issues' && context.payload.action === 'opened')) {
+            core.info('이슈 생성 이벤트가 아님: 건너뜀');
+            return;
           }
 
-          async function getColumns(project_id) {
-            const cols = await github.paginate(github.request, 'GET /projects/{project_id}/columns', {
-              project_id,
-              per_page: 100,
-              headers: inertiaHeader,
-            });
-            core.info(`프로젝트(${project_id}) 컬럼들: ${cols.map(c => c.name).join(', ')}`);
-            return cols;
-          }
-
-          async function getColumnIdByName(project_id, name) {
-            const cols = await getColumns(project_id);
-            const col = cols.find(c => c.name === name);
-            if (!col) { core.warning(`컬럼을 찾지 못했습니다: ${name}`); return null; }
-            return col.id;
-          }
-
-            async function setIssueStatusLabel(owner, repo, issue_number, label) {
-              const { data: issue } = await github.rest.issues.get({ owner, repo, issue_number });
-              const allStatus = Object.values(COLUMN_NAMES);
-              const existing = issue.labels.map(l => typeof l === 'string' ? l : l.name);
-              const filtered = existing.filter(n => !allStatus.includes(n));
-              const finalLabels = [...new Set([...filtered, label])];
-              await github.rest.issues.update({ owner, repo, issue_number, labels: finalLabels });
+          const gql = String.raw;
+          async function getProjectV2(org, number, name) {
+            if (number) {
+              const q = gql`query($org:String!,$num:Int!){ organization(login:$org){ projectV2(number:$num){ id title number fields(first:50){ nodes { __typename ... on ProjectV2FieldCommon { id name dataType } ... on ProjectV2SingleSelectField { id name options { id name } } } } } } }`;
+              const r = await github.graphql(q, { org, num: number });
+              const p = r?.organization?.projectV2;
+              if (p) return p;
             }
+            if (name) {
+              const q = gql`query($org:String!){ organization(login:$org){ projectsV2(first:100){ nodes { id title number fields(first:50){ nodes { __typename ... on ProjectV2FieldCommon { id name dataType } ... on ProjectV2SingleSelectField { id name options { id name } } } } } } } }`;
+              const r = await github.graphql(q, { org });
+              const p = r?.organization?.projectsV2?.nodes?.find(n => n.title === name);
+              if (p) return p;
+            }
+            return null;
+          }
 
-            const { owner, repo } = context.repo;
-            const issue_number = context.payload.issue.number;
-          const project = await getOrgProjectByNumberOrName(ORG, PROJECT_NUMBER, PROJECT_NAME);
-          if (!project) { core.warning('프로젝트가 없어 카드 생성을 건너뜁니다.'); return; }
-          const backlogId = await getColumnIdByName(project.id, COLUMN_NAMES.backlog);
-          if (!backlogId) { core.warning('백로그 컬럼을 찾지 못해 카드 생성을 건너뜁니다.'); return; }
+          async function getIssueId(owner, repo, number) {
+            const q = gql`query($owner:String!,$repo:String!,$num:Int!){ repository(owner:$owner,name:$repo){ issue(number:$num){ id } } }`;
+            const r = await github.graphql(q, { owner, repo, num: number });
+            return r?.repository?.issue?.id || null;
+          }
 
-            // 이슈를 백로그 컬럼 카드로 추가
+          async function ensureItem(projectId, issueId) {
+            const q = gql`query($id:ID!){ node(id:$id){ ... on Issue { projectItems(first:50){ nodes { id project{ id title number } } } } } }`;
+            const r = await github.graphql(q, { id: issueId });
+            const existing = r?.node?.projectItems?.nodes?.find(n => n.project?.id === projectId);
+            if (existing) return existing.id;
+            const m = gql`mutation($projectId:ID!,$contentId:ID!){ addProjectV2ItemById(input:{projectId:$projectId, contentId:$contentId}){ item { id } } }`;
+            const res = await github.graphql(m, { projectId, contentId: issueId });
+            return res?.addProjectV2ItemById?.item?.id;
+          }
+
+          function findStatusField(project) {
+            const fields = project?.fields?.nodes || [];
+            let field = fields.find(f => f.name === 'Status') || fields.find(f => f.name === '상태');
+            if (!field) field = fields.find(f => (f.__typename === 'ProjectV2SingleSelectField'));
+            return field;
+          }
+
+          async function setStatus(project, itemId, statusName) {
+            const field = findStatusField(project);
+            if (!field || !field.options) { core.warning('Status 필드를 찾지 못했거나 옵션이 없습니다.'); return; }
+            const opt = field.options.find(o => o.name === statusName);
+            if (!opt) { core.warning(`Status 옵션을 찾지 못했습니다: ${statusName}. 사용 가능: ${field.options.map(o=>o.name).join(', ')}`); return; }
+            const m = gql`mutation($projectId:ID!, $itemId:ID!, $fieldId:ID!, $optionId:String!){ updateProjectV2ItemFieldValue(input:{ projectId:$projectId, itemId:$itemId, fieldId:$fieldId, value:{ singleSelectOptionId:$optionId }}){ projectV2Item { id } } }`;
+            await github.graphql(m, { projectId: project.id, itemId, fieldId: field.id, optionId: opt.id });
+          }
+
+          const { owner, repo } = context.repo;
+          const issue_number = context.payload.issue.number;
+          const project = await getProjectV2(ORG, PROJECT_NUMBER, PROJECT_NAME);
+          if (!project) { core.warning('Projects(v2) 프로젝트를 찾지 못해 건너뜁니다.'); return; }
+          const issueId = await getIssueId(owner, repo, issue_number);
+          if (!issueId) { core.warning('이슈 ID를 찾지 못했습니다.'); return; }
+          const itemId = await ensureItem(project.id, issueId);
+          if (!itemId) { core.warning('프로젝트 아이템을 생성/확인하지 못했습니다.'); return; }
+
+          // 라벨 동기화는 REST로 유지
+          async function setIssueStatusLabel(owner, repo, issue_number, label) {
             const { data: issue } = await github.rest.issues.get({ owner, repo, issue_number });
-            const { data: card } = await github.request('POST /projects/columns/{column_id}/cards', {
-              column_id: backlogId,
-              content_id: issue.id,
-              content_type: 'Issue',
-              headers: inertiaHeader,
-            });
-            core.info(`백로그에 카드 생성됨: card=${card.id}, issue=#${issue_number}`);
-            await setIssueStatusLabel(owner, repo, issue_number, COLUMN_NAMES.backlog);
+            const allStatus = Object.values(STATUS_MAP);
+            const existing = issue.labels.map(l => typeof l === 'string' ? l : l.name);
+            const filtered = existing.filter(n => !allStatus.includes(n));
+            const finalLabels = [...new Set([...filtered, label])];
+            await github.rest.issues.update({ owner, repo, issue_number, labels: finalLabels });
+          }
+
+          await setStatus(project, itemId, STATUS_MAP.backlog);
+          await setIssueStatusLabel(owner, repo, issue_number, STATUS_MAP.backlog);
       env:
         ORG: ${{ inputs.org }}
         PROJECT_NUMBER: ${{ inputs['project-number'] }}
