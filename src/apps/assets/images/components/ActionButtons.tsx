@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Alert, App, Button, Upload } from 'antd';
+import { Alert, App, Button } from 'antd';
+import { overlay } from 'overlay-kit';
 
 import { imageQueries } from '@/shared/service/query/image';
+
+import ImageUploadModal from './ImageUploadModal';
 
 interface Props {
   selectedImageIds: string[];
@@ -15,7 +18,7 @@ export default function ActionButtons({
   const queryClient = useQueryClient();
   const { message, modal } = App.useApp();
 
-  const { mutate: uploadImage, isPending } = useMutation({
+  const { mutate: uploadImage, isPending: isUploading } = useMutation({
     ...imageQueries.uploadImage,
     onSuccess: () => {
       message.success('이미지를 업로드했어요.');
@@ -70,17 +73,26 @@ export default function ActionButtons({
           선택된 이미지 삭제
         </Button>
       )}
-      <Upload
-        disabled={isPending}
-        multiple
-        accept="image/*"
-        customRequest={(args) => {
-          const { file } = args;
-          uploadImage({ file: file as File, category: '테스트' });
+
+      <Button
+        loading={isUploading}
+        disabled={isUploading}
+        onClick={async () => {
+          const fileList = await overlay.openAsync<File[] | null>(
+            ({ close, isOpen }) => (
+              <ImageUploadModal isOpen={isOpen} onClose={close} />
+            )
+          );
+
+          if (fileList) {
+            fileList.forEach((file) => {
+              uploadImage({ file, category: '테스트' });
+            });
+          }
         }}
       >
-        <Button>이미지 업로드</Button>
-      </Upload>
+        이미지 업로드
+      </Button>
     </div>
   );
 }

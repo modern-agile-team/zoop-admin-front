@@ -19,6 +19,7 @@
     "codegen:sync": "yarn node ./scripts/codegen/syncCodeGenSpec.mjs"
   },
   "dependencies": {
+    "@ant-design/icons": "5.x",
     "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-devtools": "^0.7.0",
@@ -33,6 +34,7 @@
     "dayjs": "^1.11.18",
     "es-toolkit": "^1.40.0",
     "ky": "^1.11.0",
+    "overlay-kit": "^1.8.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.63.0",

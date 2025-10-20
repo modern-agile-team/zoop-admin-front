@@ -62,7 +62,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ant-design/icons@npm:^5.6.1":
+"@ant-design/icons@npm:5.x, @ant-design/icons@npm:^5.6.1":
   version: 5.6.1
   resolution: "@ant-design/icons@npm:5.6.1"
   dependencies:
@@ -7196,6 +7196,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"overlay-kit@npm:^1.8.6":
+  version: 1.8.6
+  resolution: "overlay-kit@npm:1.8.6"
+  peerDependencies:
+    react: ^16.8 || ^17 || ^18 || ^19
+    react-dom: ^16.8 || ^17 || ^18 || ^19
+  checksum: 10c0/025d61133475500ccd7f07d07e346f65880feec7898ab2ad535a4f290c885dfb68d749518873ac5dd85b38b4caa4ef2b6464e249aef03707a26e0f1768fb2ef9
+  languageName: node
+  linkType: hard
+
 "own-keys@npm:^1.0.1":
   version: 1.0.1
   resolution: "own-keys@npm:1.0.1"
@@ -7451,6 +7461,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "quiz-game-io-admin@workspace:."
   dependencies:
+    "@ant-design/icons": "npm:5.x"
     "@eslint/js": "npm:^9.37.0"
     "@hookform/resolvers": "npm:^5.2.2"
     "@tailwindcss/vite": "npm:^4.0.6"
@@ -7488,6 +7499,7 @@ __metadata:
     ky: "npm:^1.11.0"
     msw: "npm:^2.11.5"
     orval: "npm:^7.13.0"
+    overlay-kit: "npm:^1.8.6"
     pinst: "npm:^3.0.0"
     prettier: "npm:^3.5.3"
     react: "npm:^19.0.0"
