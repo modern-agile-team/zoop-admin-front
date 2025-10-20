@@ -40,12 +40,11 @@ runs:
       uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-token }}
-        script:
-          - |
-            const allowPush = ((process.env.ALLOW_PUSH || 'false') + '').toLowerCase() === 'true';
-            const isCreateBranch = (context.eventName === 'create' && context.payload.ref_type === 'branch');
-            const isPush = (context.eventName === 'push');
-            if (!(isCreateBranch || (allowPush && isPush))) { core.info('대상 이벤트가 아님: 건너뜀'); return; }
+        script: |
+          const allowPush = ((process.env.ALLOW_PUSH || 'false') + '').toLowerCase() === 'true';
+          const isCreateBranch = (context.eventName === 'create' && context.payload.ref_type === 'branch');
+          const isPush = (context.eventName === 'push');
+          if (!(isCreateBranch || (allowPush && isPush))) { core.info('대상 이벤트가 아님: 건너뜀'); return; }
 
             const ORG = process.env.ORG || process.env.GITHUB_REPOSITORY_OWNER;
             const PROJECT_NUMBER = process.env.PROJECT_NUMBER ? parseInt(process.env.PROJECT_NUMBER, 10) : undefined;

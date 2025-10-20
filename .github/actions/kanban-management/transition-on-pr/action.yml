@@ -39,9 +39,8 @@ runs:
       uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-token }}
-        script:
-          - |
-            const mode = process.env.MODE;
+        script: |
+          const mode = process.env.MODE;
             const expectEvent = (mode === 'opened') ? 'opened' : 'closed';
             if (!(context.eventName === 'pull_request' && context.payload.action === expectEvent)) {
               core.info(`PR 이벤트/모드 불일치(mode=${mode}): 건너뜀`);

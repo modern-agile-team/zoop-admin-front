@@ -36,9 +36,8 @@ runs:
       uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-token }}
-        script:
-          - |
-            const ORG = process.env.ORG || process.env.GITHUB_REPOSITORY_OWNER;
+        script: |
+          const ORG = process.env.ORG || process.env.GITHUB_REPOSITORY_OWNER;
             const PROJECT_NUMBER = process.env.PROJECT_NUMBER ? parseInt(process.env.PROJECT_NUMBER, 10) : undefined;
             const PROJECT_NAME = process.env.PROJECT_NAME || undefined;
             const COLUMN_NAMES = {
