@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useBlocker, useNavigate } from '@tanstack/react-router';
 import type { TableProps } from 'antd';
-import { Button, Drawer, Form, Popconfirm, Table, Typography } from 'antd';
+import { Button, Form, Popconfirm, Table, Typography } from 'antd';
 import useApp from 'antd/es/app/useApp';
 import { useState } from 'react';
 
@@ -12,7 +12,7 @@ import ImageDrawer from './ImageDrawer';
 import type { CreateQuizDto } from './schema';
 
 export default function CreateQuizzes() {
-  const { notification } = useApp();
+  const { notification, modal } = useApp();
   const navigate = useNavigate();
   const [form] = Form.useForm<{ dataSource: CreateQuizDto[] }>();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -73,6 +73,25 @@ export default function CreateQuizzes() {
       handleSave(selectedRowKey, 'imageUrl', imageUrl);
     }
     setDrawerVisible(false);
+  };
+
+  const showImagesModal = (recordKey: string) => {
+    setSelectedRowKey(recordKey);
+    const modalInstance = modal.info({
+      title: '이미지 선택',
+      content: (
+        <ImageDrawer
+          onSelect={(imageUrl) => {
+            handleImageSelect(imageUrl);
+            modalInstance.destroy();
+          }}
+        />
+      ),
+      icon: null,
+      width: 550,
+      footer: null,
+      closable: true,
+    });
   };
 
   const { mutateAsync: quizMutation } = useMutation(quizQueries.bulkUpload);
@@ -161,12 +180,7 @@ export default function CreateQuizzes() {
               }}
             />
           ) : (
-            <Button
-              onClick={() => {
-                setDrawerVisible(true);
-                setSelectedRowKey(record.key);
-              }}
-            >
+            <Button type="primary" onClick={() => showImagesModal(record.key)}>
               이미지 선택
             </Button>
           )}
@@ -233,15 +247,6 @@ export default function CreateQuizzes() {
         >
           행 추가
         </Button>
-        <Drawer
-          title="이미지 선택"
-          placement="right"
-          onClose={() => setDrawerVisible(false)}
-          open={drawerVisible}
-          width={500}
-        >
-          <ImageDrawer onSelect={handleImageSelect} />
-        </Drawer>
       </main>
     </>
   );
