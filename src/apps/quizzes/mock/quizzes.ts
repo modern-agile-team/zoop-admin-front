@@ -8,32 +8,6 @@ export type Quiz = {
   imageUrl: string | null;
 };
 
-export const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-  },
-  {
-    title: '질문',
-    dataIndex: 'question',
-    key: 'question',
-  },
-  {
-    title: '정답',
-    dataIndex: 'answer',
-    key: 'answer',
-  },
-  {
-    title: '이미지',
-    dataIndex: 'image',
-    key: 'image',
-  },
-  {
-    title: '시점',
-  },
-];
-
 export const QUIZZES_MOCK_DATA: Quiz[] = [
   {
     id: 'quiz-001',
@@ -62,4 +36,9 @@ export const QUIZZES_MOCK_DATA: Quiz[] = [
     answer: 'Facebook (Meta)',
     imageUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee',
   },
+];
+
+export const IMAGE_GALLERY_MOCK = [
+  'https://dev-zoop.s3.ap-northeast-2.amazonaws.com/images/766971239455110853.png',
+  'https://dev-zoop.s3.ap-northeast-2.amazonaws.com/images/767309255440708414.webp',
 ];
