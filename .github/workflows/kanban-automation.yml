@@ -20,9 +20,6 @@ jobs:
   kanban-sync:
     runs-on: ubuntu-latest
     steps:
-      - name: 저장소 체크아웃
-        uses: actions/checkout@v4
-
       - name: 이슈 생성 시 백로그로 등록
         if: github.event_name == 'issues' && github.event.action == 'opened'
         uses: ./.github/actions/kanban-management/add-to-backlog/action
