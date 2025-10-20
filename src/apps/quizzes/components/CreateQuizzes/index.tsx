@@ -1,41 +1,59 @@
+import { useMutation } from '@tanstack/react-query';
+import { useBlocker, useNavigate } from '@tanstack/react-router';
 import type { TableProps } from 'antd';
-import { Button, Drawer, Form, Popconfirm, Table } from 'antd';
+import {
+  Button,
+  Drawer,
+  Form,
+  notification,
+  Popconfirm,
+  Table,
+  Typography,
+} from 'antd';
 import { useState } from 'react';
+
+import { quizQueries } from '@/shared/service/query/quiz';
 
 import EditableCell from './EditTableCell';
 import ImageDrawer from './ImageDrawer';
 import type { CreateQuizDto } from './schema';
 
 export default function CreateQuizzes() {
-  const [form] = Form.useForm();
-  const [data, setData] = useState<CreateQuizDto[]>([
-    {
-      key: '1',
-      type: '',
-      question: '',
-      answer: '',
-      imageUrl: '',
-    },
-  ]);
-  const [count, setCount] = useState(2);
+  const [notificationApi, contextHolder] = notification.useNotification();
+  const navigate = useNavigate();
+  const [form] = Form.useForm<{ dataSource: CreateQuizDto[] }>();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
+  const [formIsDirty, setFormIsDirty] = useState(false);
 
+  useBlocker({
+    shouldBlockFn: () => {
+      if (!formIsDirty) return false;
+
+      const shouldLeave = confirm(
+        '변경사항이 저장되지 않았습니다. 정말로 나가시겠습니까?'
+      );
+      return !shouldLeave;
+    },
+  });
+
+  const quizFormValues = Form.useWatch([], form)?.dataSource || [];
   const handleDelete = (key: React.Key) => {
-    const newData = data.filter((item) => item.key !== key);
-    setData(newData);
+    const newData = quizFormValues.filter((quiz) => quiz.key !== key);
+    form.setFieldsValue({ dataSource: [...newData] });
+    setFormIsDirty(true);
   };
 
   const handleAdd = () => {
     const newData: CreateQuizDto = {
-      key: count.toString(),
+      key: (quizFormValues.length + 1).toString(),
       type: '',
       question: '',
       answer: '',
       imageUrl: '',
     };
-    setData([...data, newData]);
-    setCount(count + 1);
+    form.setFieldsValue({ dataSource: [...quizFormValues, newData] });
+    setFormIsDirty(true);
   };
 
   const handleSave = (
@@ -43,7 +61,7 @@ export default function CreateQuizzes() {
     dataIndex: keyof CreateQuizDto,
     value: unknown
   ) => {
-    const newData = [...data];
+    const newData = [...quizFormValues];
     const index = newData.findIndex((item) => key === item.key);
     if (index > -1) {
       const item = newData[index];
@@ -51,7 +69,8 @@ export default function CreateQuizzes() {
         ...item,
         [dataIndex]: value,
       });
-      setData(newData);
+      form.setFieldsValue({ dataSource: newData });
+      setFormIsDirty(true);
     }
   };
 
@@ -60,6 +79,26 @@ export default function CreateQuizzes() {
       handleSave(selectedRowKey, 'imageUrl', imageUrl);
     }
     setDrawerVisible(false);
+  };
+
+  const { mutateAsync: quizMutation } = useMutation(quizQueries.bulkUpload);
+
+  const handleBulkUpload = () => {
+    const dataToSave = quizFormValues.map(({ key, ...rest }) => rest);
+    quizMutation(dataToSave, {
+      onSuccess: () => {
+        setFormIsDirty(false);
+        navigate({ to: '/quizzes' });
+      },
+      onError: () => {
+        notificationApi.info({
+          message: '❌ 퀴즈 업로드에 실패했습니다.',
+          description:
+            '잠시 뒤 다시 요청을 보내거나, 새로고침 후 다시 시도해 보세요.',
+          placement: 'topLeft',
+        });
+      },
+    });
   };
 
   const columns: TableProps<CreateQuizDto>['columns'] = [
@@ -140,7 +179,7 @@ export default function CreateQuizzes() {
       title: '삭제',
       dataIndex: 'operation',
       render: (_, record: { key: React.Key }) =>
-        data.length >= 1 ? (
+        quizFormValues.length >= 1 ? (
           <Popconfirm
             title="Sure to delete?"
             onConfirm={() => handleDelete(record.key)}
@@ -153,29 +192,35 @@ export default function CreateQuizzes() {
 
   return (
     <>
+      {contextHolder}
       <header className="p-6 border-b border-contents-200 flex justify-between items-center">
-        <div>
-          <h1 className="text-title-2 font-bold">퀴즈 추가</h1>
-          <p className="text-contents-600 mt-1">
+        <Typography>
+          <Typography.Title>퀴즈 추가</Typography.Title>
+          <Typography.Paragraph>
             셀에 새로운 정보를 입력해 주세요.
-          </p>
-        </div>
-        <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors cursor-pointer">
+          </Typography.Paragraph>
+        </Typography>
+        <button
+          onClick={handleBulkUpload}
+          className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors cursor-pointer"
+        >
           변경 사항 저장
         </button>
       </header>
       <main className="p-6">
-        <Form form={form} component={false}>
-          <Table
-            components={{
-              body: { cell: EditableCell },
-            }}
-            bordered
-            dataSource={data}
-            columns={columns}
-            rowClassName="editable-row"
-            pagination={false}
-          />
+        <Form form={form} component={false} initialValues={{ dataSource: [] }}>
+          <Form.Item name="dataSource" rules={[{ required: true }]}>
+            <Table
+              components={{
+                body: { cell: EditableCell },
+              }}
+              bordered
+              dataSource={quizFormValues}
+              columns={columns}
+              rowClassName="editable-row"
+              pagination={false}
+            />
+          </Form.Item>
         </Form>
         <Button
           onClick={handleAdd}
