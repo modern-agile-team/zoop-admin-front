@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: 이슈 생성 시 백로그로 등록
         if: github.event_name == 'issues' && github.event.action == 'opened'
-        uses: ./.github/actions/kanban-management/add-to-backlog/action
+        uses: ./.github/actions/kanban-management/add-to-backlog
         with:
           org: modern-agile-team
           project-number: 55
@@ -36,7 +36,7 @@ jobs:
 
       - name: 브랜치 생성 시 작업중으로 변경
         if: github.event_name == 'create' && github.event.ref_type == 'branch'
-        uses: ./.github/actions/kanban-management/transition-on-branch/action
+        uses: ./.github/actions/kanban-management/transition-on-branch
         with:
           org: modern-agile-team
           project-number: 55
@@ -50,7 +50,7 @@ jobs:
 
       - name: PR 오픈 시 리뷰 대기로 변경
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        uses: ./.github/actions/kanban-management/transition-on-pr/action
+        uses: ./.github/actions/kanban-management/transition-on-pr
         with:
           mode: opened
           org: modern-agile-team
@@ -65,7 +65,7 @@ jobs:
 
       - name: PR 머지 시 완료로 변경
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
-        uses: ./.github/actions/kanban-management/transition-on-pr/action
+        uses: ./.github/actions/kanban-management/transition-on-pr
         with:
           mode: merged
           org: modern-agile-team
@@ -80,7 +80,7 @@ jobs:
 
       - name: develop 푸시 시 완료로 변경
         if: github.event_name == 'push'
-        uses: ./.github/actions/kanban-management/transition-on-develop/action
+        uses: ./.github/actions/kanban-management/transition-on-develop
         with:
           org: modern-agile-team
           project-number: 55
