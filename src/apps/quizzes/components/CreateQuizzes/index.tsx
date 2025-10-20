@@ -2,8 +2,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import type { TableProps } from 'antd';
 import { Button, Drawer, Form, notification, Popconfirm, Table } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import useOutWindow from '@/shared/hooks/useOutWindow';
 import { quizQueries } from '@/shared/service/query/quiz';
 
 import EditableCell from './EditTableCell';
@@ -17,10 +18,13 @@ export default function CreateQuizzes() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
 
+  const { blocker, setFormIsDirty } = useOutWindow();
+
   const quizFormValues = Form.useWatch([], form)?.dataSource || [];
   const handleDelete = (key: React.Key) => {
     const newData = quizFormValues.filter((quiz) => quiz.key !== key);
     form.setFieldsValue({ dataSource: [...newData] });
+    setFormIsDirty(true);
   };
 
   const handleAdd = () => {
@@ -32,6 +36,7 @@ export default function CreateQuizzes() {
       imageUrl: '',
     };
     form.setFieldsValue({ dataSource: [...quizFormValues, newData] });
+    setFormIsDirty(true);
   };
 
   const handleSave = (
@@ -48,6 +53,7 @@ export default function CreateQuizzes() {
         [dataIndex]: value,
       });
       form.setFieldsValue({ dataSource: newData });
+      setFormIsDirty(true);
     }
   };
 
@@ -64,6 +70,7 @@ export default function CreateQuizzes() {
     const dataToSave = quizFormValues.map(({ key, ...rest }) => rest);
     quizMutation(dataToSave, {
       onSuccess: () => {
+        setFormIsDirty(false);
         navigate({ to: '/quizzes' });
       },
       onError: () => {
@@ -165,6 +172,18 @@ export default function CreateQuizzes() {
         ) : null,
     },
   ];
+
+  useEffect(() => {
+    if (blocker.status === 'blocked') {
+      if (
+        window.confirm('변경사항이 저장되지 않았습니다. 정말로 나가시겠습니까?')
+      ) {
+        blocker.proceed();
+      } else {
+        blocker.reset();
+      }
+    }
+  }, [blocker]);
 
   return (
     <>
