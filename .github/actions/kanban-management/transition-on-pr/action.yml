@@ -85,7 +85,7 @@ runs:
 
           async function getOrgProjectByNumberOrName(org, number, name) {
             try {
-              const projects = await github.paginate(github.request, 'GET /orgs/{org}/projects', {
+              const projects = await github.paginate(github.request, `GET /orgs/${org}/projects`, {
                 org,
                 per_page: 100,
                 headers: inertiaHeader,
