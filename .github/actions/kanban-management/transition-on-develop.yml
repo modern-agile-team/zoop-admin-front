@@ -1,0 +1,149 @@
+name: 칸반 - develop 푸시 시 전환
+description: develop 브랜치로 푸시될 때 참조된 이슈를 ‘완료’로 이동합니다
+inputs:
+  org:
+    description: 조직 로그인(organization 로그인)
+    required: true
+  project-number:
+    description: 클래식 프로젝트 번호
+    required: false
+  project-name:
+    description: 클래식 프로젝트 이름(번호가 없을 때 대체)
+    required: false
+  backlog:
+    description: 백로그 컬럼 이름
+    required: true
+  planned:
+    description: 작업 예정 컬럼 이름
+    required: true
+  in-progress:
+    description: 작업중 컬럼 이름
+    required: true
+  review:
+    description: 리뷰 대기 컬럼 이름
+    required: true
+  done:
+    description: 완료 컬럼 이름
+    required: true
+  github-token:
+    description: 조직 클래식 프로젝트 API 접근 토큰(PAT 권장). 미설정 시 GITHUB_TOKEN 사용
+    required: false
+    default: ${{ github.token }}
+runs:
+  using: composite
+  steps:
+    - name: develop 푸시 시 ‘완료’로 이동
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          if (context.eventName !== 'push') { core.info('push 이벤트가 아님: 건너뜀'); return; }
+
+          const ORG = core.getInput('org');
+          const PROJECT_NUMBER = core.getInput('project-number') ? parseInt(core.getInput('project-number'), 10) : undefined;
+          const PROJECT_NAME = core.getInput('project-name') || undefined;
+          const COLUMN_NAMES = {
+            backlog: core.getInput('backlog'),
+            planned: core.getInput('planned'),
+            inProgress: core.getInput('in-progress'),
+            review: core.getInput('review'),
+            done: core.getInput('done'),
+          };
+          const inertiaHeader = { accept: 'application/vnd.github.inertia-preview+json' };
+
+          function extractIssueNumbersFromText(text) {
+            const nums = new Set();
+            if (!text) return [];
+            const kw = /(close[sd]?|fix(e[sd])?|resolve[sd]?)\s+#(\d+)/ig;
+            for (const match of text.matchAll(kw)) nums.add(parseInt(match[3], 10));
+            const hash = /#(\d+)/g;
+            for (const match of text.matchAll(hash)) nums.add(parseInt(match[1], 10));
+            return [...nums];
+          }
+
+          async function getOrgProjectByNumberOrName(org, number, name) {
+            const projects = await github.paginate(github.request, 'GET /orgs/{org}/projects', {
+              org,
+              per_page: 100,
+              headers: inertiaHeader,
+            });
+            const found = (number && projects.find(p => p.number === number)) || (name && projects.find(p => p.name === name));
+            if (!found) throw new Error(`프로젝트를 찾을 수 없습니다: number=${number}, name='${name}'`);
+            return found;
+          }
+
+          async function getColumns(project_id) {
+            return await github.paginate(github.request, 'GET /projects/{project_id}/columns', {
+              project_id,
+              per_page: 100,
+              headers: inertiaHeader,
+            });
+          }
+
+          async function getColumnIdByName(project_id, name) {
+            const cols = await getColumns(project_id);
+            const col = cols.find(c => c.name === name);
+            if (!col) throw new Error(`컬럼을 찾을 수 없음: ${name}`);
+            return col.id;
+          }
+
+          async function findIssue(owner, repo, issue_number) {
+            const { data } = await github.rest.issues.get({ owner, repo, issue_number });
+            return data;
+          }
+
+          async function getIssueProjectCard(issue, project) {
+            const cols = await getColumns(project.id);
+            for (const col of cols) {
+              const cards = await github.paginate(github.request, 'GET /projects/columns/{column_id}/cards', {
+                column_id: col.id,
+                per_page: 100,
+                headers: inertiaHeader,
+              });
+              const card = cards.find(card => card.content_url && card.content_url.endsWith(`/issues/${issue.number}`));
+              if (card) return { card, column: col };
+            }
+            return null;
+          }
+
+          async function moveCardToColumn(card_id, to_column_id) {
+            await github.request('POST /projects/columns/cards/{card_id}/moves', {
+              card_id,
+              column_id: to_column_id,
+              position: 'top',
+              headers: inertiaHeader,
+            });
+          }
+
+          async function setIssueStatusLabel(owner, repo, issue_number, label) {
+            const { data: issue } = await github.rest.issues.get({ owner, repo, issue_number });
+            const allStatus = Object.values(COLUMN_NAMES);
+            const existing = issue.labels.map(l => typeof l === 'string' ? l : l.name);
+            const filtered = existing.filter(n => !allStatus.includes(n));
+            const finalLabels = [...new Set([...filtered, label])];
+            await github.rest.issues.update({ owner, repo, issue_number, labels: finalLabels });
+          }
+
+          const commits = context.payload.commits || [];
+          const nums = new Set();
+          for (const c of commits) {
+            for (const n of extractIssueNumbersFromText(`${c.message}\n${c.body || ''}`)) nums.add(n);
+          }
+          if (!nums.size) { core.info('커밋 메시지에 참조된 이슈 없음'); return; }
+
+          const { owner, repo } = context.repo;
+          const project = await getOrgProjectByNumberOrName(ORG, PROJECT_NUMBER, PROJECT_NAME);
+          const toColumnId = await getColumnIdByName(project.id, COLUMN_NAMES.done);
+
+          for (const issue_number of nums) {
+            try {
+              const issue = await findIssue(owner, repo, issue_number);
+              const cardInfo = await getIssueProjectCard(issue, project);
+              if (!cardInfo) { core.info(`#${issue.number}에 연결된 카드가 없어 이동 건너뜀`); continue; }
+              await moveCardToColumn(cardInfo.card.id, toColumnId);
+              await setIssueStatusLabel(owner, repo, issue_number, COLUMN_NAMES.done);
+              core.info(`#${issue_number} -> ${COLUMN_NAMES.done}`);
+            } catch (e) {
+              core.warning(`이동 실패 #${issue_number}: ${e.message}`);
+            }
+          }
