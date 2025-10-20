@@ -29,18 +29,32 @@ inputs:
     description: 조직 클래식 프로젝트 API 접근 토큰(PAT 권장). 미설정 시 GITHUB_TOKEN 사용
     required: false
     default: ${{ github.token }}
+  allow-push:
+    description: push 이벤트에서도 동작시키기 (기본 false)
+    required: false
+    default: 'false'
 runs:
   using: composite
   steps:
-    - name: 브랜치 생성 시 ‘작업중’으로 이동
+    - name: 브랜치 생성/푸시 시 ‘작업중’으로 이동
       uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-token }}
+        # composite action 입력을 github-script 입력으로 전달
+        org: ${{ inputs.org }}
+        project-number: ${{ inputs['project-number'] }}
+        project-name: ${{ inputs['project-name'] }}
+        backlog: ${{ inputs.backlog }}
+        planned: ${{ inputs.planned }}
+        in-progress: ${{ inputs['in-progress'] }}
+        review: ${{ inputs.review }}
+        done: ${{ inputs.done }}
+        allow-push: ${{ inputs['allow-push'] }}
         script: |
-          if (!(context.eventName === 'create' && context.payload.ref_type === 'branch')) {
-            core.info('브랜치 생성 이벤트가 아님: 건너뜀');
-            return;
-          }
+          const allowPush = (core.getInput('allow-push') || 'false').toLowerCase() === 'true';
+          const isCreateBranch = (context.eventName === 'create' && context.payload.ref_type === 'branch');
+          const isPush = (context.eventName === 'push');
+          if (!(isCreateBranch || (allowPush && isPush))) { core.info('대상 이벤트가 아님: 건너뜀'); return; }
 
           const ORG = core.getInput('org');
           const PROJECT_NUMBER = core.getInput('project-number') ? parseInt(core.getInput('project-number'), 10) : undefined;

@@ -8,7 +8,8 @@ on:
   pull_request:
     types: [opened, closed]
   push:
-    branches: [develop]
+    branches:
+      - '**'   # 모든 브랜치 푸시 시 트리거 (테스트 편의)
 
 permissions:
   contents: read
@@ -82,9 +83,24 @@ jobs:
           github-token: ${{ secrets.ORG_PROJECTS_TOKEN != '' && secrets.ORG_PROJECTS_TOKEN || github.token }}
 
       - name: develop 푸시 시 완료로 변경
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop')
         uses: ./.github/actions/kanban-management/transition-on-develop
         with:
+          org: modern-agile-team
+          project-number: 55
+          project-name: zoop-admin 작업 목록
+          backlog: 백로그
+          planned: 작업 예정
+          in-progress: 작업중
+          review: 리뷰 대기
+          done: 완료
+          github-token: ${{ secrets.ORG_PROJECTS_TOKEN != '' && secrets.ORG_PROJECTS_TOKEN || github.token }}
+
+      - name: 브랜치 푸시 시 작업중 유지(재동기화)
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') && !startsWith(github.ref, 'refs/heads/develop')
+        uses: ./.github/actions/kanban-management/transition-on-branch
+        with:
+          allow-push: 'true'
           org: modern-agile-team
           project-number: 55
           project-name: zoop-admin 작업 목록

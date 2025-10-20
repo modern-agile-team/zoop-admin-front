@@ -36,6 +36,15 @@ runs:
       uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-token }}
+        # composite action 입력을 github-script 입력으로 전달
+        org: ${{ inputs.org }}
+        project-number: ${{ inputs['project-number'] }}
+        project-name: ${{ inputs['project-name'] }}
+        backlog: ${{ inputs.backlog }}
+        planned: ${{ inputs.planned }}
+        in-progress: ${{ inputs['in-progress'] }}
+        review: ${{ inputs.review }}
+        done: ${{ inputs.done }}
         script: |
           if (context.eventName !== 'push') { core.info('push 이벤트가 아님: 건너뜀'); return; }
 

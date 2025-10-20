@@ -36,6 +36,15 @@ runs:
       uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-token }}
+        # composite action 입력을 github-script 입력으로 전달
+        org: ${{ inputs.org }}
+        project-number: ${{ inputs['project-number'] }}
+        project-name: ${{ inputs['project-name'] }}
+        backlog: ${{ inputs.backlog }}
+        planned: ${{ inputs.planned }}
+        in-progress: ${{ inputs['in-progress'] }}
+        review: ${{ inputs.review }}
+        done: ${{ inputs.done }}
         script: |
           const ORG = core.getInput('org');
           const PROJECT_NUMBER = core.getInput('project-number') ? parseInt(core.getInput('project-number'), 10) : undefined;
