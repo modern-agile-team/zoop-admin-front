@@ -29,7 +29,6 @@ jobs:
         uses: ./.github/actions/kanban-management/add-to-backlog
         with:
           org: modern-agile-team
-          project-number: 55
           project-name: zoop-admin 작업 목록
           backlog: 백로그
           planned: 작업 예정
@@ -43,7 +42,6 @@ jobs:
         uses: ./.github/actions/kanban-management/transition-on-branch
         with:
           org: modern-agile-team
-          project-number: 55
           project-name: zoop-admin 작업 목록
           backlog: 백로그
           planned: 작업 예정
@@ -58,7 +56,6 @@ jobs:
         with:
           mode: opened
           org: modern-agile-team
-          project-number: 55
           project-name: zoop-admin 작업 목록
           backlog: 백로그
           planned: 작업 예정
@@ -73,7 +70,6 @@ jobs:
         with:
           mode: merged
           org: modern-agile-team
-          project-number: 55
           project-name: zoop-admin 작업 목록
           backlog: 백로그
           planned: 작업 예정
@@ -87,7 +83,6 @@ jobs:
         uses: ./.github/actions/kanban-management/transition-on-develop
         with:
           org: modern-agile-team
-          project-number: 55
           project-name: zoop-admin 작업 목록
           backlog: 백로그
           planned: 작업 예정
@@ -102,7 +97,6 @@ jobs:
         with:
           allow-push: 'true'
           org: modern-agile-team
-          project-number: 55
           project-name: zoop-admin 작업 목록
           backlog: 백로그
           planned: 작업 예정
