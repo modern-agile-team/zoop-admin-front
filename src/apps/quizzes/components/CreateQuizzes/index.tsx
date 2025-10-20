@@ -1,8 +1,16 @@
 import { useMutation } from '@tanstack/react-query';
 import { useBlocker, useNavigate } from '@tanstack/react-router';
 import type { TableProps } from 'antd';
-import { Button, Drawer, Form, notification, Popconfirm, Table } from 'antd';
-import { useEffect, useState } from 'react';
+import {
+  Button,
+  Drawer,
+  Form,
+  notification,
+  Popconfirm,
+  Table,
+  Typography,
+} from 'antd';
+import { useState } from 'react';
 
 import { quizQueries } from '@/shared/service/query/quiz';
 
@@ -18,9 +26,15 @@ export default function CreateQuizzes() {
   const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
   const [formIsDirty, setFormIsDirty] = useState(false);
 
-  const blocker = useBlocker({
-    shouldBlockFn: () => formIsDirty,
-    withResolver: true,
+  useBlocker({
+    shouldBlockFn: () => {
+      if (!formIsDirty) return false;
+
+      const shouldLeave = confirm(
+        '변경사항이 저장되지 않았습니다. 정말로 나가시겠습니까?'
+      );
+      return !shouldLeave;
+    },
   });
 
   const quizFormValues = Form.useWatch([], form)?.dataSource || [];
@@ -176,28 +190,16 @@ export default function CreateQuizzes() {
     },
   ];
 
-  useEffect(() => {
-    if (blocker.status === 'blocked') {
-      if (
-        window.confirm('변경사항이 저장되지 않았습니다. 정말로 나가시겠습니까?')
-      ) {
-        blocker.proceed();
-      } else {
-        blocker.reset();
-      }
-    }
-  }, [blocker]);
-
   return (
     <>
       {contextHolder}
       <header className="p-6 border-b border-contents-200 flex justify-between items-center">
-        <div>
-          <h1 className="text-title-2 font-bold">퀴즈 추가</h1>
-          <p className="text-contents-600 mt-1">
+        <Typography>
+          <Typography.Title>퀴즈 추가</Typography.Title>
+          <Typography.Paragraph>
             셀에 새로운 정보를 입력해 주세요.
-          </p>
-        </div>
+          </Typography.Paragraph>
+        </Typography>
         <button
           onClick={handleBulkUpload}
           className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors cursor-pointer"
