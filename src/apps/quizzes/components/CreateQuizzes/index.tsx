@@ -1,15 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { useBlocker, useNavigate } from '@tanstack/react-router';
 import type { TableProps } from 'antd';
-import {
-  Button,
-  Drawer,
-  Form,
-  notification,
-  Popconfirm,
-  Table,
-  Typography,
-} from 'antd';
+import { Button, Form, Popconfirm, Table, Typography } from 'antd';
+import useApp from 'antd/es/app/useApp';
 import { useState } from 'react';
 
 import { quizQueries } from '@/shared/service/query/quiz';
@@ -19,10 +12,9 @@ import ImageDrawer from './ImageDrawer';
 import type { CreateQuizDto } from './schema';
 
 export default function CreateQuizzes() {
-  const [notificationApi, contextHolder] = notification.useNotification();
+  const { notification, modal } = useApp();
   const navigate = useNavigate();
   const [form] = Form.useForm<{ dataSource: CreateQuizDto[] }>();
-  const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
   const [formIsDirty, setFormIsDirty] = useState(false);
 
@@ -38,6 +30,7 @@ export default function CreateQuizzes() {
   });
 
   const quizFormValues = Form.useWatch([], form)?.dataSource || [];
+
   const handleDelete = (key: React.Key) => {
     const newData = quizFormValues.filter((quiz) => quiz.key !== key);
     form.setFieldsValue({ dataSource: [...newData] });
@@ -56,7 +49,7 @@ export default function CreateQuizzes() {
     setFormIsDirty(true);
   };
 
-  const handleSave = (
+  const handleSave = async (
     key: string,
     dataIndex: keyof CreateQuizDto,
     value: unknown
@@ -78,20 +71,39 @@ export default function CreateQuizzes() {
     if (selectedRowKey) {
       handleSave(selectedRowKey, 'imageUrl', imageUrl);
     }
-    setDrawerVisible(false);
+  };
+
+  const showImagesModal = (recordKey: string) => {
+    setSelectedRowKey(recordKey);
+    const modalInstance = modal.info({
+      title: '이미지 선택',
+      content: (
+        <ImageDrawer
+          onSelect={(imageUrl) => {
+            handleImageSelect(imageUrl);
+            modalInstance.destroy();
+          }}
+        />
+      ),
+      icon: null,
+      width: 550,
+      footer: null,
+      closable: true,
+    });
   };
 
   const { mutateAsync: quizMutation } = useMutation(quizQueries.bulkUpload);
 
-  const handleBulkUpload = () => {
-    const dataToSave = quizFormValues.map(({ key, ...rest }) => rest);
+  const handleBulkUpload = async () => {
+    setFormIsDirty(false);
+    const tableValues = await form.validateFields();
+    const dataToSave = tableValues.dataSource.map(({ key, ...rest }) => rest);
     quizMutation(dataToSave, {
       onSuccess: () => {
-        setFormIsDirty(false);
         navigate({ to: '/quizzes' });
       },
       onError: () => {
-        notificationApi.info({
+        notification.info({
           message: '❌ 퀴즈 업로드에 실패했습니다.',
           description:
             '잠시 뒤 다시 요청을 보내거나, 새로고침 후 다시 시도해 보세요.',
@@ -111,10 +123,11 @@ export default function CreateQuizzes() {
       title: '카테고리',
       dataIndex: 'type',
       width: '15%',
-      onCell: (record: CreateQuizDto) => ({
+      onCell: (record: CreateQuizDto, rowIndex) => ({
         record,
         inputType: 'select',
         dataIndex: 'type',
+        rowIndex,
         onSave: handleSave,
         isEdit: true,
         children: record.type,
@@ -124,11 +137,11 @@ export default function CreateQuizzes() {
       title: '질문',
       dataIndex: 'question',
       width: '45%',
-
-      onCell: (record: CreateQuizDto) => ({
+      onCell: (record: CreateQuizDto, rowIndex) => ({
         record,
         inputType: 'text',
         dataIndex: 'question',
+        rowIndex,
         onSave: handleSave,
         isEdit: true,
         children: record.question,
@@ -138,10 +151,11 @@ export default function CreateQuizzes() {
       title: '정답',
       dataIndex: 'answer',
       width: '15%',
-      onCell: (record: CreateQuizDto) => ({
+      onCell: (record: CreateQuizDto, rowIndex) => ({
         record,
         inputType: 'text',
         dataIndex: 'answer',
+        rowIndex,
         onSave: handleSave,
         isEdit: true,
         children: record.answer,
@@ -157,18 +171,10 @@ export default function CreateQuizzes() {
             <img
               src={imageUrl}
               alt="quiz"
-              onClick={() => {
-                setDrawerVisible(true);
-                setSelectedRowKey(record.key);
-              }}
+              onClick={() => showImagesModal(record.key)}
             />
           ) : (
-            <Button
-              onClick={() => {
-                setDrawerVisible(true);
-                setSelectedRowKey(record.key);
-              }}
-            >
+            <Button type="primary" onClick={() => showImagesModal(record.key)}>
               이미지 선택
             </Button>
           )}
@@ -192,7 +198,6 @@ export default function CreateQuizzes() {
 
   return (
     <>
-      {contextHolder}
       <header className="p-6 border-b border-contents-200 flex justify-between items-center">
         <Typography>
           <Typography.Title>퀴즈 추가</Typography.Title>
@@ -200,16 +205,23 @@ export default function CreateQuizzes() {
             셀에 새로운 정보를 입력해 주세요.
           </Typography.Paragraph>
         </Typography>
-        <button
+        <Button
           onClick={handleBulkUpload}
+          type="primary"
+          htmlType="submit"
           className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors cursor-pointer"
         >
           변경 사항 저장
-        </button>
+        </Button>
       </header>
       <main className="p-6">
         <Form form={form} component={false} initialValues={{ dataSource: [] }}>
-          <Form.Item name="dataSource" rules={[{ required: true }]}>
+          <Form.Item
+            name="dataSource"
+            rules={[
+              { required: true, message: '새로운 퀴즈 추가가 필요합니다.' },
+            ]}
+          >
             <Table
               components={{
                 body: { cell: EditableCell },
@@ -229,15 +241,6 @@ export default function CreateQuizzes() {
         >
           행 추가
         </Button>
-        <Drawer
-          title="이미지 선택"
-          placement="right"
-          onClose={() => setDrawerVisible(false)}
-          open={drawerVisible}
-          width={500}
-        >
-          <ImageDrawer onSelect={handleImageSelect} />
-        </Drawer>
       </main>
     </>
   );

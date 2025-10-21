@@ -1,4 +1,4 @@
-import { Select } from 'antd';
+import { Form, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import React from 'react';
 
@@ -10,13 +10,14 @@ interface EditableCellProps {
   inputType: 'number' | 'text' | 'select';
   onSave: (key: string, dataIndex: keyof CreateQuizDto, value: unknown) => void;
   children: React.ReactNode;
+  rowIndex: number;
 }
 
 const SelectBox = ({
   record,
   dataIndex,
   onSave,
-}: Omit<EditableCellProps, 'children' | 'inputType'>) => (
+}: Omit<EditableCellProps, 'children' | 'inputType' | 'rowIndex'>) => (
   <Select
     autoFocus
     defaultValue={record[dataIndex]}
@@ -35,7 +36,7 @@ const TextBox = ({
   record,
   dataIndex,
   onSave,
-}: Omit<EditableCellProps, 'children' | 'inputType'>) => (
+}: Omit<EditableCellProps, 'children' | 'inputType' | 'rowIndex'>) => (
   <TextArea
     defaultValue={record[dataIndex]}
     autoFocus
@@ -53,27 +54,38 @@ const EditableCell: React.FC<EditableCellProps> = ({
   inputType,
   onSave,
   children,
+  rowIndex,
   ...restProps
 }) => {
   const renderCell = () => {
     if (inputType === 'select') {
       return (
-        <SelectBox
-          record={record}
-          dataIndex={dataIndex}
-          onSave={onSave}
-          {...restProps}
-        />
+        <Form.Item
+          name={['dataSource', rowIndex, dataIndex]}
+          rules={[{ required: true, message: '카테고리 선택은 필수입니다.' }]}
+        >
+          <SelectBox
+            record={record}
+            dataIndex={dataIndex}
+            onSave={onSave}
+            {...restProps}
+          />
+        </Form.Item>
       );
     }
     if (inputType === 'text') {
       return (
-        <TextBox
-          record={record}
-          dataIndex={dataIndex}
-          onSave={onSave}
-          {...restProps}
-        />
+        <Form.Item
+          name={['dataSource', rowIndex, dataIndex]}
+          rules={[{ required: true, message: '입력은 필수입니다.' }]}
+        >
+          <TextBox
+            record={record}
+            dataIndex={dataIndex}
+            onSave={onSave}
+            {...restProps}
+          />
+        </Form.Item>
       );
     }
     return children;
