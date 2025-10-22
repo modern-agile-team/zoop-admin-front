@@ -16,9 +16,7 @@ export const handlers = [
     );
   }),
 
-  http.get(`${BASE_URL}/admin/quizzes/:id`, async ({ params }) => {
-    const { id } = params;
-
+  http.get(`${BASE_URL}/admin/quizzes/:id`, async () => {
     return HttpResponse.json({ error: 'Server Error' }, { status: 500 });
   }),
 ];
