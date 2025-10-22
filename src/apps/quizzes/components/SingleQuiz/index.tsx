@@ -7,14 +7,14 @@ import Title from 'antd/es/typography/Title';
 import { quizQueries } from '@/shared/service/query/quiz';
 
 export default function SingleQuiz() {
-  const { id } = useParams({ strict: false });
+  const { id: quizId } = useParams({ from: '/(menus)/quizzes/$id/' });
   const {
     data: quiz,
     isLoading,
     isError,
   } = useQuery({
-    ...quizQueries.getSingle(id!),
-    enabled: !!id,
+    ...quizQueries.getSingle(quizId!),
+    enabled: !!quizId,
   });
 
   if (isLoading) {

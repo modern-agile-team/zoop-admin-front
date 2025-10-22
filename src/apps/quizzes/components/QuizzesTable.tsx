@@ -40,7 +40,8 @@ export default function QuizzesTable() {
             }}
             onRow={(record) => {
               return {
-                onClick: () => navigate({ to: `/quizzes/${record.id}` }),
+                onClick: () =>
+                  navigate({ to: `/quizzes/$id`, params: { id: record.id } }),
               };
             }}
           >
