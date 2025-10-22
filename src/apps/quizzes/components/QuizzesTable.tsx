@@ -1,4 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { Table } from 'antd';
 import Column from 'antd/es/table/Column';
 import ColumnGroup from 'antd/es/table/ColumnGroup';
@@ -10,6 +11,7 @@ import { TABLE } from '../constants';
 
 export default function QuizzesTable() {
   const { data: quizzes } = useSuspenseQuery(quizQueries.getList);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -35,6 +37,12 @@ export default function QuizzesTable() {
             bordered
             scroll={{
               y: 120 * 3,
+            }}
+            onRow={(record) => {
+              return {
+                onClick: () =>
+                  navigate({ to: `/quizzes/$id`, params: { id: record.id } }),
+              };
             }}
           >
             <Column title="카테고리" dataIndex="type" key="type" />
