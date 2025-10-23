@@ -85,6 +85,7 @@ export default function EditQuiz() {
                 ]}
               >
                 <Select
+                  defaultValue={quiz.type}
                   options={[
                     { value: 'multipleChoice', label: '다중선택' },
                     { value: 'shortAnswer', label: '짧은 글' },
@@ -96,14 +97,14 @@ export default function EditQuiz() {
                 label="질문"
                 rules={[{ required: true, message: '질문을 입력해주세요.' }]}
               >
-                <TextArea rows={4} />
+                <TextArea rows={4} defaultValue={quiz.question!} />
               </Form.Item>
               <Form.Item
                 name="answer"
                 label="정답"
                 rules={[{ required: true, message: '정답을 입력해주세요.' }]}
               >
-                <TextArea rows={2} />
+                <TextArea rows={2} defaultValue={quiz.answer} />
               </Form.Item>
             </div>
           </div>
