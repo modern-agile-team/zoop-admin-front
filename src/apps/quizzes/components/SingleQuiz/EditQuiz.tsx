@@ -1,6 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useBlocker, useParams, useRouter } from '@tanstack/react-router';
-import { Button, Card, Form, Image, Select, Skeleton } from 'antd';
+import {
+  useBlocker,
+  useNavigate,
+  useParams,
+  useRouter,
+} from '@tanstack/react-router';
+import { Button, Card, Form, Image, Popconfirm, Select, Skeleton } from 'antd';
 import useApp from 'antd/es/app/useApp';
 import Input from 'antd/es/input/Input';
 import TextArea from 'antd/es/input/TextArea';
@@ -14,6 +19,7 @@ import { quizQueries } from '@/shared/service/query/quiz';
 
 export default function EditQuiz() {
   const router = useRouter();
+  const navigate = useNavigate();
   const [form] = Form.useForm<UpdateQuizDto>();
   const { message } = useApp();
   const [formIsDirty, setFormIsDirty] = useState(false);
@@ -51,6 +57,21 @@ export default function EditQuiz() {
     },
     onError: () => {
       message.error('퀴즈 수정에 실패했습니다.');
+    },
+  });
+
+  const { mutate: deleteQuiz } = useMutation({
+    ...quizQueries.singleDelete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['quiz'] });
+      queryClient.invalidateQueries({
+        queryKey: quizQueries.singleDelete.mutationKey,
+      });
+      navigate({ to: '/quizzes' });
+      message.success('퀴즈가 성공적으로 삭제되었습니다.');
+    },
+    onError: () => {
+      message.error('퀴즈 삭제에 실패했습니다.');
     },
   });
 
@@ -104,6 +125,18 @@ export default function EditQuiz() {
               <Button type="primary" htmlType="submit">
                 저장
               </Button>
+              <Popconfirm
+                title="Delete the task"
+                description="Are you sure to delete this task?"
+                onConfirm={() => deleteQuiz({ quizId })}
+                onCancel={() => message.info('삭제를 취소했습니다.')}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button type="primary" danger>
+                  삭제
+                </Button>
+              </Popconfirm>
             </div>
           }
         >

@@ -2,6 +2,7 @@ import { mutationOptions, queryOptions } from '@tanstack/react-query';
 
 import {
   createQuizzesControllerCreateQuizzesAdmin,
+  deleteQuizControllerDeleteQuizAdmin,
   getQuizControllerGetQuizzesAdmin,
   listQuizzesControllerListQuizzes,
   updateQuizControllerUpdateQuizAdmin,
@@ -35,5 +36,10 @@ export const quizQueries = {
     mutationKey: ['quiz', 'modified'] as const,
     mutationFn: ({ quizId, updateQuizDto }: UpdateParams) =>
       updateQuizControllerUpdateQuizAdmin(quizId, updateQuizDto),
+  }),
+  singleDelete: mutationOptions({
+    mutationKey: ['quiz', 'delete'] as const,
+    mutationFn: ({ quizId }: { quizId: string }) =>
+      deleteQuizControllerDeleteQuizAdmin(quizId),
   }),
 };
