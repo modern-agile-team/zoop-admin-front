@@ -1,16 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from '@tanstack/react-router';
 import { Button, Card, Form, Image, Select, Skeleton } from 'antd';
+import useApp from 'antd/es/app/useApp';
 import Input from 'antd/es/input/Input';
 import TextArea from 'antd/es/input/TextArea';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
 
+import type { UpdateQuizDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
+import { queryClient } from '@/lib/queryClient';
 import { quizQueries } from '@/shared/service/query/quiz';
 
 export default function EditQuiz() {
   const router = useRouter();
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<UpdateQuizDto>();
+  const { message } = useApp();
 
   const { id: quizId } = useParams({ from: '/(menus)/quizzes/$id/edit/' });
   const {
@@ -20,6 +24,21 @@ export default function EditQuiz() {
   } = useQuery({
     ...quizQueries.getSingle(quizId!),
     enabled: !!quizId,
+  });
+
+  const { mutate: updateQuiz } = useMutation({
+    ...quizQueries.singleUpdate,
+    onSuccess: () => {
+      message.success('퀴즈가 성공적으로 수정되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['quiz'] });
+      queryClient.invalidateQueries({
+        queryKey: quizQueries.singleUpdate.mutationKey,
+      });
+      router.history.back();
+    },
+    onError: () => {
+      message.error('퀴즈 수정에 실패했습니다.');
+    },
   });
 
   if (isLoading) {
@@ -43,11 +62,13 @@ export default function EditQuiz() {
     );
   }
 
-  const onFinish = () => {};
-
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <Form form={form} layout="vertical" onFinish={onFinish}>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={(formData) => updateQuiz({ quizId, updateQuizDto: formData })}
+      >
         <Card
           title={<Title level={3}>퀴즈 수정</Title>}
           bordered={false}
