@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
-import { Card, Descriptions, Image, Skeleton, Tag } from 'antd';
+import { useNavigate, useParams } from '@tanstack/react-router';
+import { Button, Card, Descriptions, Image, Skeleton, Tag } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
 
 import { quizQueries } from '@/shared/service/query/quiz';
 
 export default function SingleQuiz() {
+  const navigate = useNavigate();
   const { id: quizId } = useParams({ from: '/(menus)/quizzes/$id/' });
   const {
     data: quiz,
@@ -38,10 +39,19 @@ export default function SingleQuiz() {
     );
   }
 
+  const routeEditHandler = () => {
+    navigate({ to: '/quizzes/$id/edit', params: { id: quizId } });
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <Card
         title={<Title level={3}>퀴즈 상세 정보</Title>}
+        extra={
+          <Button type="primary" onClick={routeEditHandler}>
+            수정
+          </Button>
+        }
         bordered={false}
         className="shadow-md"
       >
