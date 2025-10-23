@@ -1,9 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/(menus)/quizzes/$id/edit/')({
-  component: RouteComponent,
-});
+import EditQuiz from '@/apps/quizzes/components/SingleQuiz/EditQuiz';
 
-function RouteComponent() {
-  return <div>Hello "/(menus)/quizzes/$id/edit/"!</div>;
-}
+export const Route = createFileRoute('/(menus)/quizzes/$id/edit/')({
+  component: EditQuiz,
+});
