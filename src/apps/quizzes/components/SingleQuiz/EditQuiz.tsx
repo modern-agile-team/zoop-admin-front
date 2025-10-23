@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from '@tanstack/react-router';
 import { Button, Card, Form, Image, Select, Skeleton } from 'antd';
-import useApp from 'antd/es/app/useApp';
 import Input from 'antd/es/input/Input';
 import TextArea from 'antd/es/input/TextArea';
 import Paragraph from 'antd/es/typography/Paragraph';
@@ -12,7 +11,6 @@ import { quizQueries } from '@/shared/service/query/quiz';
 export default function EditQuiz() {
   const router = useRouter();
   const [form] = Form.useForm();
-  const { message } = useApp();
 
   const { id: quizId } = useParams({ from: '/(menus)/quizzes/$id/edit/' });
   const {
