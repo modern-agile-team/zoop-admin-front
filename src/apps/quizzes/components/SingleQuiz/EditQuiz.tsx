@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useParams, useRouter } from '@tanstack/react-router';
+import { useBlocker, useParams, useRouter } from '@tanstack/react-router';
 import { Button, Card, Form, Image, Select, Skeleton } from 'antd';
 import useApp from 'antd/es/app/useApp';
 import Input from 'antd/es/input/Input';
 import TextArea from 'antd/es/input/TextArea';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
+import { useEffect, useState } from 'react';
 
 import type { UpdateQuizDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 import { queryClient } from '@/lib/queryClient';
@@ -15,6 +16,18 @@ export default function EditQuiz() {
   const router = useRouter();
   const [form] = Form.useForm<UpdateQuizDto>();
   const { message } = useApp();
+  const [formIsDirty, setFormIsDirty] = useState(false);
+
+  useBlocker({
+    shouldBlockFn: () => {
+      if (!formIsDirty) return false;
+
+      const shouldLeave = confirm(
+        '변경사항이 저장되지 않았습니다. 정말로 나가시겠습니까?'
+      );
+      return !shouldLeave;
+    },
+  });
 
   const { id: quizId } = useParams({ from: '/(menus)/quizzes/$id/edit/' });
   const {
@@ -29,17 +42,28 @@ export default function EditQuiz() {
   const { mutate: updateQuiz } = useMutation({
     ...quizQueries.singleUpdate,
     onSuccess: () => {
-      message.success('퀴즈가 성공적으로 수정되었습니다.');
       queryClient.invalidateQueries({ queryKey: ['quiz'] });
       queryClient.invalidateQueries({
         queryKey: quizQueries.singleUpdate.mutationKey,
       });
       router.history.back();
+      message.success('퀴즈가 성공적으로 수정되었습니다.');
     },
     onError: () => {
       message.error('퀴즈 수정에 실패했습니다.');
     },
   });
+
+  useEffect(() => {
+    if (quiz) {
+      form.setFieldsValue(quiz);
+    }
+  }, [quiz, form]);
+
+  const onFinish = (values: UpdateQuizDto) => {
+    setFormIsDirty(false);
+    updateQuiz({ quizId, updateQuizDto: values });
+  };
 
   if (isLoading) {
     return (
@@ -67,7 +91,8 @@ export default function EditQuiz() {
       <Form
         form={form}
         layout="vertical"
-        onFinish={(formData) => updateQuiz({ quizId, updateQuizDto: formData })}
+        onFinish={onFinish}
+        onValuesChange={() => setFormIsDirty(true)}
       >
         <Card
           title={<Title level={3}>퀴즈 수정</Title>}
