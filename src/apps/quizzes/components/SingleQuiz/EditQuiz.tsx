@@ -11,7 +11,7 @@ import Input from 'antd/es/input/Input';
 import TextArea from 'antd/es/input/TextArea';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import type { UpdateQuizDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 import { queryClient } from '@/lib/queryClient';
@@ -33,6 +33,7 @@ export default function EditQuiz() {
       );
       return !shouldLeave;
     },
+    enableBeforeUnload: formIsDirty,
   });
 
   const { id: quizId } = useParams({ from: '/(menus)/quizzes/$id/edit/' });
@@ -75,12 +76,6 @@ export default function EditQuiz() {
     },
   });
 
-  useEffect(() => {
-    if (quiz) {
-      form.setFieldsValue(quiz);
-    }
-  }, [quiz, form]);
-
   const onFinish = (values: UpdateQuizDto) => {
     setFormIsDirty(false);
     updateQuiz({ quizId, updateQuizDto: values });
@@ -109,15 +104,20 @@ export default function EditQuiz() {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <Form
+      <Form<UpdateQuizDto>
         form={form}
         layout="vertical"
         onFinish={onFinish}
         onValuesChange={() => setFormIsDirty(true)}
+        initialValues={{
+          type: quiz.type,
+          question: quiz.question,
+          answer: quiz.answer,
+          imageUrl: quiz.imageUrl,
+        }}
       >
         <Card
           title={<Title level={3}>퀴즈 수정</Title>}
-          bordered={false}
           className="shadow-md"
           extra={
             <div className="flex gap-2">
@@ -126,12 +126,12 @@ export default function EditQuiz() {
                 저장
               </Button>
               <Popconfirm
-                title="Delete the task"
-                description="Are you sure to delete this task?"
+                title="정말로 삭제하시겠습니까?"
+                description="한 번 삭제된 정보를 복구할 수 없습니다."
                 onConfirm={() => deleteQuiz({ quizId })}
                 onCancel={() => message.info('삭제를 취소했습니다.')}
-                okText="Yes"
-                cancelText="No"
+                okText="삭제"
+                cancelText="취소"
               >
                 <Button type="primary" danger>
                   삭제
@@ -149,7 +149,6 @@ export default function EditQuiz() {
                   alt="퀴즈 이미지"
                   className="rounded-lg shadow-sm"
                 />
-                {/* TODO: 이미지 변경 기능 추가 */}
               </div>
             )}
             <div className="flex-grow">
