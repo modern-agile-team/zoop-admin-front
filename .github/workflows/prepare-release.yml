@@ -15,6 +15,12 @@ permissions: write-all
 jobs:
   prepare-release:
     runs-on: ubuntu-latest
+    environment:
+      name: prod
+    permissions:
+      contents: write
+      pull-requests: write
+      packages: write
     if: ${{ inputs.bumpLevel }}
 
     steps:
