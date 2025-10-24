@@ -2,7 +2,7 @@
   "name": "quiz-game-io-admin",
   "private": true,
   "type": "module",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "dev": "vite --port 3030",
     "build": "vite build --mode prod && tsc",
