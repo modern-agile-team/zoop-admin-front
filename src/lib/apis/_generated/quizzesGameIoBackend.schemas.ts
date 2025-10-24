@@ -20,6 +20,10 @@ export interface AccountDto {
   isActive: boolean;
 }
 
+export interface ActiveAccountCountDto {
+  count: number;
+}
+
 export interface AccountCollectionDto {
   data: AccountDto[];
 }
@@ -52,9 +56,10 @@ export interface CreateGameRoomDto {
   quizzesCount: number;
 }
 
-export type GameRoomMemberDtoRole =
-  (typeof GameRoomMemberDtoRole)[keyof typeof GameRoomMemberDtoRole];
+export type GameRoomMemberDtoRole = typeof GameRoomMemberDtoRole[keyof typeof GameRoomMemberDtoRole];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GameRoomMemberDtoRole = {
   host: 'host',
   player: 'player',
@@ -71,9 +76,10 @@ export interface GameRoomMemberDto {
   nickname: string;
 }
 
-export type GameRoomDtoStatus =
-  (typeof GameRoomDtoStatus)[keyof typeof GameRoomDtoStatus];
+export type GameRoomDtoStatus = typeof GameRoomDtoStatus[keyof typeof GameRoomDtoStatus];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GameRoomDtoStatus = {
   waiting: 'waiting',
   starting: 'starting',
@@ -104,35 +110,6 @@ export interface GameRoomCollectionDto {
   data: GameRoomDto[];
 }
 
-export interface CreateImageDto {
-  /** image file */
-  file: Blob;
-  /** image category */
-  category: string;
-}
-
-export interface ImageDto {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  category: string;
-  originalFileName: string;
-  imageUrl: string;
-  extension: string;
-  contentType: string;
-  contentLength: number;
-  width: number;
-  height: number;
-}
-
-export interface ImageCollectionDto {
-  currentPage: number;
-  perPage: number;
-  totalCount: number;
-  totalPages: number;
-  data: ImageDto[];
-}
-
 export interface CreateNicknameSourceDto {
   /**
    * @minLength 1
@@ -148,6 +125,22 @@ export interface NicknameSourceDto {
   name: string;
   sequence: number;
   fullname: string;
+}
+
+export interface NicknameSourceCollectionDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
+  data: NicknameSourceDto[];
+}
+
+export interface UpdateNicknameSourceDto {
+  /**
+   * @minLength 1
+   * @maxLength 10
+   */
+  name?: string;
 }
 
 export interface CreateQuizzesDto {
@@ -192,12 +185,46 @@ export interface UpdateQuizDto {
   imageUrl?: string | null;
 }
 
+export interface CreateQuizImageDto {
+  /** quiz image file */
+  file: Blob;
+  /** quiz image category */
+  category: string;
+}
+
+export interface QuizImageDto {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  category: string;
+  originalFileName: string;
+  quizImageUrl: string;
+  extension: string;
+  contentType: string;
+  contentLength: number;
+  width: number;
+  height: number;
+}
+
+export interface QuizImageCollectionDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
+  data: QuizImageDto[];
+}
+
+export type SignInWithGoogleControllerSignInWithGoogleParams = {
+redirectUrl?: string;
+};
+
 /**
  * error code
  */
-export type SignUpWithUsernameControllerSignUpWithUsername400Code =
-  (typeof SignUpWithUsernameControllerSignUpWithUsername400Code)[keyof typeof SignUpWithUsernameControllerSignUpWithUsername400Code];
+export type SignUpWithUsernameControllerSignUpWithUsername400Code = typeof SignUpWithUsernameControllerSignUpWithUsername400Code[keyof typeof SignUpWithUsernameControllerSignUpWithUsername400Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SignUpWithUsernameControllerSignUpWithUsername400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
 } as const;
@@ -214,9 +241,10 @@ export type SignUpWithUsernameControllerSignUpWithUsername400 = {
 /**
  * error code
  */
-export type SignUpWithUsernameControllerSignUpWithUsername409Code =
-  (typeof SignUpWithUsernameControllerSignUpWithUsername409Code)[keyof typeof SignUpWithUsernameControllerSignUpWithUsername409Code];
+export type SignUpWithUsernameControllerSignUpWithUsername409Code = typeof SignUpWithUsernameControllerSignUpWithUsername409Code[keyof typeof SignUpWithUsernameControllerSignUpWithUsername409Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SignUpWithUsernameControllerSignUpWithUsername409Code = {
   ACCOUNTUSERNAME_ALREADY_OCCUPIED: 'ACCOUNT.USERNAME_ALREADY_OCCUPIED',
 } as const;
@@ -233,9 +261,10 @@ export type SignUpWithUsernameControllerSignUpWithUsername409 = {
 /**
  * error code
  */
-export type SignInWithUsernameControllerSignInWithUsername400Code =
-  (typeof SignInWithUsernameControllerSignInWithUsername400Code)[keyof typeof SignInWithUsernameControllerSignInWithUsername400Code];
+export type SignInWithUsernameControllerSignInWithUsername400Code = typeof SignInWithUsernameControllerSignInWithUsername400Code[keyof typeof SignInWithUsernameControllerSignInWithUsername400Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SignInWithUsernameControllerSignInWithUsername400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
 } as const;
@@ -252,9 +281,10 @@ export type SignInWithUsernameControllerSignInWithUsername400 = {
 /**
  * error code
  */
-export type SignInWithUsernameControllerSignInWithUsername401Code =
-  (typeof SignInWithUsernameControllerSignInWithUsername401Code)[keyof typeof SignInWithUsernameControllerSignInWithUsername401Code];
+export type SignInWithUsernameControllerSignInWithUsername401Code = typeof SignInWithUsernameControllerSignInWithUsername401Code[keyof typeof SignInWithUsernameControllerSignInWithUsername401Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SignInWithUsernameControllerSignInWithUsername401Code = {
   AUTHSIGN_IN_INFO_NOT_MATCHED: 'AUTH.SIGN_IN_INFO_NOT_MATCHED',
 } as const;
@@ -267,3 +297,4 @@ export type SignInWithUsernameControllerSignInWithUsername401 = {
   /** error code */
   code?: SignInWithUsernameControllerSignInWithUsername401Code;
 };
+

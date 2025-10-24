@@ -16,7 +16,8 @@
     "commit": "node ./scripts/commit-helper.js",
     "prepare": "husky",
     "codegen:apis": "yarn node ./scripts/codegen/codeGen-apis.mjs",
-    "codegen:sync": "yarn node ./scripts/codegen/syncCodeGenSpec.mjs"
+    "codegen:sync": "yarn node ./scripts/codegen/syncCodeGenSpec.mjs",
+    "codegen:auto": "bash ./scripts/codegen/autoCodeGen.sh"
   },
   "dependencies": {
     "@ant-design/icons": "5.x",

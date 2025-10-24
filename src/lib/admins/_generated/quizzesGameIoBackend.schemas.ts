@@ -20,6 +20,10 @@ export interface AccountDto {
   isActive: boolean;
 }
 
+export interface ActiveAccountCountDto {
+  count: number;
+}
+
 export interface AccountCollectionDto {
   data: AccountDto[];
 }
@@ -52,9 +56,10 @@ export interface CreateGameRoomDto {
   quizzesCount: number;
 }
 
-export type GameRoomMemberDtoRole =
-  (typeof GameRoomMemberDtoRole)[keyof typeof GameRoomMemberDtoRole];
+export type GameRoomMemberDtoRole = typeof GameRoomMemberDtoRole[keyof typeof GameRoomMemberDtoRole];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GameRoomMemberDtoRole = {
   host: 'host',
   player: 'player',
@@ -71,9 +76,10 @@ export interface GameRoomMemberDto {
   nickname: string;
 }
 
-export type GameRoomDtoStatus =
-  (typeof GameRoomDtoStatus)[keyof typeof GameRoomDtoStatus];
+export type GameRoomDtoStatus = typeof GameRoomDtoStatus[keyof typeof GameRoomDtoStatus];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GameRoomDtoStatus = {
   waiting: 'waiting',
   starting: 'starting',
@@ -104,35 +110,6 @@ export interface GameRoomCollectionDto {
   data: GameRoomDto[];
 }
 
-export interface CreateImageDto {
-  /** image file */
-  file: Blob;
-  /** image category */
-  category: string;
-}
-
-export interface ImageDto {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  category: string;
-  originalFileName: string;
-  imageUrl: string;
-  extension: string;
-  contentType: string;
-  contentLength: number;
-  width: number;
-  height: number;
-}
-
-export interface ImageCollectionDto {
-  currentPage: number;
-  perPage: number;
-  totalCount: number;
-  totalPages: number;
-  data: ImageDto[];
-}
-
 export interface CreateNicknameSourceDto {
   /**
    * @minLength 1
@@ -148,6 +125,22 @@ export interface NicknameSourceDto {
   name: string;
   sequence: number;
   fullname: string;
+}
+
+export interface NicknameSourceCollectionDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
+  data: NicknameSourceDto[];
+}
+
+export interface UpdateNicknameSourceDto {
+  /**
+   * @minLength 1
+   * @maxLength 10
+   */
+  name?: string;
 }
 
 export interface CreateQuizzesDto {
@@ -192,218 +185,42 @@ export interface UpdateQuizDto {
   imageUrl?: string | null;
 }
 
-/**
- * error code
- */
-export type CreateImageControllerCreateImageAdmin400Code =
-  (typeof CreateImageControllerCreateImageAdmin400Code)[keyof typeof CreateImageControllerCreateImageAdmin400Code];
+export interface CreateQuizImageDto {
+  /** quiz image file */
+  file: Blob;
+  /** quiz image category */
+  category: string;
+}
 
-export const CreateImageControllerCreateImageAdmin400Code = {
-  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
-} as const;
+export interface QuizImageDto {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  category: string;
+  originalFileName: string;
+  quizImageUrl: string;
+  extension: string;
+  contentType: string;
+  contentLength: number;
+  width: number;
+  height: number;
+}
 
-export type CreateImageControllerCreateImageAdmin400 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: CreateImageControllerCreateImageAdmin400Code;
-};
-
-/**
- * error code
- */
-export type CreateImageControllerCreateImageAdmin401Code =
-  (typeof CreateImageControllerCreateImageAdmin401Code)[keyof typeof CreateImageControllerCreateImageAdmin401Code];
-
-export const CreateImageControllerCreateImageAdmin401Code = {
-  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
-} as const;
-
-export type CreateImageControllerCreateImageAdmin401 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: CreateImageControllerCreateImageAdmin401Code;
-};
+export interface QuizImageCollectionDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
+  data: QuizImageDto[];
+}
 
 /**
  * error code
  */
-export type CreateImageControllerCreateImageAdmin403Code =
-  (typeof CreateImageControllerCreateImageAdmin403Code)[keyof typeof CreateImageControllerCreateImageAdmin403Code];
+export type CreateNicknameSourceControllerCreateNicknameSourceAdmin400Code = typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin400Code[keyof typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin400Code];
 
-export const CreateImageControllerCreateImageAdmin403Code = {
-  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
-} as const;
 
-export type CreateImageControllerCreateImageAdmin403 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: CreateImageControllerCreateImageAdmin403Code;
-};
-
-export type ListImagesControllerListImagesAdminParams = {
-  /**
-   * 카테고리 필터링
-   */
-  category?: string;
-  /**
-   * @minimum 1
-   */
-  page?: number;
-  /**
-   * @minimum 5
-   * @maximum 1000
-   */
-  perPage?: number;
-};
-
-/**
- * error code
- */
-export type ListImagesControllerListImagesAdmin400Code =
-  (typeof ListImagesControllerListImagesAdmin400Code)[keyof typeof ListImagesControllerListImagesAdmin400Code];
-
-export const ListImagesControllerListImagesAdmin400Code = {
-  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
-} as const;
-
-export type ListImagesControllerListImagesAdmin400 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: ListImagesControllerListImagesAdmin400Code;
-};
-
-/**
- * error code
- */
-export type ListImagesControllerListImagesAdmin401Code =
-  (typeof ListImagesControllerListImagesAdmin401Code)[keyof typeof ListImagesControllerListImagesAdmin401Code];
-
-export const ListImagesControllerListImagesAdmin401Code = {
-  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
-} as const;
-
-export type ListImagesControllerListImagesAdmin401 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: ListImagesControllerListImagesAdmin401Code;
-};
-
-/**
- * error code
- */
-export type ListImagesControllerListImagesAdmin403Code =
-  (typeof ListImagesControllerListImagesAdmin403Code)[keyof typeof ListImagesControllerListImagesAdmin403Code];
-
-export const ListImagesControllerListImagesAdmin403Code = {
-  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
-} as const;
-
-export type ListImagesControllerListImagesAdmin403 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: ListImagesControllerListImagesAdmin403Code;
-};
-
-/**
- * error code
- */
-export type DeleteImageControllerDeleteImage400Code =
-  (typeof DeleteImageControllerDeleteImage400Code)[keyof typeof DeleteImageControllerDeleteImage400Code];
-
-export const DeleteImageControllerDeleteImage400Code = {
-  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
-} as const;
-
-export type DeleteImageControllerDeleteImage400 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: DeleteImageControllerDeleteImage400Code;
-};
-
-/**
- * error code
- */
-export type DeleteImageControllerDeleteImage401Code =
-  (typeof DeleteImageControllerDeleteImage401Code)[keyof typeof DeleteImageControllerDeleteImage401Code];
-
-export const DeleteImageControllerDeleteImage401Code = {
-  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
-} as const;
-
-export type DeleteImageControllerDeleteImage401 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: DeleteImageControllerDeleteImage401Code;
-};
-
-/**
- * error code
- */
-export type DeleteImageControllerDeleteImage403Code =
-  (typeof DeleteImageControllerDeleteImage403Code)[keyof typeof DeleteImageControllerDeleteImage403Code];
-
-export const DeleteImageControllerDeleteImage403Code = {
-  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
-} as const;
-
-export type DeleteImageControllerDeleteImage403 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: DeleteImageControllerDeleteImage403Code;
-};
-
-/**
- * error code
- */
-export type DeleteImageControllerDeleteImage404Code =
-  (typeof DeleteImageControllerDeleteImage404Code)[keyof typeof DeleteImageControllerDeleteImage404Code];
-
-export const DeleteImageControllerDeleteImage404Code = {
-  IMAGENOT_FOUND: 'IMAGE.NOT_FOUND',
-} as const;
-
-export type DeleteImageControllerDeleteImage404 = {
-  /** http status code */
-  statusCode?: number;
-  /** error message */
-  message?: string;
-  /** error code */
-  code?: DeleteImageControllerDeleteImage404Code;
-};
-
-/**
- * error code
- */
-export type CreateNicknameSourceControllerCreateNicknameSourceAdmin400Code =
-  (typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin400Code)[keyof typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin400Code];
-
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateNicknameSourceControllerCreateNicknameSourceAdmin400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
 } as const;
@@ -420,9 +237,10 @@ export type CreateNicknameSourceControllerCreateNicknameSourceAdmin400 = {
 /**
  * error code
  */
-export type CreateNicknameSourceControllerCreateNicknameSourceAdmin401Code =
-  (typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin401Code)[keyof typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin401Code];
+export type CreateNicknameSourceControllerCreateNicknameSourceAdmin401Code = typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin401Code[keyof typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin401Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateNicknameSourceControllerCreateNicknameSourceAdmin401Code = {
   COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
 } as const;
@@ -439,9 +257,10 @@ export type CreateNicknameSourceControllerCreateNicknameSourceAdmin401 = {
 /**
  * error code
  */
-export type CreateNicknameSourceControllerCreateNicknameSourceAdmin403Code =
-  (typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin403Code)[keyof typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin403Code];
+export type CreateNicknameSourceControllerCreateNicknameSourceAdmin403Code = typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin403Code[keyof typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin403Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateNicknameSourceControllerCreateNicknameSourceAdmin403Code = {
   COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
 } as const;
@@ -458,9 +277,10 @@ export type CreateNicknameSourceControllerCreateNicknameSourceAdmin403 = {
 /**
  * error code
  */
-export type CreateNicknameSourceControllerCreateNicknameSourceAdmin409Code =
-  (typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin409Code)[keyof typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin409Code];
+export type CreateNicknameSourceControllerCreateNicknameSourceAdmin409Code = typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin409Code[keyof typeof CreateNicknameSourceControllerCreateNicknameSourceAdmin409Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateNicknameSourceControllerCreateNicknameSourceAdmin409Code = {
   NICKNAME_SOURCEALREADY_EXISTS: 'NICKNAME_SOURCE.ALREADY_EXISTS',
 } as const;
@@ -474,12 +294,345 @@ export type CreateNicknameSourceControllerCreateNicknameSourceAdmin409 = {
   code?: CreateNicknameSourceControllerCreateNicknameSourceAdmin409Code;
 };
 
+export type ListNicknameSourcesControllerListNicknameSourcesParams = {
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 5
+ * @maximum 1000
+ */
+perPage?: number;
+};
+
 /**
  * error code
  */
-export type CreateQuizzesControllerCreateQuizzesAdmin400Code =
-  (typeof CreateQuizzesControllerCreateQuizzesAdmin400Code)[keyof typeof CreateQuizzesControllerCreateQuizzesAdmin400Code];
+export type ListNicknameSourcesControllerListNicknameSources400Code = typeof ListNicknameSourcesControllerListNicknameSources400Code[keyof typeof ListNicknameSourcesControllerListNicknameSources400Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ListNicknameSourcesControllerListNicknameSources400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type ListNicknameSourcesControllerListNicknameSources400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: ListNicknameSourcesControllerListNicknameSources400Code;
+};
+
+/**
+ * error code
+ */
+export type ListNicknameSourcesControllerListNicknameSources401Code = typeof ListNicknameSourcesControllerListNicknameSources401Code[keyof typeof ListNicknameSourcesControllerListNicknameSources401Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ListNicknameSourcesControllerListNicknameSources401Code = {
+  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
+} as const;
+
+export type ListNicknameSourcesControllerListNicknameSources401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: ListNicknameSourcesControllerListNicknameSources401Code;
+};
+
+/**
+ * error code
+ */
+export type ListNicknameSourcesControllerListNicknameSources403Code = typeof ListNicknameSourcesControllerListNicknameSources403Code[keyof typeof ListNicknameSourcesControllerListNicknameSources403Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ListNicknameSourcesControllerListNicknameSources403Code = {
+  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
+} as const;
+
+export type ListNicknameSourcesControllerListNicknameSources403 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: ListNicknameSourcesControllerListNicknameSources403Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteNicknameSourceControllerDeleteNicknameSource400Code = typeof DeleteNicknameSourceControllerDeleteNicknameSource400Code[keyof typeof DeleteNicknameSourceControllerDeleteNicknameSource400Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const DeleteNicknameSourceControllerDeleteNicknameSource400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type DeleteNicknameSourceControllerDeleteNicknameSource400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteNicknameSourceControllerDeleteNicknameSource400Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteNicknameSourceControllerDeleteNicknameSource401Code = typeof DeleteNicknameSourceControllerDeleteNicknameSource401Code[keyof typeof DeleteNicknameSourceControllerDeleteNicknameSource401Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const DeleteNicknameSourceControllerDeleteNicknameSource401Code = {
+  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
+} as const;
+
+export type DeleteNicknameSourceControllerDeleteNicknameSource401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteNicknameSourceControllerDeleteNicknameSource401Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteNicknameSourceControllerDeleteNicknameSource403Code = typeof DeleteNicknameSourceControllerDeleteNicknameSource403Code[keyof typeof DeleteNicknameSourceControllerDeleteNicknameSource403Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const DeleteNicknameSourceControllerDeleteNicknameSource403Code = {
+  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
+} as const;
+
+export type DeleteNicknameSourceControllerDeleteNicknameSource403 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteNicknameSourceControllerDeleteNicknameSource403Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteNicknameSourceControllerDeleteNicknameSource404Code = typeof DeleteNicknameSourceControllerDeleteNicknameSource404Code[keyof typeof DeleteNicknameSourceControllerDeleteNicknameSource404Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const DeleteNicknameSourceControllerDeleteNicknameSource404Code = {
+  NICKNAME_SOURCENOT_FOUND: 'NICKNAME_SOURCE.NOT_FOUND',
+} as const;
+
+export type DeleteNicknameSourceControllerDeleteNicknameSource404 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteNicknameSourceControllerDeleteNicknameSource404Code;
+};
+
+/**
+ * error code
+ */
+export type GetNicknameSourceControllerGetNicknameSourceAdmin400Code = typeof GetNicknameSourceControllerGetNicknameSourceAdmin400Code[keyof typeof GetNicknameSourceControllerGetNicknameSourceAdmin400Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GetNicknameSourceControllerGetNicknameSourceAdmin400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type GetNicknameSourceControllerGetNicknameSourceAdmin400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: GetNicknameSourceControllerGetNicknameSourceAdmin400Code;
+};
+
+/**
+ * error code
+ */
+export type GetNicknameSourceControllerGetNicknameSourceAdmin401Code = typeof GetNicknameSourceControllerGetNicknameSourceAdmin401Code[keyof typeof GetNicknameSourceControllerGetNicknameSourceAdmin401Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GetNicknameSourceControllerGetNicknameSourceAdmin401Code = {
+  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
+} as const;
+
+export type GetNicknameSourceControllerGetNicknameSourceAdmin401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: GetNicknameSourceControllerGetNicknameSourceAdmin401Code;
+};
+
+/**
+ * error code
+ */
+export type GetNicknameSourceControllerGetNicknameSourceAdmin403Code = typeof GetNicknameSourceControllerGetNicknameSourceAdmin403Code[keyof typeof GetNicknameSourceControllerGetNicknameSourceAdmin403Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GetNicknameSourceControllerGetNicknameSourceAdmin403Code = {
+  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
+} as const;
+
+export type GetNicknameSourceControllerGetNicknameSourceAdmin403 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: GetNicknameSourceControllerGetNicknameSourceAdmin403Code;
+};
+
+/**
+ * error code
+ */
+export type GetNicknameSourceControllerGetNicknameSourceAdmin404Code = typeof GetNicknameSourceControllerGetNicknameSourceAdmin404Code[keyof typeof GetNicknameSourceControllerGetNicknameSourceAdmin404Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GetNicknameSourceControllerGetNicknameSourceAdmin404Code = {
+  NICKNAME_SOURCENOT_FOUND: 'NICKNAME_SOURCE.NOT_FOUND',
+} as const;
+
+export type GetNicknameSourceControllerGetNicknameSourceAdmin404 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: GetNicknameSourceControllerGetNicknameSourceAdmin404Code;
+};
+
+/**
+ * error code
+ */
+export type UpdateNicknameSourceControllerUpdateNicknameSource400Code = typeof UpdateNicknameSourceControllerUpdateNicknameSource400Code[keyof typeof UpdateNicknameSourceControllerUpdateNicknameSource400Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UpdateNicknameSourceControllerUpdateNicknameSource400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type UpdateNicknameSourceControllerUpdateNicknameSource400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: UpdateNicknameSourceControllerUpdateNicknameSource400Code;
+};
+
+/**
+ * error code
+ */
+export type UpdateNicknameSourceControllerUpdateNicknameSource401Code = typeof UpdateNicknameSourceControllerUpdateNicknameSource401Code[keyof typeof UpdateNicknameSourceControllerUpdateNicknameSource401Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UpdateNicknameSourceControllerUpdateNicknameSource401Code = {
+  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
+} as const;
+
+export type UpdateNicknameSourceControllerUpdateNicknameSource401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: UpdateNicknameSourceControllerUpdateNicknameSource401Code;
+};
+
+/**
+ * error code
+ */
+export type UpdateNicknameSourceControllerUpdateNicknameSource403Code = typeof UpdateNicknameSourceControllerUpdateNicknameSource403Code[keyof typeof UpdateNicknameSourceControllerUpdateNicknameSource403Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UpdateNicknameSourceControllerUpdateNicknameSource403Code = {
+  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
+} as const;
+
+export type UpdateNicknameSourceControllerUpdateNicknameSource403 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: UpdateNicknameSourceControllerUpdateNicknameSource403Code;
+};
+
+/**
+ * error code
+ */
+export type UpdateNicknameSourceControllerUpdateNicknameSource404Code = typeof UpdateNicknameSourceControllerUpdateNicknameSource404Code[keyof typeof UpdateNicknameSourceControllerUpdateNicknameSource404Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UpdateNicknameSourceControllerUpdateNicknameSource404Code = {
+  NICKNAME_SOURCENOT_FOUND: 'NICKNAME_SOURCE.NOT_FOUND',
+} as const;
+
+export type UpdateNicknameSourceControllerUpdateNicknameSource404 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: UpdateNicknameSourceControllerUpdateNicknameSource404Code;
+};
+
+/**
+ * error code
+ */
+export type UpdateNicknameSourceControllerUpdateNicknameSource409Code = typeof UpdateNicknameSourceControllerUpdateNicknameSource409Code[keyof typeof UpdateNicknameSourceControllerUpdateNicknameSource409Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UpdateNicknameSourceControllerUpdateNicknameSource409Code = {
+  NICKNAME_SOURCEALREADY_EXISTS: 'NICKNAME_SOURCE.ALREADY_EXISTS',
+} as const;
+
+export type UpdateNicknameSourceControllerUpdateNicknameSource409 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: UpdateNicknameSourceControllerUpdateNicknameSource409Code;
+};
+
+/**
+ * error code
+ */
+export type CreateQuizzesControllerCreateQuizzesAdmin400Code = typeof CreateQuizzesControllerCreateQuizzesAdmin400Code[keyof typeof CreateQuizzesControllerCreateQuizzesAdmin400Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateQuizzesControllerCreateQuizzesAdmin400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
 } as const;
@@ -496,9 +649,10 @@ export type CreateQuizzesControllerCreateQuizzesAdmin400 = {
 /**
  * error code
  */
-export type CreateQuizzesControllerCreateQuizzesAdmin401Code =
-  (typeof CreateQuizzesControllerCreateQuizzesAdmin401Code)[keyof typeof CreateQuizzesControllerCreateQuizzesAdmin401Code];
+export type CreateQuizzesControllerCreateQuizzesAdmin401Code = typeof CreateQuizzesControllerCreateQuizzesAdmin401Code[keyof typeof CreateQuizzesControllerCreateQuizzesAdmin401Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateQuizzesControllerCreateQuizzesAdmin401Code = {
   COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
 } as const;
@@ -515,9 +669,10 @@ export type CreateQuizzesControllerCreateQuizzesAdmin401 = {
 /**
  * error code
  */
-export type CreateQuizzesControllerCreateQuizzesAdmin403Code =
-  (typeof CreateQuizzesControllerCreateQuizzesAdmin403Code)[keyof typeof CreateQuizzesControllerCreateQuizzesAdmin403Code];
+export type CreateQuizzesControllerCreateQuizzesAdmin403Code = typeof CreateQuizzesControllerCreateQuizzesAdmin403Code[keyof typeof CreateQuizzesControllerCreateQuizzesAdmin403Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateQuizzesControllerCreateQuizzesAdmin403Code = {
   COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
 } as const;
@@ -534,9 +689,10 @@ export type CreateQuizzesControllerCreateQuizzesAdmin403 = {
 /**
  * error code
  */
-export type ListQuizzesControllerListQuizzes400Code =
-  (typeof ListQuizzesControllerListQuizzes400Code)[keyof typeof ListQuizzesControllerListQuizzes400Code];
+export type ListQuizzesControllerListQuizzes400Code = typeof ListQuizzesControllerListQuizzes400Code[keyof typeof ListQuizzesControllerListQuizzes400Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListQuizzesControllerListQuizzes400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
 } as const;
@@ -553,9 +709,10 @@ export type ListQuizzesControllerListQuizzes400 = {
 /**
  * error code
  */
-export type ListQuizzesControllerListQuizzes401Code =
-  (typeof ListQuizzesControllerListQuizzes401Code)[keyof typeof ListQuizzesControllerListQuizzes401Code];
+export type ListQuizzesControllerListQuizzes401Code = typeof ListQuizzesControllerListQuizzes401Code[keyof typeof ListQuizzesControllerListQuizzes401Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListQuizzesControllerListQuizzes401Code = {
   COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
 } as const;
@@ -572,9 +729,10 @@ export type ListQuizzesControllerListQuizzes401 = {
 /**
  * error code
  */
-export type ListQuizzesControllerListQuizzes403Code =
-  (typeof ListQuizzesControllerListQuizzes403Code)[keyof typeof ListQuizzesControllerListQuizzes403Code];
+export type ListQuizzesControllerListQuizzes403Code = typeof ListQuizzesControllerListQuizzes403Code[keyof typeof ListQuizzesControllerListQuizzes403Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListQuizzesControllerListQuizzes403Code = {
   COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
 } as const;
@@ -591,9 +749,10 @@ export type ListQuizzesControllerListQuizzes403 = {
 /**
  * error code
  */
-export type DeleteQuizControllerDeleteQuizAdmin400Code =
-  (typeof DeleteQuizControllerDeleteQuizAdmin400Code)[keyof typeof DeleteQuizControllerDeleteQuizAdmin400Code];
+export type DeleteQuizControllerDeleteQuizAdmin400Code = typeof DeleteQuizControllerDeleteQuizAdmin400Code[keyof typeof DeleteQuizControllerDeleteQuizAdmin400Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DeleteQuizControllerDeleteQuizAdmin400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
 } as const;
@@ -610,9 +769,10 @@ export type DeleteQuizControllerDeleteQuizAdmin400 = {
 /**
  * error code
  */
-export type DeleteQuizControllerDeleteQuizAdmin401Code =
-  (typeof DeleteQuizControllerDeleteQuizAdmin401Code)[keyof typeof DeleteQuizControllerDeleteQuizAdmin401Code];
+export type DeleteQuizControllerDeleteQuizAdmin401Code = typeof DeleteQuizControllerDeleteQuizAdmin401Code[keyof typeof DeleteQuizControllerDeleteQuizAdmin401Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DeleteQuizControllerDeleteQuizAdmin401Code = {
   COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
 } as const;
@@ -629,9 +789,10 @@ export type DeleteQuizControllerDeleteQuizAdmin401 = {
 /**
  * error code
  */
-export type DeleteQuizControllerDeleteQuizAdmin403Code =
-  (typeof DeleteQuizControllerDeleteQuizAdmin403Code)[keyof typeof DeleteQuizControllerDeleteQuizAdmin403Code];
+export type DeleteQuizControllerDeleteQuizAdmin403Code = typeof DeleteQuizControllerDeleteQuizAdmin403Code[keyof typeof DeleteQuizControllerDeleteQuizAdmin403Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DeleteQuizControllerDeleteQuizAdmin403Code = {
   COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
 } as const;
@@ -648,9 +809,10 @@ export type DeleteQuizControllerDeleteQuizAdmin403 = {
 /**
  * error code
  */
-export type DeleteQuizControllerDeleteQuizAdmin404Code =
-  (typeof DeleteQuizControllerDeleteQuizAdmin404Code)[keyof typeof DeleteQuizControllerDeleteQuizAdmin404Code];
+export type DeleteQuizControllerDeleteQuizAdmin404Code = typeof DeleteQuizControllerDeleteQuizAdmin404Code[keyof typeof DeleteQuizControllerDeleteQuizAdmin404Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DeleteQuizControllerDeleteQuizAdmin404Code = {
   QUIZNOT_FOUND: 'QUIZ.NOT_FOUND',
 } as const;
@@ -667,9 +829,10 @@ export type DeleteQuizControllerDeleteQuizAdmin404 = {
 /**
  * error code
  */
-export type GetQuizControllerGetQuizzesAdmin400Code =
-  (typeof GetQuizControllerGetQuizzesAdmin400Code)[keyof typeof GetQuizControllerGetQuizzesAdmin400Code];
+export type GetQuizControllerGetQuizzesAdmin400Code = typeof GetQuizControllerGetQuizzesAdmin400Code[keyof typeof GetQuizControllerGetQuizzesAdmin400Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetQuizControllerGetQuizzesAdmin400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
 } as const;
@@ -686,9 +849,10 @@ export type GetQuizControllerGetQuizzesAdmin400 = {
 /**
  * error code
  */
-export type GetQuizControllerGetQuizzesAdmin401Code =
-  (typeof GetQuizControllerGetQuizzesAdmin401Code)[keyof typeof GetQuizControllerGetQuizzesAdmin401Code];
+export type GetQuizControllerGetQuizzesAdmin401Code = typeof GetQuizControllerGetQuizzesAdmin401Code[keyof typeof GetQuizControllerGetQuizzesAdmin401Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetQuizControllerGetQuizzesAdmin401Code = {
   COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
 } as const;
@@ -705,9 +869,10 @@ export type GetQuizControllerGetQuizzesAdmin401 = {
 /**
  * error code
  */
-export type GetQuizControllerGetQuizzesAdmin403Code =
-  (typeof GetQuizControllerGetQuizzesAdmin403Code)[keyof typeof GetQuizControllerGetQuizzesAdmin403Code];
+export type GetQuizControllerGetQuizzesAdmin403Code = typeof GetQuizControllerGetQuizzesAdmin403Code[keyof typeof GetQuizControllerGetQuizzesAdmin403Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetQuizControllerGetQuizzesAdmin403Code = {
   COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
 } as const;
@@ -724,9 +889,10 @@ export type GetQuizControllerGetQuizzesAdmin403 = {
 /**
  * error code
  */
-export type UpdateQuizControllerUpdateQuizAdmin400Code =
-  (typeof UpdateQuizControllerUpdateQuizAdmin400Code)[keyof typeof UpdateQuizControllerUpdateQuizAdmin400Code];
+export type UpdateQuizControllerUpdateQuizAdmin400Code = typeof UpdateQuizControllerUpdateQuizAdmin400Code[keyof typeof UpdateQuizControllerUpdateQuizAdmin400Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateQuizControllerUpdateQuizAdmin400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
   QUIZIMAGE_NOT_FOUND: 'QUIZ.IMAGE_NOT_FOUND',
@@ -744,9 +910,10 @@ export type UpdateQuizControllerUpdateQuizAdmin400 = {
 /**
  * error code
  */
-export type UpdateQuizControllerUpdateQuizAdmin401Code =
-  (typeof UpdateQuizControllerUpdateQuizAdmin401Code)[keyof typeof UpdateQuizControllerUpdateQuizAdmin401Code];
+export type UpdateQuizControllerUpdateQuizAdmin401Code = typeof UpdateQuizControllerUpdateQuizAdmin401Code[keyof typeof UpdateQuizControllerUpdateQuizAdmin401Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateQuizControllerUpdateQuizAdmin401Code = {
   COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
 } as const;
@@ -763,9 +930,10 @@ export type UpdateQuizControllerUpdateQuizAdmin401 = {
 /**
  * error code
  */
-export type UpdateQuizControllerUpdateQuizAdmin403Code =
-  (typeof UpdateQuizControllerUpdateQuizAdmin403Code)[keyof typeof UpdateQuizControllerUpdateQuizAdmin403Code];
+export type UpdateQuizControllerUpdateQuizAdmin403Code = typeof UpdateQuizControllerUpdateQuizAdmin403Code[keyof typeof UpdateQuizControllerUpdateQuizAdmin403Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateQuizControllerUpdateQuizAdmin403Code = {
   COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
 } as const;
@@ -782,9 +950,10 @@ export type UpdateQuizControllerUpdateQuizAdmin403 = {
 /**
  * error code
  */
-export type UpdateQuizControllerUpdateQuizAdmin404Code =
-  (typeof UpdateQuizControllerUpdateQuizAdmin404Code)[keyof typeof UpdateQuizControllerUpdateQuizAdmin404Code];
+export type UpdateQuizControllerUpdateQuizAdmin404Code = typeof UpdateQuizControllerUpdateQuizAdmin404Code[keyof typeof UpdateQuizControllerUpdateQuizAdmin404Code];
 
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateQuizControllerUpdateQuizAdmin404Code = {
   QUIZNOT_FOUND: 'QUIZ.NOT_FOUND',
 } as const;
@@ -797,3 +966,220 @@ export type UpdateQuizControllerUpdateQuizAdmin404 = {
   /** error code */
   code?: UpdateQuizControllerUpdateQuizAdmin404Code;
 };
+
+/**
+ * error code
+ */
+export type CreateQuizImageControllerCreateQuizImageAdmin400Code = typeof CreateQuizImageControllerCreateQuizImageAdmin400Code[keyof typeof CreateQuizImageControllerCreateQuizImageAdmin400Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const CreateQuizImageControllerCreateQuizImageAdmin400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type CreateQuizImageControllerCreateQuizImageAdmin400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: CreateQuizImageControllerCreateQuizImageAdmin400Code;
+};
+
+/**
+ * error code
+ */
+export type CreateQuizImageControllerCreateQuizImageAdmin401Code = typeof CreateQuizImageControllerCreateQuizImageAdmin401Code[keyof typeof CreateQuizImageControllerCreateQuizImageAdmin401Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const CreateQuizImageControllerCreateQuizImageAdmin401Code = {
+  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
+} as const;
+
+export type CreateQuizImageControllerCreateQuizImageAdmin401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: CreateQuizImageControllerCreateQuizImageAdmin401Code;
+};
+
+/**
+ * error code
+ */
+export type CreateQuizImageControllerCreateQuizImageAdmin403Code = typeof CreateQuizImageControllerCreateQuizImageAdmin403Code[keyof typeof CreateQuizImageControllerCreateQuizImageAdmin403Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const CreateQuizImageControllerCreateQuizImageAdmin403Code = {
+  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
+} as const;
+
+export type CreateQuizImageControllerCreateQuizImageAdmin403 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: CreateQuizImageControllerCreateQuizImageAdmin403Code;
+};
+
+export type ListQuizImagesControllerListQuizImagesAdminParams = {
+/**
+ * 카테고리 필터링
+ */
+category?: string;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 5
+ * @maximum 1000
+ */
+perPage?: number;
+};
+
+/**
+ * error code
+ */
+export type ListQuizImagesControllerListQuizImagesAdmin400Code = typeof ListQuizImagesControllerListQuizImagesAdmin400Code[keyof typeof ListQuizImagesControllerListQuizImagesAdmin400Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ListQuizImagesControllerListQuizImagesAdmin400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type ListQuizImagesControllerListQuizImagesAdmin400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: ListQuizImagesControllerListQuizImagesAdmin400Code;
+};
+
+/**
+ * error code
+ */
+export type ListQuizImagesControllerListQuizImagesAdmin401Code = typeof ListQuizImagesControllerListQuizImagesAdmin401Code[keyof typeof ListQuizImagesControllerListQuizImagesAdmin401Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ListQuizImagesControllerListQuizImagesAdmin401Code = {
+  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
+} as const;
+
+export type ListQuizImagesControllerListQuizImagesAdmin401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: ListQuizImagesControllerListQuizImagesAdmin401Code;
+};
+
+/**
+ * error code
+ */
+export type ListQuizImagesControllerListQuizImagesAdmin403Code = typeof ListQuizImagesControllerListQuizImagesAdmin403Code[keyof typeof ListQuizImagesControllerListQuizImagesAdmin403Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ListQuizImagesControllerListQuizImagesAdmin403Code = {
+  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
+} as const;
+
+export type ListQuizImagesControllerListQuizImagesAdmin403 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: ListQuizImagesControllerListQuizImagesAdmin403Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteQuizImageControllerDeleteQuizImage400Code = typeof DeleteQuizImageControllerDeleteQuizImage400Code[keyof typeof DeleteQuizImageControllerDeleteQuizImage400Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const DeleteQuizImageControllerDeleteQuizImage400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type DeleteQuizImageControllerDeleteQuizImage400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteQuizImageControllerDeleteQuizImage400Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteQuizImageControllerDeleteQuizImage401Code = typeof DeleteQuizImageControllerDeleteQuizImage401Code[keyof typeof DeleteQuizImageControllerDeleteQuizImage401Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const DeleteQuizImageControllerDeleteQuizImage401Code = {
+  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
+} as const;
+
+export type DeleteQuizImageControllerDeleteQuizImage401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteQuizImageControllerDeleteQuizImage401Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteQuizImageControllerDeleteQuizImage403Code = typeof DeleteQuizImageControllerDeleteQuizImage403Code[keyof typeof DeleteQuizImageControllerDeleteQuizImage403Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const DeleteQuizImageControllerDeleteQuizImage403Code = {
+  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
+} as const;
+
+export type DeleteQuizImageControllerDeleteQuizImage403 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteQuizImageControllerDeleteQuizImage403Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteQuizImageControllerDeleteQuizImage404Code = typeof DeleteQuizImageControllerDeleteQuizImage404Code[keyof typeof DeleteQuizImageControllerDeleteQuizImage404Code];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const DeleteQuizImageControllerDeleteQuizImage404Code = {
+  QUIZ_IMAGENOT_FOUND: 'QUIZ_IMAGE.NOT_FOUND',
+} as const;
+
+export type DeleteQuizImageControllerDeleteQuizImage404 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteQuizImageControllerDeleteQuizImage404Code;
+};
+

@@ -7,43 +7,57 @@
  */
 import type {
   AuthTokenDto,
+  SignInWithGoogleControllerSignInWithGoogleParams,
   SignInWithUsernameDto,
-  SignUpWithUsernameDto,
+  SignUpWithUsernameDto
 } from './quizzesGameIoBackend.schemas';
 
 import { orvalInstance } from '../../../shared/service/api/client/index';
 
+
+
+  /**
+ * 게정이 있다면 회원가입, 없다면 로그인시킵니다.
+ * @summary 구글 회원가입 로그인
+ */
+export const signInWithGoogleControllerSignInWithGoogle = (
+    params?: SignInWithGoogleControllerSignInWithGoogleParams,
+ ) => {
+      return orvalInstance<void>(
+      {url: `/auth/google`, method: 'GET',
+        params
+    },
+      );
+    }
+  
 /**
  * @summary username 기반 회원가입
  */
 export const signUpWithUsernameControllerSignUpWithUsername = (
-  signUpWithUsernameDto: SignUpWithUsernameDto
-) => {
-  return orvalInstance<AuthTokenDto>({
-    url: `/auth/sign-up/username`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: signUpWithUsernameDto,
-  });
-};
-
+    signUpWithUsernameDto: SignUpWithUsernameDto,
+ ) => {
+      return orvalInstance<AuthTokenDto>(
+      {url: `/auth/sign-up/username`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: signUpWithUsernameDto
+    },
+      );
+    }
+  
 /**
  * @summary username 기반 로그인
  */
 export const signInWithUsernameControllerSignInWithUsername = (
-  signInWithUsernameDto: SignInWithUsernameDto
-) => {
-  return orvalInstance<AuthTokenDto>({
-    url: `/auth/sign-in/username`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: signInWithUsernameDto,
-  });
-};
-
-export type SignUpWithUsernameControllerSignUpWithUsernameResult = NonNullable<
-  Awaited<ReturnType<typeof signUpWithUsernameControllerSignUpWithUsername>>
->;
-export type SignInWithUsernameControllerSignInWithUsernameResult = NonNullable<
-  Awaited<ReturnType<typeof signInWithUsernameControllerSignInWithUsername>>
->;
+    signInWithUsernameDto: SignInWithUsernameDto,
+ ) => {
+      return orvalInstance<AuthTokenDto>(
+      {url: `/auth/sign-in/username`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: signInWithUsernameDto
+    },
+      );
+    }
+  
+export type SignInWithGoogleControllerSignInWithGoogleResult = NonNullable<Awaited<ReturnType<typeof signInWithGoogleControllerSignInWithGoogle>>>
+export type SignUpWithUsernameControllerSignUpWithUsernameResult = NonNullable<Awaited<ReturnType<typeof signUpWithUsernameControllerSignUpWithUsername>>>
+export type SignInWithUsernameControllerSignInWithUsernameResult = NonNullable<Awaited<ReturnType<typeof signInWithUsernameControllerSignInWithUsername>>>
