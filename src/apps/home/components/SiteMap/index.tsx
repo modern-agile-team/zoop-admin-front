@@ -1,4 +1,5 @@
-import { Card, Space, Typography } from 'antd';
+import { Link } from '@tanstack/react-router';
+import { Card, Tree, type TreeProps } from 'antd';
 
 import { ROUTE_MENUS } from '@/shared/constant/routeMenus';
 import { hasSubMenus } from '@/shared/utils/routeMenu';
@@ -11,30 +12,30 @@ const joinPath = (_base: string, child: string) => {
   return `${base}${child}`;
 };
 
-export default function SiteMap() {
-  const renderLinks = (menus: typeof ROUTE_MENUS, parentPath: string) => {
-    return menus.map((m) => {
-      const fullPath = joinPath(parentPath, m.path);
-      if (hasSubMenus(m)) {
-        return (
-          <div key={`section:${fullPath}`} className="flex flex-col gap-1">
-            <Typography.Text strong>{m.name}</Typography.Text>
-            <div style={{ paddingLeft: 8 }}>
-              <Space direction="vertical">
-                {renderLinks(m.subMenus, fullPath)}
-              </Space>
-            </div>
-          </div>
-        );
-      }
-      return (
-        <Typography.Link key={fullPath} href={fullPath}>
-          {m.name}
-        </Typography.Link>
-      );
-    });
-  };
+type TreeItem = NonNullable<TreeProps['treeData']>[number];
 
+const buildTreeData = (
+  menus: typeof ROUTE_MENUS,
+  parentPath = ''
+): TreeItem[] => {
+  return menus.map<TreeItem>((m) => {
+    const fullPath = joinPath(parentPath, m.path);
+    if (hasSubMenus(m)) {
+      return {
+        key: `section:${fullPath}`,
+        title: m.name,
+        children: buildTreeData(m.subMenus!, fullPath),
+      };
+    }
+    return {
+      key: fullPath,
+      title: <Link to={fullPath}>{m.name}</Link>,
+      isLeaf: true,
+    };
+  });
+};
+
+export default function SiteMap() {
   return (
     <div className="grid grid-cols-4 gap-4">
       {ROUTE_MENUS.map((menu) => {
@@ -44,11 +45,10 @@ export default function SiteMap() {
             key={menu.path}
             extra={hasSubMenus(menu) ? null : <a href={menu.path}>바로가기</a>}
           >
-            {hasSubMenus(menu) ? (
-              <Space direction="vertical">
-                {renderLinks(menu.subMenus!, menu.path)}
-              </Space>
-            ) : null}
+            <Tree
+              showLine
+              treeData={buildTreeData(menu.subMenus ?? [], menu.path)}
+            />
           </Card>
         );
       })}
