@@ -24,17 +24,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
 
-      - name: Enable Corepack (Yarn 4)
-        run: corepack enable
-
-      - name: Install dependencies
+      - name: 의존성 설치
         run: yarn install --immutable
 
-      - name: Lint check
+      - name: 린트 체크
         run: yarn lint
 
-      - name: Type check
+      - name: 타입 체크
         run: yarn tsc --noEmit
 
-      - name: Build
+      - name: 빌드
         run: yarn build
