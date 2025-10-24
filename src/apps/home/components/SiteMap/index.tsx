@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { Card, Tree, type TreeProps } from 'antd';
+import { Card, Col, Row, Tree, type TreeProps } from 'antd';
 
 import { ROUTE_MENUS } from '@/shared/constant/routeMenus';
 import { hasSubMenus } from '@/shared/utils/routeMenu';
@@ -37,21 +37,32 @@ const buildTreeData = (
 
 export default function SiteMap() {
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <Row gutter={[16, 16]}>
       {ROUTE_MENUS.map((menu) => {
         return (
-          <Card
-            title={menu.name}
+          <Col
             key={menu.path}
-            extra={hasSubMenus(menu) ? null : <a href={menu.path}>바로가기</a>}
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 24 }}
+            lg={{ span: 12 }}
+            xl={{ span: 6 }}
           >
-            <Tree
-              showLine
-              treeData={buildTreeData(menu.subMenus ?? [], menu.path)}
-            />
-          </Card>
+            <Card
+              title={menu.name}
+              extra={
+                hasSubMenus(menu) ? null : <a href={menu.path}>바로가기</a>
+              }
+              className="h-full"
+            >
+              <Tree
+                showLine
+                treeData={buildTreeData(menu.subMenus ?? [], menu.path)}
+              />
+            </Card>
+          </Col>
         );
       })}
-    </div>
+    </Row>
   );
 }
