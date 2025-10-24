@@ -1,16 +1,40 @@
-import { useQuery } from '@tanstack/react-query';
-import { useParams, useRouter } from '@tanstack/react-router';
-import { Button, Card, Form, Image, Select, Skeleton } from 'antd';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useBlocker,
+  useNavigate,
+  useParams,
+  useRouter,
+} from '@tanstack/react-router';
+import { Button, Card, Form, Image, Popconfirm, Select, Skeleton } from 'antd';
+import useApp from 'antd/es/app/useApp';
 import Input from 'antd/es/input/Input';
 import TextArea from 'antd/es/input/TextArea';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Title from 'antd/es/typography/Title';
+import { useState } from 'react';
 
+import type { UpdateQuizDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
+import { queryClient } from '@/lib/queryClient';
 import { quizQueries } from '@/shared/service/query/quiz';
 
 export default function EditQuiz() {
   const router = useRouter();
-  const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const [form] = Form.useForm<UpdateQuizDto>();
+  const { message } = useApp();
+  const [formIsDirty, setFormIsDirty] = useState(false);
+
+  useBlocker({
+    shouldBlockFn: () => {
+      if (!formIsDirty) return false;
+
+      const shouldLeave = confirm(
+        '변경사항이 저장되지 않았습니다. 정말로 나가시겠습니까?'
+      );
+      return !shouldLeave;
+    },
+    enableBeforeUnload: formIsDirty,
+  });
 
   const { id: quizId } = useParams({ from: '/(menus)/quizzes/$id/edit/' });
   const {
@@ -21,6 +45,41 @@ export default function EditQuiz() {
     ...quizQueries.getSingle(quizId!),
     enabled: !!quizId,
   });
+
+  const { mutate: updateQuiz } = useMutation({
+    ...quizQueries.singleUpdate,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['quiz'] });
+      queryClient.invalidateQueries({
+        queryKey: quizQueries.singleUpdate.mutationKey,
+      });
+      router.history.back();
+      message.success('퀴즈가 성공적으로 수정되었습니다.');
+    },
+    onError: () => {
+      message.error('퀴즈 수정에 실패했습니다.');
+    },
+  });
+
+  const { mutate: deleteQuiz } = useMutation({
+    ...quizQueries.singleDelete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['quiz'] });
+      queryClient.invalidateQueries({
+        queryKey: quizQueries.singleDelete.mutationKey,
+      });
+      navigate({ to: '/quizzes' });
+      message.success('퀴즈가 성공적으로 삭제되었습니다.');
+    },
+    onError: () => {
+      message.error('퀴즈 삭제에 실패했습니다.');
+    },
+  });
+
+  const onFinish = (values: UpdateQuizDto) => {
+    setFormIsDirty(false);
+    updateQuiz({ quizId, updateQuizDto: values });
+  };
 
   if (isLoading) {
     return (
@@ -43,14 +102,22 @@ export default function EditQuiz() {
     );
   }
 
-  const onFinish = () => {};
-
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <Form form={form} layout="vertical" onFinish={onFinish}>
+      <Form<UpdateQuizDto>
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        onValuesChange={() => setFormIsDirty(true)}
+        initialValues={{
+          type: quiz.type,
+          question: quiz.question,
+          answer: quiz.answer,
+          imageUrl: quiz.imageUrl,
+        }}
+      >
         <Card
           title={<Title level={3}>퀴즈 수정</Title>}
-          bordered={false}
           className="shadow-md"
           extra={
             <div className="flex gap-2">
@@ -58,6 +125,18 @@ export default function EditQuiz() {
               <Button type="primary" htmlType="submit">
                 저장
               </Button>
+              <Popconfirm
+                title="정말로 삭제하시겠습니까?"
+                description="한 번 삭제된 정보를 복구할 수 없습니다."
+                onConfirm={() => deleteQuiz({ quizId })}
+                onCancel={() => message.info('삭제를 취소했습니다.')}
+                okText="삭제"
+                cancelText="취소"
+              >
+                <Button type="primary" danger>
+                  삭제
+                </Button>
+              </Popconfirm>
             </div>
           }
         >
@@ -70,7 +149,6 @@ export default function EditQuiz() {
                   alt="퀴즈 이미지"
                   className="rounded-lg shadow-sm"
                 />
-                {/* TODO: 이미지 변경 기능 추가 */}
               </div>
             )}
             <div className="flex-grow">
