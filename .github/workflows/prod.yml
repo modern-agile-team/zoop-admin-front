@@ -9,39 +9,7 @@ env:
   APP: zoop-admin-front
 
 jobs:
-  sync-develop:
-    permissions:
-      contents: write
-      pull-requests: write
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.version.outputs.VERSION }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Get version
-        id: version
-        run: |
-          VERSION=$(jq -r '.version' package.json)
-          echo "Extracted version from package.json: $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-      - name: PR 생성 후 머지 (main(${{ steps.version.outputs.VERSION }}) -> develop)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAIN_BRANCH: main
-          BASE_BRANCH: develop
-          TITLE: Merge '${{ steps.version.outputs.VERSION }}' into develop
-          BODY: |
-            Merge tag '${{ steps.version.outputs.VERSION }}' into develop.
-
-            > This PR was created automatically for up-to-date develop branch and will merge immediately.
-        run: |
-          gh pr create --head "$MAIN_BRANCH" --base "$BASE_BRANCH" --title "$TITLE" --body "$BODY"
-          gh pr merge "$MAIN_BRANCH" --merge
-
   build-and-push:
-    needs: [sync-develop]
     runs-on: ubuntu-latest
     environment:
       name: prod
@@ -115,29 +83,3 @@ jobs:
           docker run -d --name "$NAME" --restart unless-stopped \
             -e PORT="$PORT" -p "$PORT:$PORT" "${{ steps.r.outputs.image }}"
       - run: docker image prune -f
-
-  release-notes:
-    needs: [deploy, sync-develop]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: 릴리즈 노트 작성
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ needs.sync-develop.outputs.version }}
-        run: |
-          if [ -z "$VERSION" ]; then
-            echo "Version not found from previous job outputs" >&2
-            exit 1
-          fi
-          TAG="$VERSION"
-          echo "Creating or ensuring release for tag '$TAG'"
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            echo "Release '$TAG' already exists. Skipping creation."
-          else
-            gh release create "$TAG" --generate-notes --title "$TAG"
-          fi
