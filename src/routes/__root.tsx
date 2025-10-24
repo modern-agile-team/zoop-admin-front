@@ -20,10 +20,12 @@ const Component = () => {
     () => (STORAGE.getThemeMode() as 'light' | 'dark') || 'light'
   );
 
-  const algorithm = useMemo(
-    () => (mode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm),
-    [mode]
-  );
+  const algorithm = useMemo(() => {
+    if (location.pathname === '/login') {
+      return theme.defaultAlgorithm;
+    }
+    return mode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm;
+  }, [mode, location.pathname]);
 
   const toggleTheme = () => {
     const next = mode === 'dark' ? 'light' : 'dark';
@@ -36,13 +38,15 @@ const Component = () => {
       <QueryClientProvider client={queryClient}>
         <OverlayProvider key={location.url}>
           <AntdAppProvider>
-            <Button
-              type="default"
-              aria-label="toggle-theme"
-              onClick={toggleTheme}
-              icon={mode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
-              style={{ position: 'fixed', right: 16, top: 16, zIndex: 1000 }}
-            />
+            {location.pathname !== '/login' && (
+              <Button
+                type="default"
+                aria-label="toggle-theme"
+                onClick={toggleTheme}
+                icon={mode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
+                style={{ position: 'fixed', right: 16, top: 16, zIndex: 1000 }}
+              />
+            )}
             <Outlet />
           </AntdAppProvider>
         </OverlayProvider>
