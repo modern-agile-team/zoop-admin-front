@@ -11,7 +11,7 @@ const HomeComponent = () => {
       <SiderMenu />
       <Layout>
         <Content>
-          <div className="w-full h-full bg-white py-4 px-6">
+          <div className="w-full h-full py-4 px-6">
             <HomePage />
           </div>
         </Content>
