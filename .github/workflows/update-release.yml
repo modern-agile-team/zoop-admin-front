@@ -34,8 +34,15 @@ jobs:
 
             > This PR was created automatically for up-to-date develop branch and will merge immediately.
         run: |
-          gh pr create --head "$MAIN_BRANCH" --base "$BASE_BRANCH" --title "$TITLE" --body "$BODY"
-          gh pr merge "$MAIN_BRANCH" --merge
+          # Find existing PR from main -> develop, or create it
+          PR_NUMBER=$(gh pr list --head "$MAIN_BRANCH" --base "$BASE_BRANCH" --state open --json number --jq '.[0].number')
+          if [ -z "$PR_NUMBER" ]; then
+            gh pr create --head "$MAIN_BRANCH" --base "$BASE_BRANCH" --title "$TITLE" --body "$BODY"
+            PR_NUMBER=$(gh pr list --head "$MAIN_BRANCH" --base "$BASE_BRANCH" --state open --json number --jq '.[0].number')
+          fi
+          echo "Target PR: #$PR_NUMBER"
+          # Set auto-merge so it merges once branch protection requirements are satisfied
+          gh pr merge "$PR_NUMBER" --merge --auto
 
   release-notes:
     needs: [sync-develop]
