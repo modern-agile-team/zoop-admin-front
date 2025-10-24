@@ -25,7 +25,7 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
       - name: PR 생성 후 머지 (main(${{ steps.version.outputs.VERSION }}) -> develop)
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAIN_BRANCH: main
           BASE_BRANCH: develop
           TITLE: Merge '${{ steps.version.outputs.VERSION }}' into develop
@@ -55,7 +55,7 @@ jobs:
           fetch-depth: 0
       - name: 릴리즈 노트 작성
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ needs.sync-develop.outputs.version }}
         run: |
           if [ -z "$VERSION" ]; then
