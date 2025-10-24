@@ -9,6 +9,26 @@ env:
   APP: zoop-admin-front
 
 jobs:
+  sync-develop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          echo "Extracted version from package.json: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+      - name: PR 생성 후 머지 (release/${{ steps.version.outputs.VERSION }} -> develop)
+        env:
+          TITLE: Merge '${{ steps.version.outputs.VERSION }}' into develop
+          BODY: |
+            Merge tag '${{ steps.version.outputs.VERSION }}' into develop.
+
+            > This PR was created automatically for up-to-date develop branch and will merge immediately.
+        run: |
+          gh pr create --head $MAIN_BRANCH --base $BASE_BRANCH --title "$TITLE" --body "$BODY"
+          gh pr merge $MAIN_BRANCH --merge
+
   build-and-push:
     runs-on: ubuntu-latest
     environment:
