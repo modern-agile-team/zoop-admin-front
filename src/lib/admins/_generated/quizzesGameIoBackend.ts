@@ -6,60 +6,22 @@
  * OpenAPI spec version: 0.1
  */
 import type {
-  CreateImageDto,
   CreateNicknameSourceDto,
+  CreateQuizImageDto,
   CreateQuizzesDto,
-  ImageCollectionDto,
-  ImageDto,
-  ListImagesControllerListImagesAdminParams,
+  ListNicknameSourcesControllerListNicknameSourcesParams,
+  ListQuizImagesControllerListQuizImagesAdminParams,
+  NicknameSourceCollectionDto,
   NicknameSourceDto,
   QuizCollectionDto,
   QuizDto,
+  QuizImageCollectionDto,
+  QuizImageDto,
+  UpdateNicknameSourceDto,
   UpdateQuizDto,
 } from './quizzesGameIoBackend.schemas';
 
 import { orvalInstance } from '../../../shared/service/api/client/index';
-
-/**
- * @summary 이미지 업로드
- */
-export const createImageControllerCreateImageAdmin = (
-  createImageDto: CreateImageDto
-) => {
-  const formData = new FormData();
-  formData.append(`file`, createImageDto.file);
-  formData.append(`category`, createImageDto.category);
-
-  return orvalInstance<ImageDto>({
-    url: `/admin/images`,
-    method: 'POST',
-    headers: { 'Content-Type': 'multipart/form-data' },
-    data: formData,
-  });
-};
-
-/**
- * @summary 이미지 리스트 조회
- */
-export const listImagesControllerListImagesAdmin = (
-  params?: ListImagesControllerListImagesAdminParams
-) => {
-  return orvalInstance<ImageCollectionDto>({
-    url: `/admin/images`,
-    method: 'GET',
-    params,
-  });
-};
-
-/**
- * @summary 이미지 제거
- */
-export const deleteImageControllerDeleteImage = (imageId: string) => {
-  return orvalInstance<void>({
-    url: `/admin/images/${imageId}`,
-    method: 'DELETE',
-  });
-};
 
 /**
  * @summary 닉네임 소스 생성
@@ -72,6 +34,58 @@ export const createNicknameSourceControllerCreateNicknameSourceAdmin = (
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: createNicknameSourceDto,
+  });
+};
+
+/**
+ * @summary 닉네임 소스 리스트 조회
+ */
+export const listNicknameSourcesControllerListNicknameSources = (
+  params?: ListNicknameSourcesControllerListNicknameSourcesParams
+) => {
+  return orvalInstance<NicknameSourceCollectionDto>({
+    url: `/admin/nickname-sources`,
+    method: 'GET',
+    params,
+  });
+};
+
+/**
+ * @summary 닉네임 소스 삭제
+ */
+export const deleteNicknameSourceControllerDeleteNicknameSource = (
+  nicknameSourceId: string
+) => {
+  return orvalInstance<void>({
+    url: `/admin/nickname-sources/${nicknameSourceId}`,
+    method: 'DELETE',
+  });
+};
+
+/**
+ * @summary 닉네임 소스 조회
+ */
+export const getNicknameSourceControllerGetNicknameSourceAdmin = (
+  nicknameSourceId: string
+) => {
+  return orvalInstance<NicknameSourceDto>({
+    url: `/admin/nickname-sources/${nicknameSourceId}`,
+    method: 'GET',
+  });
+};
+
+/**
+ * @summary 닉네임 소스 수정
+ */
+export const updateNicknameSourceControllerUpdateNicknameSource = (
+  nicknameSourceId: string,
+  updateNicknameSourceDto: UpdateNicknameSourceDto
+) => {
+  return orvalInstance<NicknameSourceDto>({
+    url: `/admin/nickname-sources/${nicknameSourceId}`,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    data: updateNicknameSourceDto,
   });
 };
 
@@ -134,19 +148,75 @@ export const updateQuizControllerUpdateQuizAdmin = (
   });
 };
 
-export type CreateImageControllerCreateImageAdminResult = NonNullable<
-  Awaited<ReturnType<typeof createImageControllerCreateImageAdmin>>
->;
-export type ListImagesControllerListImagesAdminResult = NonNullable<
-  Awaited<ReturnType<typeof listImagesControllerListImagesAdmin>>
->;
-export type DeleteImageControllerDeleteImageResult = NonNullable<
-  Awaited<ReturnType<typeof deleteImageControllerDeleteImage>>
->;
+/**
+ * @summary 퀴즈 이미지 업로드
+ */
+export const createQuizImageControllerCreateQuizImageAdmin = (
+  createQuizImageDto: CreateQuizImageDto
+) => {
+  const formData = new FormData();
+  formData.append(`file`, createQuizImageDto.file);
+  formData.append(`category`, createQuizImageDto.category);
+
+  return orvalInstance<QuizImageDto>({
+    url: `/admin/quiz-images`,
+    method: 'POST',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data: formData,
+  });
+};
+
+/**
+ * @summary 퀴즈 이미지 리스트 조회
+ */
+export const listQuizImagesControllerListQuizImagesAdmin = (
+  params?: ListQuizImagesControllerListQuizImagesAdminParams
+) => {
+  return orvalInstance<QuizImageCollectionDto>({
+    url: `/admin/quiz-images`,
+    method: 'GET',
+    params,
+  });
+};
+
+/**
+ * @summary 퀴즈 이미지 제거
+ */
+export const deleteQuizImageControllerDeleteQuizImage = (
+  quizImageId: string
+) => {
+  return orvalInstance<void>({
+    url: `/admin/quiz-images/${quizImageId}`,
+    method: 'DELETE',
+  });
+};
+
 export type CreateNicknameSourceControllerCreateNicknameSourceAdminResult =
   NonNullable<
     Awaited<
       ReturnType<typeof createNicknameSourceControllerCreateNicknameSourceAdmin>
+    >
+  >;
+export type ListNicknameSourcesControllerListNicknameSourcesResult =
+  NonNullable<
+    Awaited<ReturnType<typeof listNicknameSourcesControllerListNicknameSources>>
+  >;
+export type DeleteNicknameSourceControllerDeleteNicknameSourceResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof deleteNicknameSourceControllerDeleteNicknameSource>
+    >
+  >;
+export type GetNicknameSourceControllerGetNicknameSourceAdminResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof getNicknameSourceControllerGetNicknameSourceAdmin>
+    >
+  >;
+export type UpdateNicknameSourceControllerUpdateNicknameSourceResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof updateNicknameSourceControllerUpdateNicknameSource>
     >
   >;
 export type CreateQuizzesControllerCreateQuizzesAdminResult = NonNullable<
@@ -163,4 +233,13 @@ export type GetQuizControllerGetQuizzesAdminResult = NonNullable<
 >;
 export type UpdateQuizControllerUpdateQuizAdminResult = NonNullable<
   Awaited<ReturnType<typeof updateQuizControllerUpdateQuizAdmin>>
+>;
+export type CreateQuizImageControllerCreateQuizImageAdminResult = NonNullable<
+  Awaited<ReturnType<typeof createQuizImageControllerCreateQuizImageAdmin>>
+>;
+export type ListQuizImagesControllerListQuizImagesAdminResult = NonNullable<
+  Awaited<ReturnType<typeof listQuizImagesControllerListQuizImagesAdmin>>
+>;
+export type DeleteQuizImageControllerDeleteQuizImageResult = NonNullable<
+  Awaited<ReturnType<typeof deleteQuizImageControllerDeleteQuizImage>>
 >;

@@ -6,12 +6,12 @@ import dayjs from 'dayjs';
 import { omit } from 'es-toolkit/object';
 import { useState } from 'react';
 
-import type { ImageDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
+import type { QuizImageDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 import { imageQueries } from '@/shared/service/query/image';
 
 import ActionButtons from './components/ActionButtons';
 
-const columns: ColumnsType<ImageDto> = [
+const columns: ColumnsType<QuizImageDto> = [
   {
     title: 'ID',
     dataIndex: 'id',

@@ -20,6 +20,10 @@ export interface AccountDto {
   isActive: boolean;
 }
 
+export interface ActiveAccountCountDto {
+  count: number;
+}
+
 export interface AccountCollectionDto {
   data: AccountDto[];
 }
@@ -104,35 +108,6 @@ export interface GameRoomCollectionDto {
   data: GameRoomDto[];
 }
 
-export interface CreateImageDto {
-  /** image file */
-  file: Blob;
-  /** image category */
-  category: string;
-}
-
-export interface ImageDto {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  category: string;
-  originalFileName: string;
-  imageUrl: string;
-  extension: string;
-  contentType: string;
-  contentLength: number;
-  width: number;
-  height: number;
-}
-
-export interface ImageCollectionDto {
-  currentPage: number;
-  perPage: number;
-  totalCount: number;
-  totalPages: number;
-  data: ImageDto[];
-}
-
 export interface CreateNicknameSourceDto {
   /**
    * @minLength 1
@@ -148,6 +123,22 @@ export interface NicknameSourceDto {
   name: string;
   sequence: number;
   fullname: string;
+}
+
+export interface NicknameSourceCollectionDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
+  data: NicknameSourceDto[];
+}
+
+export interface UpdateNicknameSourceDto {
+  /**
+   * @minLength 1
+   * @maxLength 10
+   */
+  name?: string;
 }
 
 export interface CreateQuizzesDto {
@@ -191,6 +182,39 @@ export interface UpdateQuizDto {
   /** @nullable */
   imageUrl?: string | null;
 }
+
+export interface CreateQuizImageDto {
+  /** quiz image file */
+  file: Blob;
+  /** quiz image category */
+  category: string;
+}
+
+export interface QuizImageDto {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  category: string;
+  originalFileName: string;
+  quizImageUrl: string;
+  extension: string;
+  contentType: string;
+  contentLength: number;
+  width: number;
+  height: number;
+}
+
+export interface QuizImageCollectionDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
+  data: QuizImageDto[];
+}
+
+export type SignInWithGoogleControllerSignInWithGoogleParams = {
+  redirectUrl?: string;
+};
 
 /**
  * error code

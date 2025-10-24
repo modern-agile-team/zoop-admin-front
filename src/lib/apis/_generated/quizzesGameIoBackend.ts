@@ -7,11 +7,22 @@
  */
 import type {
   AuthTokenDto,
+  SignInWithGoogleControllerSignInWithGoogleParams,
   SignInWithUsernameDto,
   SignUpWithUsernameDto,
 } from './quizzesGameIoBackend.schemas';
 
 import { orvalInstance } from '../../../shared/service/api/client/index';
+
+/**
+ * 게정이 있다면 회원가입, 없다면 로그인시킵니다.
+ * @summary 구글 회원가입 로그인
+ */
+export const signInWithGoogleControllerSignInWithGoogle = (
+  params?: SignInWithGoogleControllerSignInWithGoogleParams
+) => {
+  return orvalInstance<void>({ url: `/auth/google`, method: 'GET', params });
+};
 
 /**
  * @summary username 기반 회원가입
@@ -41,6 +52,9 @@ export const signInWithUsernameControllerSignInWithUsername = (
   });
 };
 
+export type SignInWithGoogleControllerSignInWithGoogleResult = NonNullable<
+  Awaited<ReturnType<typeof signInWithGoogleControllerSignInWithGoogle>>
+>;
 export type SignUpWithUsernameControllerSignUpWithUsernameResult = NonNullable<
   Awaited<ReturnType<typeof signUpWithUsernameControllerSignUpWithUsername>>
 >;
