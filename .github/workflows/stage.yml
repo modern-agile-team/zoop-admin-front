@@ -1,4 +1,4 @@
-name: 스테이징 환경 배포
+name: stage 환경 릴리즈
 
 on:
   push:

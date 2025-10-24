@@ -1,4 +1,4 @@
-name: 운영 릴리즈
+name: prod 환경 릴리즈
 
 on:
   push:
