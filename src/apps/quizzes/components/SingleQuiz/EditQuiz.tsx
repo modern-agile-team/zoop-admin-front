@@ -47,7 +47,9 @@ export default function EditQuiz() {
     enableBeforeUnload: formIsDirty,
   });
 
-  const { id: quizId } = useParams({ from: '/(menus)/quizzes/$id/edit/' });
+  const { id: quizId } = useParams({
+    from: '/(menus)/contents/quizzes/$id/edit/',
+  });
   const {
     data: quiz,
     isLoading,
@@ -79,7 +81,7 @@ export default function EditQuiz() {
       queryClient.invalidateQueries({
         queryKey: quizQueries.singleDelete.mutationKey,
       });
-      navigate({ to: '/quizzes' });
+      navigate({ to: '/contents/quizzes' });
       message.success('퀴즈가 성공적으로 삭제되었습니다.');
     },
     onError: () => {
@@ -135,7 +137,7 @@ export default function EditQuiz() {
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 min-h-screen">
       <Form<UpdateQuizDto>
         form={form}
         layout="vertical"

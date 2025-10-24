@@ -9,18 +9,21 @@ export const ROUTE_MENUS: RouteMenu[] = [
   {
     name: '유저 관리',
     path: '/users',
-    subMenus: [
-      { name: '유저 목록', path: '/' },
-      { name: '닉네임 관리', path: '/nickname' },
-    ],
+    subMenus: [{ name: '유저 목록', path: '/' }],
   },
   {
-    name: '퀴즈 관리',
-    path: '/quizzes',
+    name: '컨텐츠 관리',
+    path: '/contents',
     subMenus: [
-      { name: '퀴즈 목록', path: '/' },
-      { name: '퀴즈 추가', path: '/create' },
-      { name: '퀴즈 관리', path: '/edit' },
+      {
+        name: '퀴즈 관리',
+        path: '/quizzes',
+        subMenus: [
+          { name: '퀴즈 목록', path: '/' },
+          { name: '퀴즈 추가', path: '/create' },
+        ],
+      },
+      { name: '닉네임 관리', path: '/nicknames' },
     ],
   },
   {

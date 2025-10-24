@@ -8,7 +8,7 @@ import { quizQueries } from '@/shared/service/query/quiz';
 
 export default function SingleQuiz() {
   const navigate = useNavigate();
-  const { id: quizId } = useParams({ from: '/(menus)/quizzes/$id/' });
+  const { id: quizId } = useParams({ from: '/(menus)/contents/quizzes/$id/' });
   const {
     data: quiz,
     isLoading,
@@ -40,11 +40,11 @@ export default function SingleQuiz() {
   }
 
   const routeEditHandler = () => {
-    navigate({ to: '/quizzes/$id/edit', params: { id: quizId } });
+    navigate({ to: '/contents/quizzes/$id/edit', params: { id: quizId } });
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 min-h-screen">
       <Card
         title={<Title level={3}>퀴즈 상세 정보</Title>}
         extra={
