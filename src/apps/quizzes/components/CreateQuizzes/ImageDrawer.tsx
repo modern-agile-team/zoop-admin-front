@@ -14,6 +14,8 @@ const ImageDrawer: React.FC<ImageGalleryProps> = ({ onSelect }) => {
         display: 'grid',
         gridTemplateColumns: 'repeat(2, 1fr)',
         gap: '16px',
+        maxHeight: 550,
+        overflow: 'auto',
       }}
     >
       {IMAGE_GALLERY_MOCK.map((imageUrl) => (
