@@ -5,10 +5,6 @@ on:
     types: [closed]
     branches: [main]
 
-env:
-  IMAGE: ghcr.io/modern-agile-team/zoop-admin-front
-  APP: zoop-admin-front
-
 jobs:
   sync-develop:
     permissions:
