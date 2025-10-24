@@ -100,7 +100,7 @@ export default function CreateQuizzes() {
     const dataToSave = tableValues.dataSource.map(({ key, ...rest }) => rest);
     quizMutation(dataToSave, {
       onSuccess: () => {
-        navigate({ to: '/quizzes' });
+        navigate({ to: '/contents/quizzes' });
       },
       onError: () => {
         notification.info({
