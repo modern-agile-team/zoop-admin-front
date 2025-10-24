@@ -5,7 +5,7 @@ import { queryClient } from '@/lib/queryClient';
 import ErrorComponent from '@/shared/components/Error';
 import { quizQueries } from '@/shared/service/query/quiz';
 
-export const Route = createFileRoute('/(menus)/quizzes/$id/')({
+export const Route = createFileRoute('/(menus)/contents/quizzes/$id/')({
   loader: async ({ params }) => {
     const { id } = params;
     await queryClient.ensureQueryData(quizQueries.getSingle(id));
