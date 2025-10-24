@@ -1,8 +1,8 @@
-name: stage 환경 릴리즈
+name: dev 환경 릴리즈
 
 on:
   push:
-    branches: [stage]
+    branches: [dev]
 
 env:
   IMAGE: ghcr.io/modern-agile-team/zoop-admin-front
