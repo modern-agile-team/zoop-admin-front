@@ -56,10 +56,9 @@ export interface CreateGameRoomDto {
   quizzesCount: number;
 }
 
-export type GameRoomMemberDtoRole = typeof GameRoomMemberDtoRole[keyof typeof GameRoomMemberDtoRole];
+export type GameRoomMemberDtoRole =
+  (typeof GameRoomMemberDtoRole)[keyof typeof GameRoomMemberDtoRole];
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GameRoomMemberDtoRole = {
   host: 'host',
   player: 'player',
@@ -76,10 +75,9 @@ export interface GameRoomMemberDto {
   nickname: string;
 }
 
-export type GameRoomDtoStatus = typeof GameRoomDtoStatus[keyof typeof GameRoomDtoStatus];
+export type GameRoomDtoStatus =
+  (typeof GameRoomDtoStatus)[keyof typeof GameRoomDtoStatus];
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GameRoomDtoStatus = {
   waiting: 'waiting',
   starting: 'starting',
@@ -215,16 +213,15 @@ export interface QuizImageCollectionDto {
 }
 
 export type SignInWithGoogleControllerSignInWithGoogleParams = {
-redirectUrl?: string;
+  redirectUrl?: string;
 };
 
 /**
  * error code
  */
-export type SignUpWithUsernameControllerSignUpWithUsername400Code = typeof SignUpWithUsernameControllerSignUpWithUsername400Code[keyof typeof SignUpWithUsernameControllerSignUpWithUsername400Code];
+export type SignUpWithUsernameControllerSignUpWithUsername400Code =
+  (typeof SignUpWithUsernameControllerSignUpWithUsername400Code)[keyof typeof SignUpWithUsernameControllerSignUpWithUsername400Code];
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SignUpWithUsernameControllerSignUpWithUsername400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
 } as const;
@@ -241,10 +238,9 @@ export type SignUpWithUsernameControllerSignUpWithUsername400 = {
 /**
  * error code
  */
-export type SignUpWithUsernameControllerSignUpWithUsername409Code = typeof SignUpWithUsernameControllerSignUpWithUsername409Code[keyof typeof SignUpWithUsernameControllerSignUpWithUsername409Code];
+export type SignUpWithUsernameControllerSignUpWithUsername409Code =
+  (typeof SignUpWithUsernameControllerSignUpWithUsername409Code)[keyof typeof SignUpWithUsernameControllerSignUpWithUsername409Code];
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SignUpWithUsernameControllerSignUpWithUsername409Code = {
   ACCOUNTUSERNAME_ALREADY_OCCUPIED: 'ACCOUNT.USERNAME_ALREADY_OCCUPIED',
 } as const;
@@ -261,10 +257,9 @@ export type SignUpWithUsernameControllerSignUpWithUsername409 = {
 /**
  * error code
  */
-export type SignInWithUsernameControllerSignInWithUsername400Code = typeof SignInWithUsernameControllerSignInWithUsername400Code[keyof typeof SignInWithUsernameControllerSignInWithUsername400Code];
+export type SignInWithUsernameControllerSignInWithUsername400Code =
+  (typeof SignInWithUsernameControllerSignInWithUsername400Code)[keyof typeof SignInWithUsernameControllerSignInWithUsername400Code];
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SignInWithUsernameControllerSignInWithUsername400Code = {
   COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
 } as const;
@@ -281,10 +276,9 @@ export type SignInWithUsernameControllerSignInWithUsername400 = {
 /**
  * error code
  */
-export type SignInWithUsernameControllerSignInWithUsername401Code = typeof SignInWithUsernameControllerSignInWithUsername401Code[keyof typeof SignInWithUsernameControllerSignInWithUsername401Code];
+export type SignInWithUsernameControllerSignInWithUsername401Code =
+  (typeof SignInWithUsernameControllerSignInWithUsername401Code)[keyof typeof SignInWithUsernameControllerSignInWithUsername401Code];
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SignInWithUsernameControllerSignInWithUsername401Code = {
   AUTHSIGN_IN_INFO_NOT_MATCHED: 'AUTH.SIGN_IN_INFO_NOT_MATCHED',
 } as const;
@@ -297,4 +291,3 @@ export type SignInWithUsernameControllerSignInWithUsername401 = {
   /** error code */
   code?: SignInWithUsernameControllerSignInWithUsername401Code;
 };
-

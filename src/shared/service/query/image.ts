@@ -1,22 +1,23 @@
 import { mutationOptions, queryOptions } from '@tanstack/react-query';
 
 import {
-  createImageControllerCreateImageAdmin,
-  deleteImageControllerDeleteImage,
-  listImagesControllerListImagesAdmin,
+  createQuizImageControllerCreateQuizImageAdmin,
+  deleteQuizImageControllerDeleteQuizImage,
+  listQuizImagesControllerListQuizImagesAdmin,
 } from '@/lib/admins/_generated/quizzesGameIoBackend';
-import type { ListImagesControllerListImagesAdminParams } from '@/lib/admins/_generated/quizzesGameIoBackend.schemas';
 
 export const imageQueries = {
   uploadImage: mutationOptions({
-    mutationFn: createImageControllerCreateImageAdmin,
+    mutationFn: createQuizImageControllerCreateQuizImageAdmin,
   }),
   removeImage: mutationOptions({
-    mutationFn: deleteImageControllerDeleteImage,
+    mutationFn: deleteQuizImageControllerDeleteQuizImage,
   }),
-  getList: (params: ListImagesControllerListImagesAdminParams) =>
+  getList: (
+    params: Parameters<typeof listQuizImagesControllerListQuizImagesAdmin>[0]
+  ) =>
     queryOptions({
       queryKey: ['admin', 'images', 'list', params] as const,
-      queryFn: () => listImagesControllerListImagesAdmin(params),
+      queryFn: () => listQuizImagesControllerListQuizImagesAdmin(params),
     }),
 };
