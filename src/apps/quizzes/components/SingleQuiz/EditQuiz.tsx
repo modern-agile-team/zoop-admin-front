@@ -5,7 +5,16 @@ import {
   useParams,
   useRouter,
 } from '@tanstack/react-router';
-import { Button, Card, Form, Image, Popconfirm, Select, Skeleton } from 'antd';
+import {
+  Button,
+  Card,
+  Form,
+  Image,
+  Popconfirm,
+  Select,
+  Skeleton,
+  Space,
+} from 'antd';
 import useApp from 'antd/es/app/useApp';
 import Input from 'antd/es/input/Input';
 import TextArea from 'antd/es/input/TextArea';
@@ -17,11 +26,13 @@ import type { UpdateQuizDto } from '@/lib/apis/_generated/quizzesGameIoBackend.s
 import { queryClient } from '@/lib/queryClient';
 import { quizQueries } from '@/shared/service/query/quiz';
 
+import ImageDrawer from '../CreateQuizzes/ImageDrawer';
+
 export default function EditQuiz() {
   const router = useRouter();
   const navigate = useNavigate();
   const [form] = Form.useForm<UpdateQuizDto>();
-  const { message } = useApp();
+  const { message, modal } = useApp();
   const [formIsDirty, setFormIsDirty] = useState(false);
 
   useBlocker({
@@ -81,6 +92,27 @@ export default function EditQuiz() {
     updateQuiz({ quizId, updateQuizDto: values });
   };
 
+  const showImagesModal = () => {
+    const modalInstance = modal.info({
+      title: '이미지 선택',
+      content: (
+        <ImageDrawer
+          onSelect={(imageUrl) => {
+            form.setFieldsValue({ imageUrl });
+            setFormIsDirty(true);
+            modalInstance.destroy();
+          }}
+        />
+      ),
+      icon: null,
+      width: 550,
+      footer: null,
+      closable: true,
+    });
+  };
+
+  const imageUrlValue = Form.useWatch('imageUrl', form);
+
   if (isLoading) {
     return (
       <div className="p-6">
@@ -109,12 +141,7 @@ export default function EditQuiz() {
         layout="vertical"
         onFinish={onFinish}
         onValuesChange={() => setFormIsDirty(true)}
-        initialValues={{
-          type: quiz.type,
-          question: quiz.question,
-          answer: quiz.answer,
-          imageUrl: quiz.imageUrl,
-        }}
+        initialValues={{ ...quiz }}
       >
         <Card
           title={<Title level={3}>퀴즈 수정</Title>}
@@ -141,16 +168,32 @@ export default function EditQuiz() {
           }
         >
           <div className="flex flex-col md:flex-row gap-8">
-            {quiz.imageUrl && (
-              <div className="flex-shrink-0 text-center">
-                <Image
-                  width={250}
-                  src={quiz.imageUrl}
-                  alt="퀴즈 이미지"
-                  className="rounded-lg shadow-sm"
-                />
-              </div>
-            )}
+            <Form.Item name="imageUrl" className="flex-shrink-0 text-center">
+              <Space direction="vertical">
+                {imageUrlValue ? (
+                  <Image
+                    width={250}
+                    src={imageUrlValue}
+                    alt="퀴즈 이미지"
+                    className="rounded-lg shadow-sm"
+                  />
+                ) : (
+                  <div
+                    className="w-[250px] h-[150px] bg-gray-200 rounded-lg flex items-center justify-center"
+                    style={{ border: '1px dashed #d9d9d9' }}
+                  >
+                    <span className="text-gray-500">이미지 없음</span>
+                  </div>
+                )}
+                <Button
+                  onClick={showImagesModal}
+                  type="primary"
+                  style={{ width: '100%' }}
+                >
+                  {imageUrlValue ? '이미지 변경' : '이미지 추가'}
+                </Button>
+              </Space>
+            </Form.Item>
             <div className="flex-grow">
               <Form.Item label="ID">
                 <Input value={quiz.id} disabled />

@@ -41,4 +41,5 @@ export const QUIZZES_MOCK_DATA: Quiz[] = [
 export const IMAGE_GALLERY_MOCK = [
   'https://dev-zoop.s3.ap-northeast-2.amazonaws.com/images/766971239455110853.png',
   'https://dev-zoop.s3.ap-northeast-2.amazonaws.com/images/767309255440708414.webp',
+  'https://dev-zoop.s3.ap-northeast-2.amazonaws.com/quiz-images/769450269779152252.webp',
 ];
