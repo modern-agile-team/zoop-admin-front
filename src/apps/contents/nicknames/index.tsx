@@ -24,7 +24,7 @@ const columns: ColumnsType<NicknameSourceDto> = [
     title: '위치',
     dataIndex: 'sequence',
     key: 'sequence',
-    render: (value) => value + '번 째',
+    render: (value) => (value === 0 ? '앞' : '뒤'),
   },
   {
     title: '생성일',
