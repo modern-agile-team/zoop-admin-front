@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { Table } from 'antd';
+import { Image, Table } from 'antd';
 import Column from 'antd/es/table/Column';
 import ColumnGroup from 'antd/es/table/ColumnGroup';
 
@@ -17,14 +17,11 @@ export default function QuizzesTable() {
     <>
       <header className="p-6 border-b border-contents-200 flex justify-between items-center">
         <div>
-          <h1 className="text-title-2 font-bold">퀴즈 목록 (인라인 편집)</h1>
+          <h1 className="text-title-2 font-bold">퀴즈 목록</h1>
           <p className="text-contents-600 mt-1">
-            셀을 더블클릭하여 내용을 수정하세요.
+            셀을 클릭하면 상세 정보 확인이 가능합니다.
           </p>
         </div>
-        <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors cursor-pointer">
-          변경 사항 저장
-        </button>
       </header>
 
       <main className="p-6">
@@ -59,7 +56,7 @@ export default function QuizzesTable() {
                 if (image === null) return null;
                 return (
                   <>
-                    <img src={image} alt="image" width={50} height={50} />
+                    <Image src={image} alt="image" width={50} height={50} />
                   </>
                 );
               }}
@@ -70,9 +67,6 @@ export default function QuizzesTable() {
             </ColumnGroup>
           </Table>
         </section>
-        <button className="bg-primary-600 px-2 py-1 mt-3 text-white rounded-lg hover:bg-primary-700 transition-colors cursor-pointer">
-          +
-        </button>
       </main>
     </>
   );

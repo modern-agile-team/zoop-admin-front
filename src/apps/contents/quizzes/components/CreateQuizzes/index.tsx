@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useBlocker, useNavigate } from '@tanstack/react-router';
 import type { TableProps } from 'antd';
-import { Button, Form, Popconfirm, Table, Typography } from 'antd';
+import { Button, Form, Image, Popconfirm, Table, Typography } from 'antd';
 import useApp from 'antd/es/app/useApp';
 import { useState } from 'react';
 
@@ -15,7 +15,6 @@ export default function CreateQuizzes() {
   const { notification, modal } = useApp();
   const navigate = useNavigate();
   const [form] = Form.useForm<{ dataSource: CreateQuizDto[] }>();
-  const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
   const [formIsDirty, setFormIsDirty] = useState(false);
 
   useBlocker({
@@ -39,7 +38,7 @@ export default function CreateQuizzes() {
 
   const handleAdd = () => {
     const newData: CreateQuizDto = {
-      key: (quizFormValues.length + 1).toString(),
+      key: Date.now().toString(),
       type: '',
       question: '',
       answer: '',
@@ -67,26 +66,19 @@ export default function CreateQuizzes() {
     }
   };
 
-  const handleImageSelect = (imageUrl: string) => {
-    if (selectedRowKey) {
-      handleSave(selectedRowKey, 'imageUrl', imageUrl);
-    }
-  };
-
   const showImagesModal = (recordKey: string) => {
-    setSelectedRowKey(recordKey);
     const modalInstance = modal.info({
       title: '이미지 선택',
       content: (
         <ImageModal
           onSelect={(imageUrl) => {
-            handleImageSelect(imageUrl);
+            handleSave(recordKey, 'imageUrl', imageUrl);
             modalInstance.destroy();
           }}
         />
       ),
       icon: null,
-      width: 550,
+      width: '60%',
       footer: null,
       closable: true,
     });
@@ -168,7 +160,7 @@ export default function CreateQuizzes() {
       render: (imageUrl: string, record: CreateQuizDto) => (
         <>
           {imageUrl ? (
-            <img
+            <Image
               src={imageUrl}
               alt="quiz"
               onClick={() => showImagesModal(record.key)}
