@@ -19,8 +19,8 @@ const columns: ColumnsType<QuizImageDto> = [
   },
   {
     title: '이미지',
-    dataIndex: 'imageUrl',
-    key: 'imageUrl',
+    dataIndex: 'quizImageUrl',
+    key: 'quizImageUrl',
     render: (url) => <Image src={url} alt="이미지" style={{ height: 40 }} />,
   },
   {
