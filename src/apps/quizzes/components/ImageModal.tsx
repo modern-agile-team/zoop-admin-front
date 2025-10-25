@@ -1,30 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-import { useSearch } from '@tanstack/react-router';
 import { Image } from 'antd';
 
-import { imageQueries } from '@/shared/service/query/image';
+import { IMAGE_GALLERY_MOCK } from '@/apps/quizzes/mock/quizzes';
 
 interface ImageGalleryProps {
   onSelect: (imageUrl: string) => void;
 }
 
-const PAGE_SIZE = 30;
-
 export default function ImageModal({ onSelect }: ImageGalleryProps) {
-  const currentPage = useSearch({ from: '/(menus)/assets/images/' }).page;
-
-  const {
-    data: imageList,
-    isLoading,
-    refetch,
-  } = useQuery({
-    ...imageQueries.getList({
-      category: undefined,
-      page: currentPage,
-      perPage: PAGE_SIZE,
-    }),
-  });
-
   return (
     <div
       style={{
@@ -35,11 +17,11 @@ export default function ImageModal({ onSelect }: ImageGalleryProps) {
         overflow: 'auto',
       }}
     >
-      {imageList?.data.map((ele) => (
+      {IMAGE_GALLERY_MOCK.map((imageUrl) => (
         <Image
-          key={ele.id}
-          src={ele.quizImageUrl}
-          alt={ele.originalFileName}
+          key={imageUrl}
+          src={imageUrl}
+          alt={`${imageUrl}`}
           width={200}
           height={200}
           style={{
