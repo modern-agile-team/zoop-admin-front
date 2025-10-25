@@ -107,7 +107,7 @@ export default function EditQuiz() {
         />
       ),
       icon: null,
-      width: 550,
+      width: '60%',
       footer: null,
       closable: true,
     });
