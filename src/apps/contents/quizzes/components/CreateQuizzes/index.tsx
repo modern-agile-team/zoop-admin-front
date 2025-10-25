@@ -4,6 +4,7 @@ import type { TableProps } from 'antd';
 import { Button, Form, Image, Popconfirm, Table, Typography } from 'antd';
 import useApp from 'antd/es/app/useApp';
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { quizQueries } from '@/shared/service/query/quiz';
 
@@ -38,7 +39,7 @@ export default function CreateQuizzes() {
 
   const handleAdd = () => {
     const newData: CreateQuizDto = {
-      key: Date.now().toString(),
+      key: uuidv4(),
       type: '',
       question: '',
       answer: '',
