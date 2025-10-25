@@ -26,7 +26,7 @@ import type { UpdateQuizDto } from '@/lib/apis/_generated/quizzesGameIoBackend.s
 import { queryClient } from '@/lib/queryClient';
 import { quizQueries } from '@/shared/service/query/quiz';
 
-import ImageDrawer from '../CreateQuizzes/ImageDrawer';
+import ImageModal from '../ImageModal';
 
 export default function EditQuiz() {
   const router = useRouter();
@@ -98,7 +98,7 @@ export default function EditQuiz() {
     const modalInstance = modal.info({
       title: '이미지 선택',
       content: (
-        <ImageDrawer
+        <ImageModal
           onSelect={(imageUrl) => {
             form.setFieldsValue({ imageUrl });
             setFormIsDirty(true);

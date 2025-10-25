@@ -2788,6 +2788,18 @@
               "default": 20,
               "type": "number"
             }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "\n    정렬 쿼리. 다중 정렬은 콤마(,)로 구분.\n    허용되지 않은 정렬 필드 및 방향은 무시합니다.\n    형식: field:asc | field:desc\n    허용 필드: createdAt,updatedAt,name,category,\n    예: sort=-title:asc,createdAt:asc\n      ",
+            "allowFields": {},
+            "schema": {
+              "default": "createdAt:asc",
+              "example": "createdAt:asc",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3033,6 +3045,308 @@
           }
         ],
         "summary": "퀴즈 이미지 제거",
+        "tags": [
+          "quiz-image"
+        ]
+      },
+      "get": {
+        "operationId": "GetQuizImageController_getQuizImage",
+        "parameters": [
+          {
+            "name": "quizImageId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "COMMON.REQUEST_VALIDATION_ERROR",
+                      "enum": [
+                        "COMMON.REQUEST_VALIDATION_ERROR"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "COMMON.UNAUTHORIZED",
+                      "enum": [
+                        "COMMON.UNAUTHORIZED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "COMMON.PERMISSION_DENIED",
+                      "enum": [
+                        "COMMON.PERMISSION_DENIED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "QUIZ_IMAGE.NOT_FOUND",
+                      "enum": [
+                        "QUIZ_IMAGE.NOT_FOUND"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "퀴즈 이미지 단건 조회",
+        "tags": [
+          "quiz-image"
+        ]
+      },
+      "patch": {
+        "operationId": "UpdateQuizImageController_updateQuizImage",
+        "parameters": [
+          {
+            "name": "quizImageId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQuizImageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "COMMON.REQUEST_VALIDATION_ERROR",
+                      "enum": [
+                        "COMMON.REQUEST_VALIDATION_ERROR"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "COMMON.UNAUTHORIZED",
+                      "enum": [
+                        "COMMON.UNAUTHORIZED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "COMMON.PERMISSION_DENIED",
+                      "enum": [
+                        "COMMON.PERMISSION_DENIED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "http status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "error code",
+                      "example": "QUIZ_IMAGE.NOT_FOUND",
+                      "enum": [
+                        "QUIZ_IMAGE.NOT_FOUND"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "퀴즈 이미지 수정",
         "tags": [
           "quiz-image"
         ]
@@ -3534,6 +3848,11 @@
           "category": {
             "type": "string",
             "description": "quiz image category"
+          },
+          "name": {
+            "type": "string",
+            "default": "originalFIleName의 확장자를 제외함",
+            "minLength": 1
           }
         },
         "required": [
@@ -3556,6 +3875,9 @@
             "type": "string"
           },
           "category": {
+            "type": "string"
+          },
+          "name": {
             "type": "string"
           },
           "originalFileName": {
@@ -3585,6 +3907,7 @@
           "createdAt",
           "updatedAt",
           "category",
+          "name",
           "originalFileName",
           "quizImageUrl",
           "extension",
@@ -3623,6 +3946,18 @@
           "totalPages",
           "data"
         ]
+      },
+      "UpdateQuizImageDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "type": "string"
+          }
+        }
       }
     }
   }

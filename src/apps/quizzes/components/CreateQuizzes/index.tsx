@@ -7,8 +7,8 @@ import { useState } from 'react';
 
 import { quizQueries } from '@/shared/service/query/quiz';
 
+import ImageModal from '../ImageModal';
 import EditableCell from './EditTableCell';
-import ImageDrawer from './ImageDrawer';
 import type { CreateQuizDto } from './schema';
 
 export default function CreateQuizzes() {
@@ -78,7 +78,7 @@ export default function CreateQuizzes() {
     const modalInstance = modal.info({
       title: '이미지 선택',
       content: (
-        <ImageDrawer
+        <ImageModal
           onSelect={(imageUrl) => {
             handleImageSelect(imageUrl);
             modalInstance.destroy();
