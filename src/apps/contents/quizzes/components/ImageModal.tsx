@@ -1,6 +1,6 @@
 import { Image } from 'antd';
 
-import { IMAGE_GALLERY_MOCK } from '@/apps/quizzes/mock/quizzes';
+import { IMAGE_GALLERY_MOCK } from '@/apps/contents/quizzes/mock/quizzes';
 
 interface ImageGalleryProps {
   onSelect: (imageUrl: string) => void;

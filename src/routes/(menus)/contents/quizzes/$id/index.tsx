@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import SingleQuiz from '@/apps/quizzes/components/SingleQuiz';
+import SingleQuiz from '@/apps/contents/quizzes/components/SingleQuiz';
 import { queryClient } from '@/lib/queryClient';
 import ErrorComponent from '@/shared/components/Error';
 import { quizQueries } from '@/shared/service/query/quiz';
