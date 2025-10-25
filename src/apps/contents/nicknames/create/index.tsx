@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { App, Badge, Button, Input, Table, Typography } from 'antd';
+import { App, Badge, Button, Input, Popconfirm, Table, Typography } from 'antd';
 import { useState } from 'react';
 
 import { nicknameQueries } from '@/shared/service/query/nicknames';
@@ -87,13 +87,17 @@ export default function NicknameCreatePage() {
           <PlusOutlined />
         </Button>
 
-        <Button
-          type="primary"
+        <Popconfirm
+          title="닉네임을 추가하시겠습니다?"
+          okText="네"
+          cancelText="아니오"
+          onConfirm={handleAddNicknames}
           disabled={addDisabled}
-          onClick={handleAddNicknames}
         >
-          닉네임 추가하기
-        </Button>
+          <Button type="primary" disabled={addDisabled}>
+            닉네임 추가하기
+          </Button>
+        </Popconfirm>
       </div>
     </div>
   );
