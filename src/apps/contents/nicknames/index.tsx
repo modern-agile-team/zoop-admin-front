@@ -9,6 +9,8 @@ import { useState } from 'react';
 import type { NicknameSourceDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 import { nicknameQueries } from '@/shared/service/query/nicknames';
 
+import ActionButtons from './components/ActionButtons';
+
 const columns: ColumnsType<NicknameSourceDto> = [
   {
     title: 'ID',
@@ -45,7 +47,7 @@ const PAGE_SIZE = 30;
 export default function NicknameListPage() {
   const currentPage = useSearch({ from: '/(menus)/contents/nicknames/' }).page;
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     nicknameQueries.getList({
       perPage: PAGE_SIZE,
       page: currentPage,
@@ -58,6 +60,14 @@ export default function NicknameListPage() {
     <div className="flex flex-col gap-4">
       <Typography.Title level={2}>닉네임 소스 관리</Typography.Title>
 
+      <ActionButtons
+        selectedNicknameIds={selectedRowKeys.map((key) => key.toString())}
+        onRemoveNicknames={() => {
+          setSelectedRowKeys([]);
+          refetch();
+        }}
+      />
+
       <Table
         rowSelection={{
           type: 'checkbox',
@@ -66,7 +76,7 @@ export default function NicknameListPage() {
         }}
         loading={isLoading}
         columns={columns}
-        dataSource={data?.data}
+        dataSource={data?.data.map((item) => ({ ...item, key: item.id }))}
         scroll={{ y: '70vh' }}
         pagination={{
           pageSize: PAGE_SIZE,
