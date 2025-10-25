@@ -1,5 +1,4 @@
 import { Image } from 'antd';
-import React from 'react';
 
 import { IMAGE_GALLERY_MOCK } from '@/apps/quizzes/mock/quizzes';
 
@@ -7,7 +6,7 @@ interface ImageGalleryProps {
   onSelect: (imageUrl: string) => void;
 }
 
-const ImageDrawer: React.FC<ImageGalleryProps> = ({ onSelect }) => {
+export default function ImageModal({ onSelect }: ImageGalleryProps) {
   return (
     <div
       style={{
@@ -37,6 +36,4 @@ const ImageDrawer: React.FC<ImageGalleryProps> = ({ onSelect }) => {
       ))}
     </div>
   );
-};
-
-export default ImageDrawer;
+}
