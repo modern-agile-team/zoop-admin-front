@@ -77,6 +77,7 @@ const RAW_RUNTIME_STATE =
           ["tiny-invariant", "npm:1.3.3"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
           ["typescript-eslint", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:8.46.0"],\
+          ["uuid", "npm:13.0.0"],\
           ["vite", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:7.1.9"],\
           ["vitest", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:3.2.4"],\
           ["web-vitals", "npm:5.1.0"],\
@@ -9672,6 +9673,7 @@ const RAW_RUNTIME_STATE =
           ["tiny-invariant", "npm:1.3.3"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
           ["typescript-eslint", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:8.46.0"],\
+          ["uuid", "npm:13.0.0"],\
           ["vite", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:7.1.9"],\
           ["vitest", "virtual:abd51c7ad5b0d189b06b5d76a410fb570d0a98843a09a8f8a06b1c836db284746b1e3996e70aeb2f56a6f091fc3f5e6cc9b7f583fee7e385c7fe71df96af8810#npm:3.2.4"],\
           ["web-vitals", "npm:5.1.0"],\
@@ -12457,6 +12459,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/utility-types-npm-3.11.0-5b9c56f39f-2f1580137b.zip/node_modules/utility-types/",\
         "packageDependencies": [\
           ["utility-types", "npm:3.11.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["uuid", [\
+      ["npm:13.0.0", {\
+        "packageLocation": "./.yarn/cache/uuid-npm-13.0.0-29831a4f1f-950e4c18d5.zip/node_modules/uuid/",\
+        "packageDependencies": [\
+          ["uuid", "npm:13.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -18431,8 +18442,7 @@ class ZipFS extends BasePortableFakeFS {
         const entries = Array.from(directoryListing, (name) => {
           return Object.assign(this.statImpl(`lstat`, ppath.join(p, name)), {
             name,
-            path: PortablePath.dot,
-            parentPath: PortablePath.dot
+            path: PortablePath.dot
           });
         });
         for (const entry of entries) {
@@ -18443,8 +18453,7 @@ class ZipFS extends BasePortableFakeFS {
           for (const child of subListing) {
             entries.push(Object.assign(this.statImpl(`lstat`, ppath.join(p, subPath, child)), {
               name: child,
-              path: subPath,
-              parentPath: subPath
+              path: subPath
             }));
           }
         }
@@ -18465,8 +18474,7 @@ class ZipFS extends BasePortableFakeFS {
       return Array.from(directoryListing, (name) => {
         return Object.assign(this.statImpl(`lstat`, ppath.join(p, name)), {
           name,
-          path: void 0,
-          parentPath: void 0
+          path: void 0
         });
       });
     } else {
