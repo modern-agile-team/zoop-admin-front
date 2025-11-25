@@ -2,6 +2,7 @@ import { mutationOptions, queryOptions } from '@tanstack/react-query';
 
 import {
   createAvatarControllerCreateAvatarAdmin,
+  getAvatarControllerGetAvatar,
   listAvatarsControllerListAvatars,
 } from '@/lib/admins/_generated/quizzesGameIoBackend';
 import type { ListAvatarsControllerListAvatarsParams } from '@/lib/admins/_generated/quizzesGameIoBackend.schemas';
@@ -11,6 +12,11 @@ export const avatarQueries = {
     queryOptions({
       queryKey: ['avatar', 'list', params],
       queryFn: () => listAvatarsControllerListAvatars(params),
+    }),
+  getSingle: (id: string) =>
+    queryOptions({
+      queryKey: ['avatar', 'single', id],
+      queryFn: () => getAvatarControllerGetAvatar(id),
     }),
   uploadAvatar: mutationOptions({
     mutationFn: createAvatarControllerCreateAvatarAdmin,
