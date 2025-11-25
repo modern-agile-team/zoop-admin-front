@@ -62,9 +62,9 @@ export default function AvatarUploadModal({ isOpen, onClose }: Props) {
   };
 
   const itemRender = (
-    originNode: ReactNode,
+    _originNode: ReactNode,
     file: UploadFile,
-    fileList: UploadFile[],
+    _fileList: UploadFile[],
     actions: { download: () => void; preview: () => void; remove: () => void }
   ) => {
     return (
@@ -77,7 +77,7 @@ export default function AvatarUploadModal({ isOpen, onClose }: Props) {
           className="rounded-md object-cover"
           preview={false}
         />
-        <div className="flex-1">
+        <div className="flex-1 flex flex-col gap-1">
           <p className="truncate font-semibold">{file.name}</p>
           <Form.Item name={['metadata', file.uid, 'name']} noStyle>
             <Input placeholder="이름 (선택 사항)" className="mt-2" />
