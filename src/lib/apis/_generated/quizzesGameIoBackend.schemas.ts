@@ -16,9 +16,13 @@ export interface AccountDto {
   nickname: string;
   avatarFileName: string;
   avatarUrl: string;
-  /** 진입 시점 */
-  enteredAt: string;
-  leftAt: string;
+  /**
+   * 진입 시점
+   * @nullable
+   */
+  enteredAt: string | null;
+  /** @nullable */
+  leftAt: string | null;
   isActive: boolean;
 }
 
@@ -28,6 +32,40 @@ export interface ActiveAccountCountDto {
 
 export interface AccountCollectionDto {
   data: AccountDto[];
+}
+
+export interface AccountAdminDto {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  /** Account role */
+  role: string;
+  /** Account sign in type */
+  signInType: string;
+  nickname: string;
+  avatarFileName: string;
+  avatarUrl: string;
+  /**
+   * 진입 시점
+   * @nullable
+   */
+  enteredAt: string | null;
+  /** @nullable */
+  leftAt: string | null;
+  isActive: boolean;
+}
+
+export interface AccountCollectionAdminDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
+  data: AccountAdminDto[];
+}
+
+export interface UpdateAccountDto {
+  nickname?: string;
+  avatarFileName?: string;
 }
 
 export interface SignUpWithUsernameDto {
@@ -52,11 +90,6 @@ export interface CreateAvatarDto {
   description?: string;
 }
 
-/**
- * @nullable
- */
-export type AvatarAdminDtoDescription = { [key: string]: unknown } | null;
-
 export interface AvatarAdminDto {
   id: string;
   createdAt: string;
@@ -71,7 +104,7 @@ export interface AvatarAdminDto {
   width: number;
   height: number;
   /** @nullable */
-  description: AvatarAdminDtoDescription;
+  description: string | null;
   usageCount: number;
 }
 
@@ -122,6 +155,7 @@ export interface GameRoomMemberDto {
   role: GameRoomMemberDtoRole;
   /** 게임방 구성원의 닉네임(계정 닉네임과 동일함) */
   nickname: string;
+  avatarUrl: string;
 }
 
 export type GameRoomDtoStatus = typeof GameRoomDtoStatus[keyof typeof GameRoomDtoStatus];
@@ -226,6 +260,10 @@ export interface QuizAdminDto {
 }
 
 export interface QuizCollectionAdminDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
   data: QuizAdminDto[];
 }
 
@@ -284,11 +322,6 @@ export interface CreateSoundEffectDto {
   description?: string;
 }
 
-/**
- * @nullable
- */
-export type SoundEffectAdminDtoDescription = { [key: string]: unknown } | null;
-
 export interface SoundEffectAdminDto {
   id: string;
   createdAt: string;
@@ -301,7 +334,26 @@ export interface SoundEffectAdminDto {
   contentType: string;
   contentLength: number;
   /** @nullable */
-  description: SoundEffectAdminDtoDescription;
+  description: string | null;
+}
+
+export interface SoundEffectDto {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  originalFileName: string;
+  soundEffectFileName: string;
+  soundEffectUrl: string;
+  extension: string;
+  contentType: string;
+  contentLength: number;
+  /** @nullable */
+  description: string | null;
+}
+
+export interface SoundEffectCollectionDto {
+  data: SoundEffectDto[];
 }
 
 export interface SoundEffectCollectionAdminDto {
