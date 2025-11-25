@@ -73,6 +73,15 @@ export default function Avatars() {
         }}
       />
       <Table
+        onRow={(record) => {
+          return {
+            onClick: () =>
+              navigate({
+                to: '/assets/avatars/$id',
+                params: { id: record.id },
+              }),
+          };
+        }}
         rowSelection={{
           type: 'checkbox',
           selectedRowKeys,
