@@ -9,6 +9,8 @@ import { useState } from 'react';
 import type { AvatarAdminDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 import { avatarQueries } from '@/shared/service/query/avatar';
 
+import ActionButton from './components/ActionButton';
+
 const columns: ColumnsType<AvatarAdminDto> = [
   {
     title: 'ID',
@@ -26,6 +28,7 @@ const columns: ColumnsType<AvatarAdminDto> = [
     dataIndex: 'name',
     key: 'name',
   },
+  { title: '설명', dataIndex: 'description', key: 'description' },
   {
     title: '원래 파일명',
     dataIndex: 'originalFileName',
@@ -37,24 +40,21 @@ const columns: ColumnsType<AvatarAdminDto> = [
     key: 'createdAt',
     render: (date) => dayjs(date).format('YYYY년 MM월 DD일'),
   },
-  {
-    title: '사용 수',
-    dataIndex: 'usageCount',
-    key: 'usageCount',
-  },
 ];
 
 const PAGE_SIZE = 30;
 
 export default function Avatars() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  type _SearchLike = { page?: number };
-  const _search = useSearch({
+  const {
+    page: currentPage,
+    sortBy,
+    orderBy,
+  } = useSearch({
     from: '/(menus)/assets/avatars/',
-  }) as unknown as _SearchLike;
-  const currentPage = _search.page ?? 1;
+  });
   const navigate = useNavigate({ from: '/assets/avatars' });
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     ...avatarQueries.getList({ page: currentPage, perPage: PAGE_SIZE }),
     select: (res) => ({
       dataSource: res.data.map((item) => ({ ...item, key: item.id })),
@@ -65,6 +65,13 @@ export default function Avatars() {
   return (
     <div className="flex flex-col gap-4">
       <Typography.Title level={2}>아바타 관리</Typography.Title>
+      <ActionButton
+        selectedAvatarIds={selectedRowKeys.map((key) => key.toString())}
+        onRemoveAvatars={() => {
+          refetch();
+          setSelectedRowKeys([]);
+        }}
+      />
       <Table
         rowSelection={{
           type: 'checkbox',
@@ -84,7 +91,7 @@ export default function Avatars() {
           showTotal: (total, range) =>
             `총 ${total.toLocaleString()}개 중 ${range[0]}-${range[1]}`,
           onChange(page) {
-            navigate({ search: { page } });
+            navigate({ search: { page, sortBy, orderBy } });
           },
         }}
       />

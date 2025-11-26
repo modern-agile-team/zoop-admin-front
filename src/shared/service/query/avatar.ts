@@ -1,6 +1,9 @@
-import { queryOptions } from '@tanstack/react-query';
+import { mutationOptions, queryOptions } from '@tanstack/react-query';
 
-import { listAvatarsControllerListAvatars } from '@/lib/admins/_generated/quizzesGameIoBackend';
+import {
+  createAvatarControllerCreateAvatarAdmin,
+  listAvatarsControllerListAvatars,
+} from '@/lib/admins/_generated/quizzesGameIoBackend';
 import type { ListAvatarsControllerListAvatarsParams } from '@/lib/admins/_generated/quizzesGameIoBackend.schemas';
 
 export const avatarQueries = {
@@ -9,4 +12,7 @@ export const avatarQueries = {
       queryKey: ['avatar', 'list', params],
       queryFn: () => listAvatarsControllerListAvatars(params),
     }),
+  uploadAvatar: mutationOptions({
+    mutationFn: createAvatarControllerCreateAvatarAdmin,
+  }),
 };
