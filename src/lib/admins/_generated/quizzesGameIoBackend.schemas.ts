@@ -16,9 +16,13 @@ export interface AccountDto {
   nickname: string;
   avatarFileName: string;
   avatarUrl: string;
-  /** 진입 시점 */
-  enteredAt: string;
-  leftAt: string;
+  /**
+   * 진입 시점
+   * @nullable
+   */
+  enteredAt: string | null;
+  /** @nullable */
+  leftAt: string | null;
   isActive: boolean;
 }
 
@@ -28,6 +32,40 @@ export interface ActiveAccountCountDto {
 
 export interface AccountCollectionDto {
   data: AccountDto[];
+}
+
+export interface AccountAdminDto {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  /** Account role */
+  role: string;
+  /** Account sign in type */
+  signInType: string;
+  nickname: string;
+  avatarFileName: string;
+  avatarUrl: string;
+  /**
+   * 진입 시점
+   * @nullable
+   */
+  enteredAt: string | null;
+  /** @nullable */
+  leftAt: string | null;
+  isActive: boolean;
+}
+
+export interface AccountCollectionAdminDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
+  data: AccountAdminDto[];
+}
+
+export interface UpdateAccountDto {
+  nickname?: string;
+  avatarFileName?: string;
 }
 
 export interface SignUpWithUsernameDto {
@@ -52,11 +90,6 @@ export interface CreateAvatarDto {
   description?: string;
 }
 
-/**
- * @nullable
- */
-export type AvatarAdminDtoDescription = { [key: string]: unknown } | null;
-
 export interface AvatarAdminDto {
   id: string;
   createdAt: string;
@@ -71,7 +104,7 @@ export interface AvatarAdminDto {
   width: number;
   height: number;
   /** @nullable */
-  description: AvatarAdminDtoDescription;
+  description: string | null;
   usageCount: number;
 }
 
@@ -121,6 +154,7 @@ export interface GameRoomMemberDto {
   role: GameRoomMemberDtoRole;
   /** 게임방 구성원의 닉네임(계정 닉네임과 동일함) */
   nickname: string;
+  avatarUrl: string;
 }
 
 export type GameRoomDtoStatus =
@@ -224,6 +258,10 @@ export interface QuizAdminDto {
 }
 
 export interface QuizCollectionAdminDto {
+  currentPage: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
   data: QuizAdminDto[];
 }
 
@@ -282,11 +320,6 @@ export interface CreateSoundEffectDto {
   description?: string;
 }
 
-/**
- * @nullable
- */
-export type SoundEffectAdminDtoDescription = { [key: string]: unknown } | null;
-
 export interface SoundEffectAdminDto {
   id: string;
   createdAt: string;
@@ -299,7 +332,26 @@ export interface SoundEffectAdminDto {
   contentType: string;
   contentLength: number;
   /** @nullable */
-  description: SoundEffectAdminDtoDescription;
+  description: string | null;
+}
+
+export interface SoundEffectDto {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  originalFileName: string;
+  soundEffectFileName: string;
+  soundEffectUrl: string;
+  extension: string;
+  contentType: string;
+  contentLength: number;
+  /** @nullable */
+  description: string | null;
+}
+
+export interface SoundEffectCollectionDto {
+  data: SoundEffectDto[];
 }
 
 export interface SoundEffectCollectionAdminDto {
@@ -316,6 +368,79 @@ export interface UpdateSoundEffectAdminDto {
   /** @nullable */
   description?: string | null;
 }
+
+export type ListAccountsControllerListAccountsAdminParams = {
+  /**
+   * 아바타 파일명으로 필터링
+   */
+  avatarFileName?: string;
+  /**
+   * @minimum 1
+   */
+  page?: number;
+  /**
+   * @minimum 5
+   * @maximum 1000
+   */
+  perPage?: number;
+};
+
+/**
+ * error code
+ */
+export type ListAccountsControllerListAccountsAdmin400Code =
+  (typeof ListAccountsControllerListAccountsAdmin400Code)[keyof typeof ListAccountsControllerListAccountsAdmin400Code];
+
+export const ListAccountsControllerListAccountsAdmin400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type ListAccountsControllerListAccountsAdmin400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: ListAccountsControllerListAccountsAdmin400Code;
+};
+
+/**
+ * error code
+ */
+export type ListAccountsControllerListAccountsAdmin401Code =
+  (typeof ListAccountsControllerListAccountsAdmin401Code)[keyof typeof ListAccountsControllerListAccountsAdmin401Code];
+
+export const ListAccountsControllerListAccountsAdmin401Code = {
+  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
+} as const;
+
+export type ListAccountsControllerListAccountsAdmin401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: ListAccountsControllerListAccountsAdmin401Code;
+};
+
+/**
+ * error code
+ */
+export type ListAccountsControllerListAccountsAdmin403Code =
+  (typeof ListAccountsControllerListAccountsAdmin403Code)[keyof typeof ListAccountsControllerListAccountsAdmin403Code];
+
+export const ListAccountsControllerListAccountsAdmin403Code = {
+  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
+} as const;
+
+export type ListAccountsControllerListAccountsAdmin403 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: ListAccountsControllerListAccountsAdmin403Code;
+};
 
 /**
  * error code
@@ -441,6 +566,101 @@ export type ListAvatarsControllerListAvatars403 = {
   message?: string;
   /** error code */
   code?: ListAvatarsControllerListAvatars403Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteAvatarControllerDeleteAvatarAdmin400Code =
+  (typeof DeleteAvatarControllerDeleteAvatarAdmin400Code)[keyof typeof DeleteAvatarControllerDeleteAvatarAdmin400Code];
+
+export const DeleteAvatarControllerDeleteAvatarAdmin400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type DeleteAvatarControllerDeleteAvatarAdmin400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteAvatarControllerDeleteAvatarAdmin400Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteAvatarControllerDeleteAvatarAdmin401Code =
+  (typeof DeleteAvatarControllerDeleteAvatarAdmin401Code)[keyof typeof DeleteAvatarControllerDeleteAvatarAdmin401Code];
+
+export const DeleteAvatarControllerDeleteAvatarAdmin401Code = {
+  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
+} as const;
+
+export type DeleteAvatarControllerDeleteAvatarAdmin401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteAvatarControllerDeleteAvatarAdmin401Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteAvatarControllerDeleteAvatarAdmin403Code =
+  (typeof DeleteAvatarControllerDeleteAvatarAdmin403Code)[keyof typeof DeleteAvatarControllerDeleteAvatarAdmin403Code];
+
+export const DeleteAvatarControllerDeleteAvatarAdmin403Code = {
+  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
+} as const;
+
+export type DeleteAvatarControllerDeleteAvatarAdmin403 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteAvatarControllerDeleteAvatarAdmin403Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteAvatarControllerDeleteAvatarAdmin404Code =
+  (typeof DeleteAvatarControllerDeleteAvatarAdmin404Code)[keyof typeof DeleteAvatarControllerDeleteAvatarAdmin404Code];
+
+export const DeleteAvatarControllerDeleteAvatarAdmin404Code = {
+  AVATARNOT_FOUND: 'AVATAR.NOT_FOUND',
+} as const;
+
+export type DeleteAvatarControllerDeleteAvatarAdmin404 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteAvatarControllerDeleteAvatarAdmin404Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteAvatarControllerDeleteAvatarAdmin409Code =
+  (typeof DeleteAvatarControllerDeleteAvatarAdmin409Code)[keyof typeof DeleteAvatarControllerDeleteAvatarAdmin409Code];
+
+export const DeleteAvatarControllerDeleteAvatarAdmin409Code = {
+  AVATARIN_USED: 'AVATAR.IN_USED',
+} as const;
+
+export type DeleteAvatarControllerDeleteAvatarAdmin409 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteAvatarControllerDeleteAvatarAdmin409Code;
 };
 
 /**
@@ -1049,6 +1269,15 @@ export type ListQuizzesControllerListQuizzesParams = {
    * 이미지 파일 이름으로 필터링
    */
   imageFileName?: string;
+  /**
+   * @minimum 1
+   */
+  page?: number;
+  /**
+   * @minimum 5
+   * @maximum 1000
+   */
+  perPage?: number;
 };
 
 /**
@@ -1829,6 +2058,82 @@ export type ListSoundEffectsControllerListSoundEffectsAdmin403 = {
   message?: string;
   /** error code */
   code?: ListSoundEffectsControllerListSoundEffectsAdmin403Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteSoundEffectControllerDeleteSoundEffectAdmin400Code =
+  (typeof DeleteSoundEffectControllerDeleteSoundEffectAdmin400Code)[keyof typeof DeleteSoundEffectControllerDeleteSoundEffectAdmin400Code];
+
+export const DeleteSoundEffectControllerDeleteSoundEffectAdmin400Code = {
+  COMMONREQUEST_VALIDATION_ERROR: 'COMMON.REQUEST_VALIDATION_ERROR',
+} as const;
+
+export type DeleteSoundEffectControllerDeleteSoundEffectAdmin400 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteSoundEffectControllerDeleteSoundEffectAdmin400Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteSoundEffectControllerDeleteSoundEffectAdmin401Code =
+  (typeof DeleteSoundEffectControllerDeleteSoundEffectAdmin401Code)[keyof typeof DeleteSoundEffectControllerDeleteSoundEffectAdmin401Code];
+
+export const DeleteSoundEffectControllerDeleteSoundEffectAdmin401Code = {
+  COMMONUNAUTHORIZED: 'COMMON.UNAUTHORIZED',
+} as const;
+
+export type DeleteSoundEffectControllerDeleteSoundEffectAdmin401 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteSoundEffectControllerDeleteSoundEffectAdmin401Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteSoundEffectControllerDeleteSoundEffectAdmin403Code =
+  (typeof DeleteSoundEffectControllerDeleteSoundEffectAdmin403Code)[keyof typeof DeleteSoundEffectControllerDeleteSoundEffectAdmin403Code];
+
+export const DeleteSoundEffectControllerDeleteSoundEffectAdmin403Code = {
+  COMMONPERMISSION_DENIED: 'COMMON.PERMISSION_DENIED',
+} as const;
+
+export type DeleteSoundEffectControllerDeleteSoundEffectAdmin403 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteSoundEffectControllerDeleteSoundEffectAdmin403Code;
+};
+
+/**
+ * error code
+ */
+export type DeleteSoundEffectControllerDeleteSoundEffectAdmin404Code =
+  (typeof DeleteSoundEffectControllerDeleteSoundEffectAdmin404Code)[keyof typeof DeleteSoundEffectControllerDeleteSoundEffectAdmin404Code];
+
+export const DeleteSoundEffectControllerDeleteSoundEffectAdmin404Code = {
+  SOUND_EFFECTNOT_FOUND: 'SOUND_EFFECT.NOT_FOUND',
+} as const;
+
+export type DeleteSoundEffectControllerDeleteSoundEffectAdmin404 = {
+  /** http status code */
+  statusCode?: number;
+  /** error message */
+  message?: string;
+  /** error code */
+  code?: DeleteSoundEffectControllerDeleteSoundEffectAdmin404Code;
 };
 
 /**

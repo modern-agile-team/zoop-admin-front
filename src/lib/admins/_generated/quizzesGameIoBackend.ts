@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1
  */
 import type {
+  AccountCollectionAdminDto,
   AvatarAdminDto,
   AvatarCollectionAdminDto,
   CreateAvatarDto,
@@ -13,6 +14,7 @@ import type {
   CreateQuizImageAdminDto,
   CreateQuizzesAdminDto,
   CreateSoundEffectDto,
+  ListAccountsControllerListAccountsAdminParams,
   ListAvatarsControllerListAvatarsParams,
   ListNicknameSourcesControllerListNicknameSourcesParams,
   ListQuizImagesControllerListQuizImagesAdminParams,
@@ -38,6 +40,19 @@ import { orvalInstance } from '../../../shared/service/api/client/index';
 
 
   /**
+ * @summary 계정 목록 조회
+ */
+export const listAccountsControllerListAccountsAdmin = (
+    params?: ListAccountsControllerListAccountsAdminParams,
+ ) => {
+      return orvalInstance<AccountCollectionAdminDto>(
+      {url: `/admin/accounts`, method: 'GET',
+        params
+    },
+      );
+    }
+  
+/**
  * @summary 아바타 생성
  */
 export const createAvatarControllerCreateAvatarAdmin = (
@@ -68,6 +83,18 @@ export const listAvatarsControllerListAvatars = (
       return orvalInstance<AvatarCollectionAdminDto>(
       {url: `/admin/avatars`, method: 'GET',
         params
+    },
+      );
+    }
+  
+/**
+ * @summary 아바타 삭제
+ */
+export const deleteAvatarControllerDeleteAvatarAdmin = (
+    avatarId: string,
+ ) => {
+      return orvalInstance<void>(
+      {url: `/admin/avatars/${avatarId}`, method: 'DELETE'
     },
       );
     }
@@ -339,6 +366,18 @@ export const listSoundEffectsControllerListSoundEffectsAdmin = (
     }
   
 /**
+ * @summary 효과음 삭제
+ */
+export const deleteSoundEffectControllerDeleteSoundEffectAdmin = (
+    soundEffectId: string,
+ ) => {
+      return orvalInstance<void>(
+      {url: `/admin/sound-effects/${soundEffectId}`, method: 'DELETE'
+    },
+      );
+    }
+  
+/**
  * @summary 효과음 단일 조회
  */
 export const getSoundEffectControllerGetSoundEffect = (
@@ -365,8 +404,10 @@ export const updateSoundEffectControllerUpdateSoundEffectAdmin = (
       );
     }
   
+export type ListAccountsControllerListAccountsAdminResult = NonNullable<Awaited<ReturnType<typeof listAccountsControllerListAccountsAdmin>>>
 export type CreateAvatarControllerCreateAvatarAdminResult = NonNullable<Awaited<ReturnType<typeof createAvatarControllerCreateAvatarAdmin>>>
 export type ListAvatarsControllerListAvatarsResult = NonNullable<Awaited<ReturnType<typeof listAvatarsControllerListAvatars>>>
+export type DeleteAvatarControllerDeleteAvatarAdminResult = NonNullable<Awaited<ReturnType<typeof deleteAvatarControllerDeleteAvatarAdmin>>>
 export type GetAvatarControllerGetAvatarResult = NonNullable<Awaited<ReturnType<typeof getAvatarControllerGetAvatar>>>
 export type UpdateAvatarControllerUpdateAvatarResult = NonNullable<Awaited<ReturnType<typeof updateAvatarControllerUpdateAvatar>>>
 export type CreateNicknameSourceControllerCreateNicknameSourceAdminResult = NonNullable<Awaited<ReturnType<typeof createNicknameSourceControllerCreateNicknameSourceAdmin>>>
@@ -386,5 +427,6 @@ export type GetQuizImageControllerGetQuizImageResult = NonNullable<Awaited<Retur
 export type UpdateQuizImageControllerUpdateQuizImageAdminResult = NonNullable<Awaited<ReturnType<typeof updateQuizImageControllerUpdateQuizImageAdmin>>>
 export type CreateSoundEffectControllerCreateSoundEffectAdminResult = NonNullable<Awaited<ReturnType<typeof createSoundEffectControllerCreateSoundEffectAdmin>>>
 export type ListSoundEffectsControllerListSoundEffectsAdminResult = NonNullable<Awaited<ReturnType<typeof listSoundEffectsControllerListSoundEffectsAdmin>>>
+export type DeleteSoundEffectControllerDeleteSoundEffectAdminResult = NonNullable<Awaited<ReturnType<typeof deleteSoundEffectControllerDeleteSoundEffectAdmin>>>
 export type GetSoundEffectControllerGetSoundEffectResult = NonNullable<Awaited<ReturnType<typeof getSoundEffectControllerGetSoundEffect>>>
 export type UpdateSoundEffectControllerUpdateSoundEffectAdminResult = NonNullable<Awaited<ReturnType<typeof updateSoundEffectControllerUpdateSoundEffectAdmin>>>
