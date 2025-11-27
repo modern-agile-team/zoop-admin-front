@@ -6,12 +6,11 @@ import dayjs from 'dayjs';
 import { omit } from 'es-toolkit/object';
 import { useState } from 'react';
 
-import type { AvatarAdminDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 import { avatarQueries } from '@/shared/service/query/avatar';
 
 import ActionButton from './components/ActionButton';
 
-const columns: ColumnsType<AvatarAdminDto> = [
+const columns: ColumnsType = [
   {
     title: 'ID',
     dataIndex: 'id',

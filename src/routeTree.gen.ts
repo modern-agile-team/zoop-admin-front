@@ -23,6 +23,7 @@ import { Route as menusContentsQuizzesCreateIndexRouteImport } from './routes/(m
 import { Route as menusContentsQuizzesIdIndexRouteImport } from './routes/(menus)/contents/quizzes/$id/index'
 import { Route as menusAssetsAvatarsIdIndexRouteImport } from './routes/(menus)/assets/avatars/$id/index'
 import { Route as menusContentsQuizzesIdEditIndexRouteImport } from './routes/(menus)/contents/quizzes/$id/edit/index'
+import { Route as menusAssetsAvatarsIdEditIndexRouteImport } from './routes/(menus)/assets/avatars/$id/edit/index'
 
 const menusRouteRoute = menusRouteRouteImport.update({
   id: '/(menus)',
@@ -100,6 +101,12 @@ const menusContentsQuizzesIdEditIndexRoute =
     path: '/contents/quizzes/$id/edit/',
     getParentRoute: () => menusRouteRoute,
   } as any)
+const menusAssetsAvatarsIdEditIndexRoute =
+  menusAssetsAvatarsIdEditIndexRouteImport.update({
+    id: '/assets/avatars/$id/edit/',
+    path: '/assets/avatars/$id/edit/',
+    getParentRoute: () => menusRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof menusRouteRouteWithChildren
@@ -113,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/contents/quizzes/$id': typeof menusContentsQuizzesIdIndexRoute
   '/contents/quizzes/create': typeof menusContentsQuizzesCreateIndexRoute
   '/contents/quizzes/edit': typeof menusContentsQuizzesEditIndexRoute
+  '/assets/avatars/$id/edit': typeof menusAssetsAvatarsIdEditIndexRoute
   '/contents/quizzes/$id/edit': typeof menusContentsQuizzesIdEditIndexRoute
 }
 export interface FileRoutesByTo {
@@ -127,6 +135,7 @@ export interface FileRoutesByTo {
   '/contents/quizzes/$id': typeof menusContentsQuizzesIdIndexRoute
   '/contents/quizzes/create': typeof menusContentsQuizzesCreateIndexRoute
   '/contents/quizzes/edit': typeof menusContentsQuizzesEditIndexRoute
+  '/assets/avatars/$id/edit': typeof menusAssetsAvatarsIdEditIndexRoute
   '/contents/quizzes/$id/edit': typeof menusContentsQuizzesIdEditIndexRoute
 }
 export interface FileRoutesById {
@@ -144,6 +153,7 @@ export interface FileRoutesById {
   '/(menus)/contents/quizzes/$id/': typeof menusContentsQuizzesIdIndexRoute
   '/(menus)/contents/quizzes/create/': typeof menusContentsQuizzesCreateIndexRoute
   '/(menus)/contents/quizzes/edit/': typeof menusContentsQuizzesEditIndexRoute
+  '/(menus)/assets/avatars/$id/edit/': typeof menusAssetsAvatarsIdEditIndexRoute
   '/(menus)/contents/quizzes/$id/edit/': typeof menusContentsQuizzesIdEditIndexRoute
 }
 export interface FileRouteTypes {
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/contents/quizzes/$id'
     | '/contents/quizzes/create'
     | '/contents/quizzes/edit'
+    | '/assets/avatars/$id/edit'
     | '/contents/quizzes/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/contents/quizzes/$id'
     | '/contents/quizzes/create'
     | '/contents/quizzes/edit'
+    | '/assets/avatars/$id/edit'
     | '/contents/quizzes/$id/edit'
   id:
     | '__root__'
@@ -190,6 +202,7 @@ export interface FileRouteTypes {
     | '/(menus)/contents/quizzes/$id/'
     | '/(menus)/contents/quizzes/create/'
     | '/(menus)/contents/quizzes/edit/'
+    | '/(menus)/assets/avatars/$id/edit/'
     | '/(menus)/contents/quizzes/$id/edit/'
   fileRoutesById: FileRoutesById
 }
@@ -299,6 +312,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof menusContentsQuizzesIdEditIndexRouteImport
       parentRoute: typeof menusRouteRoute
     }
+    '/(menus)/assets/avatars/$id/edit/': {
+      id: '/(menus)/assets/avatars/$id/edit/'
+      path: '/assets/avatars/$id/edit'
+      fullPath: '/assets/avatars/$id/edit'
+      preLoaderRoute: typeof menusAssetsAvatarsIdEditIndexRouteImport
+      parentRoute: typeof menusRouteRoute
+    }
   }
 }
 
@@ -324,6 +344,7 @@ interface menusRouteRouteChildren {
   menusContentsQuizzesIdIndexRoute: typeof menusContentsQuizzesIdIndexRoute
   menusContentsQuizzesCreateIndexRoute: typeof menusContentsQuizzesCreateIndexRoute
   menusContentsQuizzesEditIndexRoute: typeof menusContentsQuizzesEditIndexRoute
+  menusAssetsAvatarsIdEditIndexRoute: typeof menusAssetsAvatarsIdEditIndexRoute
   menusContentsQuizzesIdEditIndexRoute: typeof menusContentsQuizzesIdEditIndexRoute
 }
 
@@ -337,6 +358,7 @@ const menusRouteRouteChildren: menusRouteRouteChildren = {
   menusContentsQuizzesIdIndexRoute: menusContentsQuizzesIdIndexRoute,
   menusContentsQuizzesCreateIndexRoute: menusContentsQuizzesCreateIndexRoute,
   menusContentsQuizzesEditIndexRoute: menusContentsQuizzesEditIndexRoute,
+  menusAssetsAvatarsIdEditIndexRoute: menusAssetsAvatarsIdEditIndexRoute,
   menusContentsQuizzesIdEditIndexRoute: menusContentsQuizzesIdEditIndexRoute,
 }
 
