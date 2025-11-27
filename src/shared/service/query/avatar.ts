@@ -1,6 +1,7 @@
 import { mutationOptions, queryOptions } from '@tanstack/react-query';
 
 import {
+  createAvatarControllerCreateAvatarAdmin,
   getAvatarControllerGetAvatar,
   listAvatarsControllerListAvatars,
   updateAvatarControllerUpdateAvatar,
@@ -19,6 +20,9 @@ export const avatarQueries = {
       queryFn: () => getAvatarControllerGetAvatar(avatarId!),
       enabled: !!avatarId,
     }),
+  uploadAvatar: mutationOptions({
+    mutationFn: createAvatarControllerCreateAvatarAdmin,
+  }),
   updateAvatar: mutationOptions({
     mutationFn: ({
       avatarId,
