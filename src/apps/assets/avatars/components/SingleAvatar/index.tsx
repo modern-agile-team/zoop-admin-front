@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { Alert, Card, Descriptions, Image, Spin, Typography } from 'antd';
 import dayjs from 'dayjs';
 
@@ -8,7 +8,6 @@ import { avatarQueries } from '@/shared/service/query/avatar';
 import ActionButtons from './ActionButtons';
 
 export default function SingleAvatar() {
-  const navigate = useNavigate();
   const { id: avatarId } = useParams({ from: '/(menus)/assets/avatars/$id/' });
   const {
     data: avatar,

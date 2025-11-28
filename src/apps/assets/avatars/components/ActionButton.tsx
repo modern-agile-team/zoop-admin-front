@@ -1,7 +1,7 @@
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { App, Button, Select } from 'antd';
+import { Alert, App, Button, Select } from 'antd';
 import { overlay } from 'overlay-kit';
 
 import { avatarQueries } from '@/shared/service/query/avatar';
@@ -16,7 +16,7 @@ interface Props {
 
 export default function ActionButton({ selectedAvatarIds }: Props) {
   const queryClient = useQueryClient();
-  const { message } = App.useApp();
+  const { modal, message } = App.useApp();
 
   const { page, sortBy, orderBy } = useSearch({
     from: '/(menus)/assets/avatars/',
@@ -37,8 +37,42 @@ export default function ActionButton({ selectedAvatarIds }: Props) {
     retry: false,
   });
 
+  const { mutateAsync: removeAvatar } = useMutation({
+    ...avatarQueries.deleteAvatar,
+    retry: false,
+  });
+
   const handleRemoveAvatars = async () => {
-    message.info('구현중입니다.');
+    const shouldRemove = await modal.confirm({
+      title: '아바타 삭제',
+      okText: '삭제',
+      cancelText: '취소',
+      okButtonProps: { danger: true },
+      icon: null,
+      content: (
+        <Alert
+          message="선택한 아바타를 삭제하시겠습니까?"
+          description="삭제된 아바타는 복구할 수 없습니다."
+          type="error"
+        />
+      ),
+    });
+
+    if (shouldRemove) {
+      try {
+        await Promise.all(
+          selectedAvatarIds.map((id) =>
+            removeAvatar({ avatarId: id.toString() })
+          )
+        );
+        queryClient.invalidateQueries({
+          queryKey: avatarQueries.getList({ page }).queryKey,
+        });
+        message.success('아바타를 삭제했어요.');
+      } catch {
+        message.error('아바타 삭제 중 오류가 발생했어요.');
+      }
+    }
   };
 
   const handleSelectSortField = (value: string) => {
