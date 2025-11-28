@@ -4,21 +4,32 @@ import {
   createAvatarControllerCreateAvatarAdmin,
   getAvatarControllerGetAvatar,
   listAvatarsControllerListAvatars,
+  updateAvatarControllerUpdateAvatar,
 } from '@/lib/admins/_generated/quizzesGameIoBackend';
-import type { ListAvatarsControllerListAvatarsParams } from '@/lib/admins/_generated/quizzesGameIoBackend.schemas';
+import type { UpdateAvatarAdminDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 
 export const avatarQueries = {
-  getList: (params: ListAvatarsControllerListAvatarsParams) =>
+  getList: (params: Parameters<typeof listAvatarsControllerListAvatars>[0]) =>
     queryOptions({
-      queryKey: ['avatar', 'list', params],
+      queryKey: ['admin', 'avatars', 'list', params] as const,
       queryFn: () => listAvatarsControllerListAvatars(params),
     }),
-  getSingle: (id: string) =>
+  getSingle: (avatarId?: string) =>
     queryOptions({
-      queryKey: ['avatar', 'single', id],
-      queryFn: () => getAvatarControllerGetAvatar(id),
+      queryKey: ['admin', 'avatar', avatarId] as const,
+      queryFn: () => getAvatarControllerGetAvatar(avatarId!),
+      enabled: !!avatarId,
     }),
   uploadAvatar: mutationOptions({
     mutationFn: createAvatarControllerCreateAvatarAdmin,
+  }),
+  updateAvatar: mutationOptions({
+    mutationFn: ({
+      avatarId,
+      updateAvatarAdminDto,
+    }: {
+      avatarId: string;
+      updateAvatarAdminDto: UpdateAvatarAdminDto;
+    }) => updateAvatarControllerUpdateAvatar(avatarId, updateAvatarAdminDto),
   }),
 };
