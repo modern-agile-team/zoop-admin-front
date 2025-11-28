@@ -2,6 +2,7 @@ import { mutationOptions, queryOptions } from '@tanstack/react-query';
 
 import {
   createAvatarControllerCreateAvatarAdmin,
+  deleteAvatarControllerDeleteAvatarAdmin,
   getAvatarControllerGetAvatar,
   listAvatarsControllerListAvatars,
   updateAvatarControllerUpdateAvatar,
@@ -31,5 +32,9 @@ export const avatarQueries = {
       avatarId: string;
       updateAvatarAdminDto: UpdateAvatarAdminDto;
     }) => updateAvatarControllerUpdateAvatar(avatarId, updateAvatarAdminDto),
+  }),
+  deleteAvatar: mutationOptions({
+    mutationFn: ({ avatarId }: { avatarId: string }) =>
+      deleteAvatarControllerDeleteAvatarAdmin(avatarId),
   }),
 };
