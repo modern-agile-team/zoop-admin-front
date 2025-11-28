@@ -1,21 +1,13 @@
-import { EditOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from '@tanstack/react-router';
-import {
-  Alert,
-  Button,
-  Card,
-  Descriptions,
-  Image,
-  Spin,
-  Typography,
-} from 'antd';
+import { useParams } from '@tanstack/react-router';
+import { Alert, Card, Descriptions, Image, Spin, Typography } from 'antd';
 import dayjs from 'dayjs';
 
 import { avatarQueries } from '@/shared/service/query/avatar';
 
+import ActionButtons from './ActionButtons';
+
 export default function SingleAvatar() {
-  const navigate = useNavigate();
   const { id: avatarId } = useParams({ from: '/(menus)/assets/avatars/$id/' });
   const {
     data: avatar,
@@ -44,14 +36,7 @@ export default function SingleAvatar() {
   return (
     <div className="flex flex-col gap-4">
       <Typography.Title level={3}>아바타 상세 정보</Typography.Title>
-      <div className="flex justify-end">
-        <Button
-          type="default"
-          onClick={() => navigate({ to: `/assets/avatars/${avatarId}/edit/` })}
-        >
-          <EditOutlined />
-        </Button>
-      </div>
+      <ActionButtons avatarId={avatarId} />
       <Card>
         <div className="flex flex-col gap-8 md:flex-row">
           <div className="flex justify-center">

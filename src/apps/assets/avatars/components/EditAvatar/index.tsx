@@ -47,7 +47,10 @@ export default function EditAvatar() {
     onSuccess: () => {
       message.success('아바타 정보가 성공적으로 수정되었습니다.');
       queryClient.invalidateQueries({
-        queryKey: avatarQueries.getSingle(avatarId).queryKey,
+        queryKey: [
+          avatarQueries.getSingle(avatarId).queryKey,
+          avatarQueries.getList({}).queryKey,
+        ],
       });
       router.history.back();
     },
