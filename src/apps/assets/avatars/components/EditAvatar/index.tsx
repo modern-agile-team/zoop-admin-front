@@ -19,12 +19,12 @@ import { z } from 'zod';
 
 import { avatarQueries } from '@/shared/service/query/avatar';
 
-const schema = z.object({
+const avatarEditSchema = z.object({
   name: z.string().min(1, '이름을 입력해주세요.'),
   description: z.string().optional(),
 });
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<typeof avatarEditSchema>;
 
 export default function EditAvatar() {
   const { id: avatarId } = useParams({
@@ -38,16 +38,16 @@ export default function EditAvatar() {
     isLoading,
     isError,
   } = useQuery({
-    ...avatarQueries.getSingle(avatarId!),
+    ...avatarQueries.getSingle(avatarId),
     enabled: !!avatarId,
   });
 
-  const { mutate, isPending } = useMutation({
+  const { mutate: updateAvatar, isPending } = useMutation({
     ...avatarQueries.updateAvatar,
     onSuccess: () => {
       message.success('아바타 정보가 성공적으로 수정되었습니다.');
       queryClient.invalidateQueries({
-        queryKey: avatarQueries.getSingle(avatarId!).queryKey,
+        queryKey: avatarQueries.getSingle(avatarId).queryKey,
       });
       router.history.back();
     },
@@ -63,7 +63,7 @@ export default function EditAvatar() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(avatarEditSchema),
     defaultValues: {
       name: avatar?.name ?? '',
       description: avatar?.description ?? '',
@@ -74,7 +74,7 @@ export default function EditAvatar() {
   });
 
   const onSubmit = (updateAvatarAdminDto: FormValues) => {
-    mutate({
+    updateAvatar({
       avatarId,
       updateAvatarAdminDto,
     });
