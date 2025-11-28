@@ -12,7 +12,7 @@ export default function SingleAvatar() {
     isLoading,
     isError,
   } = useQuery({
-    ...avatarQueries.getSingle(avatarId!),
+    ...avatarQueries.getSingle(avatarId),
     enabled: !!avatarId,
   });
 
