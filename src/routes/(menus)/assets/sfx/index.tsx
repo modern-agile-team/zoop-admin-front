@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
-import SoundAsset from '@/apps/assets/sounds';
+import SoundAsset from '@/apps/assets/sfx';
 
 const searchParamsSchema = z.object({
   page: z.number().min(1).default(1),
