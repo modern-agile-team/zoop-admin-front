@@ -14,7 +14,7 @@ interface Props {
   onRemoveSfxs: () => void;
 }
 
-export default function ActionButtons({ selectedSfxIds, onRemoveSfxs }: Props) {
+export default function ActionButtons({ selectedSfxIds }: Props) {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
 
