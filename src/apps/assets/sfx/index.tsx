@@ -9,6 +9,8 @@ import { useState } from 'react';
 import type { SoundEffectAdminDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 import { sfxQueries } from '@/shared/service/query/sfx';
 
+import ActionButtons from './components/ActionButtons';
+
 const columns: ColumnsType<SoundEffectAdminDto> = [
   {
     title: 'ID',
@@ -53,7 +55,7 @@ export default function SfxAssetPage() {
   });
   const navigate = useNavigate({ from: '/assets/sfx' });
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     ...sfxQueries.getList({
       page: currentPage,
       perPage: PAGE_SIZE,
@@ -69,6 +71,13 @@ export default function SfxAssetPage() {
   return (
     <div className="flex flex-col gap-4">
       <Typography.Title level={2}>효과음 관리</Typography.Title>
+      <ActionButtons
+        selectedSfxIds={selectedRowKeys.map((key) => key.toString())}
+        onRemoveSfxs={() => {
+          refetch();
+          setSelectedRowKeys([]);
+        }}
+      />
       <Table
         rowSelection={{
           type: 'checkbox',
