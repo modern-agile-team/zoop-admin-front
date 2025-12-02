@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useSearch } from '@tanstack/react-router';
 import { App, Button } from 'antd';
 import { overlay } from 'overlay-kit';
 
@@ -17,11 +16,6 @@ export default function ActionButtons({ selectedSfxIds }: Props) {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
 
-  const { page, sortBy, orderBy } = useSearch({
-    from: '/(menus)/assets/sfx/',
-  });
-  const navigate = useNavigate({ from: '/assets/sfx' });
-
   const { mutate: uploadSfx, isPending: isUploading } = useMutation({
     ...sfxQueries.upload,
     onSuccess: () => {
@@ -37,14 +31,6 @@ export default function ActionButtons({ selectedSfxIds }: Props) {
   });
 
   const handleRemoveSfxs = async () => {};
-
-  const handleSelectSortField = (value: string) => {
-    navigate({ search: { page, sortBy: value, orderBy } });
-  };
-
-  const handleToggleSortType = (type: 'asc' | 'desc') => {
-    navigate({ search: { page, sortBy, orderBy: type } });
-  };
 
   return (
     <div className="flex gap-4 justify-end">
