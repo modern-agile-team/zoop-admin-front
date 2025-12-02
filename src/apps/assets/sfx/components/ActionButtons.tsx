@@ -1,13 +1,12 @@
-import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { App, Button, Select } from 'antd';
+import { App, Button } from 'antd';
 import { overlay } from 'overlay-kit';
 
 import { sfxQueries } from '@/shared/service/query/sfx';
 
-import type { UploadData } from './schema';
 import SfxUploadModal from './SfxUploadModal';
+import type { UploadData } from './type';
 
 interface Props {
   selectedSfxIds: string[];
@@ -48,27 +47,7 @@ export default function ActionButtons({ selectedSfxIds }: Props) {
   };
 
   return (
-    <div className="flex gap-4 justify-between">
-      <div className="flex gap-1">
-        <Select
-          value={sortBy ?? undefined}
-          style={{ width: 120 }}
-          options={[
-            { value: 'createdAt', label: '생성 날짜' },
-            { value: 'updatedAt', label: '수정 날짜' },
-            { value: 'name', label: '이름' },
-            { value: 'category', label: '카테고리' },
-          ]}
-          onChange={handleSelectSortField}
-        />
-        <Button
-          onClick={() =>
-            handleToggleSortType(orderBy === 'desc' ? 'asc' : 'desc')
-          }
-        >
-          {orderBy === 'desc' ? <CaretUpOutlined /> : <CaretDownOutlined />}
-        </Button>
-      </div>
+    <div className="flex gap-4 justify-end">
       <div>
         {selectedSfxIds.length > 0 && (
           <Button danger onClick={handleRemoveSfxs}>

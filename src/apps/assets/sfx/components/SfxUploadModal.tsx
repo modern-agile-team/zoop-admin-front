@@ -2,7 +2,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd';
 import { Button, Form, Modal, Upload } from 'antd';
 
-import type { UploadData } from './schema';
+import type { UploadData } from './type';
 
 interface FormValues {
   fileList: UploadFile[];

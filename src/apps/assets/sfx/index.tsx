@@ -23,22 +23,26 @@ const columns: ColumnsType<SoundEffectAdminDto> = [
     key: 'soundEffectUrl',
     width: 400,
     render: (url) => <audio controls src={url} className="w-full" />,
+    sorter: (a, b) => a.soundEffectUrl.localeCompare(b.soundEffectUrl),
   },
   {
     title: '이름',
     dataIndex: 'name',
     key: 'name',
+    sorter: (a, b) => a.name.localeCompare(b.name),
   },
   {
     title: '원본 파일명',
     dataIndex: 'originalFileName',
     key: 'originalFileName',
+    sorter: (a, b) => a.originalFileName.localeCompare(b.originalFileName),
   },
   {
     title: '생성일',
     dataIndex: 'createdAt',
     key: 'createdAt',
     render: (date) => dayjs(date).format('YYYY년 MM월 DD일'),
+    sorter: (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
   },
 ];
 
