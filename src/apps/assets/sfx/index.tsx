@@ -9,6 +9,8 @@ import { useState } from 'react';
 import type { SoundEffectAdminDto } from '@/lib/apis/_generated/quizzesGameIoBackend.schemas';
 import { sfxQueries } from '@/shared/service/query/sfx';
 
+import ActionButtons from './components/ActionButtons';
+
 const columns: ColumnsType<SoundEffectAdminDto> = [
   {
     title: 'ID',
@@ -21,22 +23,26 @@ const columns: ColumnsType<SoundEffectAdminDto> = [
     key: 'soundEffectUrl',
     width: 400,
     render: (url) => <audio controls src={url} className="w-full" />,
+    sorter: (a, b) => a.soundEffectUrl.localeCompare(b.soundEffectUrl),
   },
   {
     title: '이름',
     dataIndex: 'name',
     key: 'name',
+    sorter: (a, b) => a.name.localeCompare(b.name),
   },
   {
     title: '원본 파일명',
     dataIndex: 'originalFileName',
     key: 'originalFileName',
+    sorter: (a, b) => a.originalFileName.localeCompare(b.originalFileName),
   },
   {
     title: '생성일',
     dataIndex: 'createdAt',
     key: 'createdAt',
     render: (date) => dayjs(date).format('YYYY년 MM월 DD일'),
+    sorter: (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
   },
 ];
 
@@ -53,7 +59,7 @@ export default function SfxAssetPage() {
   });
   const navigate = useNavigate({ from: '/assets/sfx' });
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     ...sfxQueries.getList({
       page: currentPage,
       perPage: PAGE_SIZE,
@@ -69,6 +75,13 @@ export default function SfxAssetPage() {
   return (
     <div className="flex flex-col gap-4">
       <Typography.Title level={2}>효과음 관리</Typography.Title>
+      <ActionButtons
+        selectedSfxIds={selectedRowKeys.map((key) => key.toString())}
+        onRemoveSfxs={() => {
+          refetch();
+          setSelectedRowKeys([]);
+        }}
+      />
       <Table
         rowSelection={{
           type: 'checkbox',
