@@ -2,6 +2,7 @@ import { mutationOptions, queryOptions } from '@tanstack/react-query';
 
 import {
   createSoundEffectControllerCreateSoundEffectAdmin,
+  deleteSoundEffectControllerDeleteSoundEffectAdmin,
   listSoundEffectsControllerListSoundEffectsAdmin,
 } from '@/lib/admins/_generated/quizzesGameIoBackend';
 import type { ListSoundEffectsControllerListSoundEffectsAdminParams } from '@/lib/admins/_generated/quizzesGameIoBackend.schemas';
@@ -14,5 +15,8 @@ export const sfxQueries = {
     }),
   upload: mutationOptions({
     mutationFn: createSoundEffectControllerCreateSoundEffectAdmin,
+  }),
+  remove: mutationOptions({
+    mutationFn: deleteSoundEffectControllerDeleteSoundEffectAdmin,
   }),
 };
